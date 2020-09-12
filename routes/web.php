@@ -12,5 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('store_order');
 });
+
+Route::any('/item', 'orders@item');

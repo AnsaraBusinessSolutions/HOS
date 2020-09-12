@@ -1,0 +1,166 @@
+body{
+  font-family: 'Montserrat', sans-serif!important;
+}
+.main{
+  height: 100%;
+  position: fixed!important;
+  width: 87%;
+  left: 13%;
+  background: #BAD0D9;
+}
+.topnav{
+  border-top: 5px solid #00BCD4;
+  box-shadow: inset 0px -6px 11px 0 rgba(0, 0, 0, 0.2), 0 2px 8px 0 rgba(0, 0, 0, 0.19);
+  border-bottom: 1px solid #b2b2b2;
+}
+.topsecnav{
+  background: #ffffff;
+  box-shadow: inset 0px -1px 5px 0 rgba(0, 0, 0, 0.2), 0px 5px 5px 0 rgba(0, 0, 0, 0.19);
+}
+.sidenav{
+  height: 100%;
+  position: fixed!important;
+  width:13%;
+  z-index: 99!important;
+  box-shadow: inset 0px -6px 11px 0 rgba(0, 0, 0, 0.2), 0 2px 8px 0 rgba(0, 0, 0, 0.19);
+}
+.main .navbar{
+  position: fixed!important;
+  width: 87%;
+}
+.sidenav .navbar-nav .nav-link {
+  padding: 13px 20px!important;
+  color: #ffffff!important;
+  font-size: 13px;
+  font-weight: 600;
+}
+.sidenav .navbar-nav .nav-item .nav-link:hover{
+  background: #f8f9fa!important;
+  color: #495057!important;
+  text-decoration: none;
+  padding-left: 30px;
+}
+.sidenav .navbar-nav .nav-item.active > .nav-link {
+  background: #f8f9fa!important;
+  color: #495057!important;
+  text-decoration: none;
+  padding-left: 30px;
+}
+.topsecnav{
+  position: fixed!important;
+  top:108px;
+  left: 13%;
+  width: 100%;
+  background: white;
+  z-index: 99!important;
+  overflow-x: auto;
+  margin-right: 40px;
+}
+.topsecnav .navbar-nav .nav-link {
+  padding :6px 25px!important; 
+  color: black!important;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: inset 0px 0px 3px 1px rgb(147 182 222), 0 0px 2px 0px rgb(147 182 222);
+}
+.fs_18{
+  font-size: 18px;
+}
+.topsecnav .navbar-nav .nav-item .nav-link:hover{
+  background: #EBF2F9!important;
+  color: #0e5099!important;
+}
+.topsecnav .navbar-nav .nav-item.active > .nav-link {
+  background: #EBF2F9!important;
+  color: #0e5099!important;
+}
+.topsecnav .navbar-nav{
+  text-align: center;
+}
+#example_wrapper{
+  width: 100%!important;
+  font-size: 12px!important;
+  text-align: center!important;
+}
+#example_wrapper .table th, .table td {
+  padding: 4px 2px!important;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6!important;
+}
+#example_wrapper table th {
+  background: lightgray!important;
+}
+.main_content{
+  height: 85%;
+  margin: 30px 2px;
+  border-radius: 10px;
+  overflow-y: auto;
+  overflow-x: auto;
+  box-shadow: 0 0 4px 0px #909090, 0 0 2px 2px #f1f1f1;
+}
+#example_length{
+  text-align: left;
+}
+#example_info{
+  text-align: left;
+}
+/*===============nav=================*/
+.nav_left{
+
+}
+.nav_center{
+
+}
+.nav_right{
+
+}
+.text_shadow{
+  text-shadow: 0.04em 0.04em 0 #fff, 0.08em 0.08em 0 #aaa;
+  -webkit-text-shadow: .04em .04em 0 #fff, .08em .08em 0 #aaa;
+}
+.text_shadow2{
+  text-shadow: 0 1px 0 #ccc, 
+               0 2px 0 #c9c9c9,
+               0 3px 0 #bbb,
+               0 4px 0 #b9b9b9,
+               0 5px 0 #aaa,
+               0 6px 1px rgba(0,0,0,.1),
+               0 0 5px rgba(0,0,0,.1),
+               0 1px 3px rgba(0,0,0,.3),
+               0 3px 5px rgba(0,0,0,.2),
+               0 5px 10px rgba(0,0,0,.25),
+               0 10px 10px rgba(0,0,0,.2),
+               0 20px 20px rgba(0,0,0,.15);
+}
+.text_shadow3{
+background-color: #666666;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;}
+.text_shadow4{text-shadow: 0px 4px 3px rgba(0,0,0,0.4),
+             0px 8px 13px rgba(0,0,0,0.1),
+             0px 18px 23px rgba(0,0,0,0.1);}
+.text_shadow5{text-shadow: 4px 3px 0px #fff, 9px 8px 0px rgba(0,0,0,0.15);}
+.text_shadow6{
+text-shadow: -10px 10px 0px #00e6e6,
+                 -20px 20px 0px #01cccc,
+                 -30px 30px 0px #00bdbd;}
+.text_shadow7{
+color: rgba(0,0,0,0.6);
+text-shadow: 2px 8px 6px rgba(0,0,0,0.2),
+                 0px -5px 35px rgba(255,255,255,0.3);}
+.topnav{
+  border: none;
+  background: #93b6de!important;
+}
+.topsecnav{
+  background: #ffffff;
+}
+.sidenav{
+  background: #65A3EA!important;
+}
+.main{
+  background: #ECF4FC!important;
+}
