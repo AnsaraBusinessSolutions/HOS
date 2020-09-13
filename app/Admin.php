@@ -12,3 +12,10 @@ namespace App;
         protected $guard = 'admin';
 
         protected $fillable = [
+            'name', 'email', 'password',
+        ];
+
+        protected $hidden = [
+            'password', 'remember_token',
+        ];
+    }
