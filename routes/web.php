@@ -26,7 +26,8 @@ Route::prefix('hos')->group(function () {
     Route::get('/profile', 'Hos\HomeController@profile')->name('hos.profile')->middleware('auth');
     Route::post('/add_order', 'Hos\HomeController@addOrder')->name('hos.add.order')->middleware('auth');
 });
-Route::post('get-material-data', 'Hos\HomeController@materialData')->name('hos.material.data');
+Route::post('search_data', 'Hos\HomeController@searchData')->name('hos.search.data')->middleware('auth');
+Route::post('material_data', 'Hos\HomeController@materialData')->name('hos.material.data')->middleware('auth');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

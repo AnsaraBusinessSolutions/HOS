@@ -137,6 +137,7 @@
   <script src="{{ asset('hos/js/jquery-3.3.1.js') }}"></script>
   <script src="{{ asset('hos/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ asset('hos/js/dataTables.bootstrap4.min.js') }}"></script>
+  
   @stack('scripts')
   <script>
     $( '.topsecnav .navbar-nav .nav-link' ).on( 'click', function () {
