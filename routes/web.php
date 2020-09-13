@@ -11,8 +11,22 @@
 |
 */
 
-Route::get('/', function () {
-    return view('store_order');
+Route::view('/', 'welcome');
+Auth::routes();
+
+Route::prefix('admin')->group(function () {
+    Route::get('/login', 'Auth\LoginController@showAdminLoginForm')->name('admin.login');
+    Route::post('/login', 'Auth\LoginController@adminLogin');
 });
 
-Route::any('/item', 'orders@item');
+Route::prefix('hos')->group(function () {
+    Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
+    Route::post('/login', 'Auth\LoginController@login');
+    Route::get('/home', 'Hos\HomeController@index')->name('hos.home')->middleware('auth');
+    Route::get('/profile', 'Hos\HomeController@profile')->name('hos.profile')->middleware('auth');
+    Route::post('/add_order', 'Hos\HomeController@addOrder')->name('hos.add.order')->middleware('auth');
+});
+Route::post('get-material-data', 'Hos\HomeController@materialData')->name('hos.material.data');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

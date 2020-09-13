@@ -1,0 +1,272 @@
+body{
+    
+}
+.bg-grey{
+	background-color: #E2E2E2!important;
+}
+.bg-lightblue{
+    background-color: #c1ddfb;
+}
+.cus-shadow{
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.hvr-grow-shadow:hover, .hvr-grow-shadow:focus, .hvr-grow-shadow:active {
+    box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+.hvr-glow:hover, .hvr-glow:focus, .hvr-glow:active {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+}
+.ft-mw{
+	font-family: 'Merriweather', serif;
+}
+.ff_mon{
+  font-family: 'Montserrat', sans-serif;
+}
+.navbar-brand .btn-nav{
+    font-size: 14px;
+    background-image: linear-gradient(to bottom, #4c5a8e , #396fa9 , #495d92);
+    border: 1px solid gray;
+    color: white;
+}
+.dropleft{
+	position: absolute;
+	top: 38px;
+	right: 8px;
+	border: 1px solid #bec0c1!important; 
+	box-shadow: 0px 0px 4px 0 rgba(0, 0, 0, 0.2), 0px 0px 15px 0 rgba(0, 0, 0, 0.19);
+}
+.cus-btn{
+	font-size: 14px;
+    background-color: #584d7d;
+    border: 1px solid gray;
+    color: white;
+}
+.lab-name{
+    margin-bottom: 0px;
+}
+.star::after{
+	content: "*";
+	color: red;
+}
+.gci{
+	font-size: 15px;
+}
+.gci-input{
+    display: block;
+    width: 100%;
+    height: calc(1.3em + 0.70rem + 1px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.gci .row .form-group{
+	margin-bottom: 8px;
+}
+/*==========contact person info=======*/
+.cpi-input{
+    display: block;
+    width: 100%;
+    height: calc(1.3em + 0.70rem + 1px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.cpi .row .form-group{
+	margin-bottom: 8px;
+}
+.cpi{
+	font-size: 15px;
+}
+.updown > a {
+  display: block;
+  position: relative;
+  text-decoration: none;
+}
+.updown > a:after {
+  content: "\f078"; /* fa-chevron-down */
+  font-family: 'Font Awesome 5 Free';
+  position: absolute;
+  right: 0;
+  font-weight: 900;
+}
+.updown > a[aria-expanded="true"]:after {
+  content: "\f077"; /* fa-chevron-up */
+}
+/*==========Vendor type=======*/
+.vdt-input{
+    display: block;
+    width: 100%;
+    height: calc(1.3em + 0.70rem + 1px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.vdt .row .form-group{
+	margin-bottom: 8px;
+}
+.vdt input[type=checkbox] + label {
+  display: block;
+  margin: 0.2em;
+  cursor: pointer;
+  padding: 0.2em;
+}
+
+.vdt input[type=checkbox] {
+  display: none;
+}
+
+.vdt input[type=checkbox] + label:before {
+  content: "\2714";
+  border: 0.1em solid #7a7a7b;
+  border-radius: 0.2em;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  padding-left: 0.2em;
+  padding-bottom: 0.3em;
+  margin-right: 0.2em;
+  vertical-align: bottom;
+  color: transparent;
+  transition: .2s;
+}
+
+.vdt input[type=checkbox] + label:active:before {
+  transform: scale(0);
+}
+
+.vdt input[type=checkbox]:checked + label:before {
+  background-color: MediumSeaGreen;
+  border-color: MediumSeaGreen;
+  color: #fff;
+  padding-left: 4px;
+}
+
+.vdt input[type=checkbox]:disabled + label:before {
+  transform: scale(1);
+  border-color: #aaa;
+}
+
+.vdt input[type=checkbox]:checked:disabled + label:before {
+  transform: scale(1);
+  background-color: #bfb;
+  border-color: #bfb;
+}
+/*==========Account group=======*/
+ .atg [type="radio"]:checked,
+.atg [type="radio"]:not(:checked) {
+    position: absolute;
+    left: -9999px;
+}
+.atg [type="radio"]:checked + label,
+.atg [type="radio"]:not(:checked) + label
+{
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    line-height: 20px;
+    display: inline-block;
+    color: #333;
+}
+.atg [type="radio"]:checked + label:before,
+.atg [type="radio"]:not(:checked) + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #9d9d9d;
+    border-radius: 100%;
+    background: #fff;
+}
+.atg [type="radio"]:checked + label:after,
+.atg [type="radio"]:not(:checked) + label:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #485f94;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    border-radius: 100%;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+.atg [type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    transform: scale(0);
+}
+.atg [type="radio"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+/*==========bank detail=======*/
+.bnk_detail .table td, .bnk_detail .table th {
+    padding: 2px 3px;
+}
+/*==========Vat detail=======*/
+.vat_detail .table th {
+    background-color: #d5d5d5;
+    font-weight: lighter;
+    border: 1px solid #c8c8c8;
+}
+.vat_detail .table td {
+    background-color: white;
+    border: 1px solid #c8c8c8;
+}
+.vat_detail .cus-btn{
+	font-size: 14px;
+    background-color: #584d7d;
+    border: 1px solid gray;
+    color: white;
+}
+/*==========footer=======*/
+#footer{
+	background-image: url(../images/footer.png);
+	background-position: top;
+	background-size: cover;
+	background-repeat: no-repeat;
+	width: 100%;
+	padding-top:100px;
+}
+/*==========container & hr tag=======*/
+.container{
+	box-shadow: 0px 0px 4px 0 rgba(0, 0, 0, 0.2), 0px 0px 15px 0 rgba(0, 0, 0, 0.19);
+	padding:10px 15px;
+}
+.hr-bar{
+	margin-top: 0px;
+	margin-bottom: 1rem; 
+	margin-left: 15px;
+	margin-right: 15px;
+	border-top: 3px ridge #d9d9d9;
+}
+#example_wrapper .table tr:nth-child(1) th {
+    background-color: steelblue!important;
+    color: #fff!important;
+}
