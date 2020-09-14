@@ -122,6 +122,11 @@ echo $currentTime; ?></span> |
               <i class="fas fa-certificate fs_18"></i><br> 
               Catelogue</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" id="addrow">
+              <i class="fas fa-plus fs_18"></i><br> 
+              Add Row</a>
+            </li>
            <!--  <li class="nav-item">
               <a class="nav-link" href="#">
               <img src="assets/images/market.png" style="height:30px;width:auto;"><br> 
