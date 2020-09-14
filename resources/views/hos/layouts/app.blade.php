@@ -40,7 +40,7 @@
             <a class="dropdown-item" href="#">Logout</a>
           </div>
         </span> -->
-        <span style="color:#197c89;"><?php echo date("m/d/y"); ?></span> |
+        <span style="color:#197c89;"><?php echo date("Y/m/d"); ?></span> |
         <span style="color:#8a8c8d;"><?php echo date("h:i a"); ?></span> |
         <span style="color:#8a8c8d;">Help</span>
     </div>
