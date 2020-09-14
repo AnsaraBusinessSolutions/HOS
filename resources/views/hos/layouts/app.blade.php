@@ -56,16 +56,20 @@ echo $currentTime; ?></span> |
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item my-1 active">
-          <a class="nav-link" href="{{ route('hos.home') }}">Store Order</a>
+          <a class="nav-link" href="{{ route('hos.home') }}">
+          <i class="fas fa-store fs_18"></i>&ensp;  Store Order</a>
         </li>
         <li class="nav-item mb-1">
-          <a class="nav-link" href=#>Medical List</a>
+        <a class="nav-link" href=#>
+            <i class="fas fa-pills fs_18"></i> &ensp;Medical List</a>
         </li>
         <li class="nav-item mb-1">
-          <a class="nav-link" href="#">Inventory</a>
+        <a class="nav-link" href="#">
+            <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Inventory</a>
         </li>
         <li class="nav-item mb-1">
-          <a class="nav-link" href="#">Sales</a>
+        <a class="nav-link" href="#">
+            <i class="fas fa-balance-scale fs_18"></i> &ensp;Sales</a>
         </li>
       </ul>
     </div>
