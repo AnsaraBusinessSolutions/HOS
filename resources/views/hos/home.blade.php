@@ -33,7 +33,7 @@
 
           <form id="store_order_form" method="POST">
           <div class="col-12 text-right">
-              <button id="store_order_submit">Submit form</button>
+              <button id="store_order_submit">Save</button>
           </div>
                 <div class="col-12 text-center">
                   <table id="store_order" class="table table-striped table-bordered">

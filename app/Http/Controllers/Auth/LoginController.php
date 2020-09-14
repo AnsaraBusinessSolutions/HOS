@@ -27,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/hos/home';
+    protected $redirectTo = '/store/home';
 
     /**
      * Create a new controller instance.
@@ -62,4 +62,14 @@ class LoginController extends Controller
         }
         return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
     }
+
+    protected function authenticated(Request $request, $user) {
+        if ($user->user_type == 1) {
+            return redirect('/store/home');
+        } else if ($user->user_type == 2) {
+            return redirect('/3pl/home');
+        } else {
+            return redirect('/');
+        }
+   }
 }

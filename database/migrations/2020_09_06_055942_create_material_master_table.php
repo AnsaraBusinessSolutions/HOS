@@ -15,18 +15,18 @@ class CreateMaterialMasterTable extends Migration
     {
         Schema::create('material_master', function (Blueprint $table) {
             $table->id();
-            $table->string('customer_bp',50)->nullable();
+            $table->string('customer_bp',100)->nullable();
             $table->bigInteger('nupco_material_generic_code')->nullable();
             $table->bigInteger('nupco_trade_code')->nullable();
-            $table->string('material_description')->nullable();
+            $table->string('material_description',4000)->nullable();
             $table->bigInteger('customer_generic_code')->nullable();
             $table->bigInteger('customer_trade_code')->nullable();
-            $table->string('customer_trade_description')->nullable();
+            $table->string('customer_trade_description',4000)->nullable();
             $table->string('buom',25)->nullable();
-            $table->string('manufacturer')->nullable();
+            $table->string('manufacturer',255)->nullable();
             $table->string('country_of_origin',100)->nullable();
-            $table->integer('client_id')->nullable();
-            $table->timestamps();
+            $table->integer('client_id',11)->nullable();
+            $table->timestamps()->nullable();
         });
     }
 

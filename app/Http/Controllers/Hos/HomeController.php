@@ -12,7 +12,7 @@ ini_set('memory_limit', '-1');
 
 class HomeController extends Controller
 {
-    protected static $serialize = true;
+    
     public function index()
     {
         return view('hos.home');
@@ -33,7 +33,7 @@ class HomeController extends Controller
         $input_data = $request->input_data;
         $input_name = $request->input_name;
         $search_data = MaterialMaster::select('id',$input_name)->where($input_name,'LIKE',"%{$input_data}%")->get();
-        
+
         if(count($search_data) > 0){
             $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
             foreach($search_data as $row)
@@ -60,21 +60,21 @@ class HomeController extends Controller
             }else{
                 $lasts_ord_id=$last_ord_id->order_code;
             }
-            $order_inc = 1;
+            
+            if($lasts_ord_id!==''){
+                $ord_no=str_replace('-', '',$lasts_ord_id);
+                $ord_no=$ord_no+1;
+                $ord_no=str_pad($ord_no,9,'0',STR_PAD_LEFT);
+                $ord_no = implode('-',str_split($ord_no,3));
+            }
             foreach($qty_array as $key=>$val) {
                 if(!empty($val)){ 
-                    if($lasts_ord_id!==''){
-                        $ord_no=str_replace('-', '',$lasts_ord_id);
-                        $ord_no=$ord_no+$order_inc;
-                        $ord_no=str_pad($ord_no,9,'0',STR_PAD_LEFT);
-                        $ord_no = implode('-',str_split($ord_no,3));
-                    }       
+                           
                     $order_data[] = array('order_code' => $ord_no,
                                         'material_master_id' => $material_master_id_array[$key],
                                         'user_id'=>Auth::user()->id,
                                         'qty'=>$val,
                                         'status'=>0 );
-                    $order_inc++;
                 }
             }
             $result = 0;

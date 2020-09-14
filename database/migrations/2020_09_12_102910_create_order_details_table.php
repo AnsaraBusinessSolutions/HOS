@@ -15,11 +15,11 @@ class CreateOrderDetailsTable extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('order_code')->nullable();
+            $table->string('order_code',100)->nullable();
             $table->bigInteger('material_master_id');
             $table->bigInteger('user_id');
-            $table->integer('qty');
-            $table->enum('status', ['Requested','Approved','Delivered','Cancelled']);
+            $table->integer('qty',11);
+            $table->integer('status',10);
             $table->timestamps();
         });
     }
