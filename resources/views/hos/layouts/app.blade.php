@@ -34,14 +34,14 @@
            <img class="" src="{{ asset('hos/img/logo2.png') }}" height="50px" width="auto" style="margin:16px 10px">
          </div>
       </div>
-        <span class="dropdown">
+        <!-- <span class="dropdown">
           <span class="dropdown-toggle" data-toggle="dropdown" style="color:#197c89">White Pharmacy</span> |
           <div class="dropdown-menu">
             <a class="dropdown-item" href="#">Logout</a>
           </div>
-        </span>
-        <span style="color:#197c89;">White Pharmacy</span> |
-        <span style="color:#8a8c8d;">Cycle end Dec 31</span> |
+        </span> -->
+        <span style="color:#197c89;"><?php echo date("mm/dd/yyyy"); ?></span> |
+        <span style="color:#8a8c8d;"><?php echo date("h:i a"); ?></span> |
         <span style="color:#8a8c8d;">Help</span>
     </div>
   </nav><br><br><br><br>
