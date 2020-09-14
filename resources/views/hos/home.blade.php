@@ -75,13 +75,13 @@ $(function() {
       alert("sdfgh");
       e.preventDefault();
       table.row.add( [
-            '<td><input type="hidden" data-row_id ="'+counter+'" data-name="material_master_id" id="material_master_id_'+counter+'" name="material_master_id[]">'+counter+'</td>',
-            '<td ><input type="text" class="material_data" data-row_id ="'+counter+'" data-name="nupco_material_generic_code" id="nupco_material_generic_code_'+counter+'" name="nupco_material_generic_code[]"><div id="nupco_material_generic_code_list_'+counter+'"></div></td>',
-            '<td><input type="text"  class="material_data"  data-row_id ="'+counter+'" data-name="customer_bp" id="customer_bp_'+counter+'" name="customer_bp[]"><div id="customer_bp_list_'+counter+'"></div></td>',
-            '<td><input type="text"  class="material_data" data-row_id ="'+counter+'" data-name="material_description" id="material_description_'+counter+'" name="material_description[]"><div id="material_description_list_'+counter+'"></div></td>',
-            '<td><input type="text" data-row_id ="'+counter+'" data-name="buom" id="buom_'+counter+'" name="buom[]" readonly></td>',
-            '<td><input type="text" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="qty[]" onkeypress="return onlyNumberKey(event)"></td>',
-            '<td><input type="text" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="available[]" readonly></td>',
+            '<td><input type="hidden" class="form-control-sm" data-row_id ="'+counter+'" data-name="material_master_id" id="material_master_id_'+counter+'" name="material_master_id[]">'+counter+'</td>',
+            '<td ><input type="text" class="material_data form-control-sm" data-row_id ="'+counter+'" data-name="nupco_material_generic_code" id="nupco_material_generic_code_'+counter+'" name="nupco_material_generic_code[]"><div id="nupco_material_generic_code_list_'+counter+'"></div></td>',
+            '<td><input type="text"  class="material_data form-control-sm"  data-row_id ="'+counter+'" data-name="customer_bp" id="customer_bp_'+counter+'" name="customer_bp[]"><div id="customer_bp_list_'+counter+'"></div></td>',
+            '<td><input type="text"  class="material_data form-control-sm" data-row_id ="'+counter+'" data-name="material_description" id="material_description_'+counter+'" name="material_description[]"><div id="material_description_list_'+counter+'"></div></td>',
+            '<td><input type="text" class="form-control-sm" data-row_id ="'+counter+'" data-name="buom" id="buom_'+counter+'" name="buom[]" readonly></td>',
+            '<td><input type="text" class="form-control-sm" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="qty[]" onkeypress="return onlyNumberKey(event)"></td>',
+            '<td><input type="text" class="form-control-sm" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="available[]" readonly></td>',
            ] ).draw( false );
         counter++;
         autoSearchMaterial();
