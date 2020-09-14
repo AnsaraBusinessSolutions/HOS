@@ -80,37 +80,53 @@ echo $currentTime; ?></span> |
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="height: 57px">
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="{{ route('hos.profile') }}">
-              <img src="{{ asset('hos/img/admin.png') }}" style="height:30px;width:auto;"><br> 
-              Admin</a>
+              <a class="nav-link" href="">
+              <i class="fas fa-copy fs_18"></i><br> 
+              Copy</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">
-              <img src="{{ asset('hos/img/mail.png') }}" style="height:30px;width:auto;"><br> 
-              Mails</a>
+              <i class="fas fa-trash fs_18"></i><br> 
+              Delete</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">
-              <img src="{{ asset('hos/img/security.png') }}" style="height:30px;width:auto;"><br> 
-              Security</a>
+              <i class="fas fa-search fs_18"></i><br>  
+              Search</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">
-              <img src="{{ asset('hos/img/analytics.png') }}" style="height:30px;width:auto;"><br> 
-              Analytics</a>
+              <i class="fas fa-filter fs_18"></i><br> 
+              Filter</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ route('logout') }}"onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-              <img src="{{ asset('hos/img/logout.png') }}" style="height:30px;width:auto;"><br> 
-              Logout</a>
+              <a class="nav-link" href="#">
+              <i class="fas fa-print fs_18"></i><br> 
+              Print</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+              <i class="fas fa-file-export fs_18"></i><br> 
+              Export</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+              <i class="fas fa-paperclip fs_18"></i><br> 
+              Attach</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+              <i class="fas fa-certificate fs_18"></i><br> 
+              Catelogue</a>
+            </li>
+           <!--  <li class="nav-item">
+              <a class="nav-link" href="#">
+              <img src="assets/images/market.png" style="height:30px;width:auto;"><br> 
+              Marketplace</a>
+            </li> -->
           </ul>
           <ul class="navbar-nav ml-auto">
           <li class="nav-item px-2">
@@ -121,6 +137,14 @@ echo $currentTime; ?></span> |
                 <option value="arabic">Arabic</option>
               </select>
             </form>
+            </a>
+          </li>
+          <li class="nav-item px-2 py-1">
+            <a href="index.html"><span class="badge badge-dark p-2" title="logout"><i class="fas fa-power-off"></i></span>
+            </a>
+          </li>
+          <li class="nav-item px-2 py-1">
+            <a>
             </a>
           </li>
         </ul>
