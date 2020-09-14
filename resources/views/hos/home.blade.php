@@ -67,6 +67,8 @@
     var t;
 $(function() {
     table = $('#store_order').DataTable({
+      "scrollY":        "55vh",
+      "scrollCollapse": true,
       "searching": false,
       "paging": false,
     });
