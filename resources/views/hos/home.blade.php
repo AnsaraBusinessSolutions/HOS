@@ -71,7 +71,8 @@ $(function() {
       "paging": false,
     });
     var counter = 1;
-    $('#addRow').on( 'click', function (e) {
+    $('#addRow').on( 'click', function (e) { 
+      alert("sdfgh");
       e.preventDefault();
       table.row.add( [
             '<td><input type="hidden" data-row_id ="'+counter+'" data-name="material_master_id" id="material_master_id_'+counter+'" name="material_master_id[]">'+counter+'</td>',

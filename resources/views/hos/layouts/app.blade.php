@@ -123,7 +123,7 @@ echo $currentTime; ?></span> |
               Catelogue</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="addrow">
+              <a class="nav-link" id="addRow">
               <i class="fas fa-plus fs_18"></i><br> 
               Add Row</a>
             </li>
