@@ -270,3 +270,7 @@ body{
     background-color: steelblue!important;
     color: #fff!important;
 }
+.text_shadow{
+  text-shadow: 0.04em 0.04em 0 #fff, 0.08em 0.08em 0 #aaa;
+  -webkit-text-shadow: .04em .04em 0 #fff, .08em .08em 0 #aaa;
+}

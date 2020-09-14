@@ -24,7 +24,9 @@
        </a>
    </div>
     <div class="col-6 text-center px-0">
-      <h6 class="text-danger ff_mon"><b>NUPCO HOSPITAL ORDERING PORTAL</b> <img class="" src="{{ asset('hos/img/HOS-logo.png') }}" style="width:auto;height: 30px"></h6>
+      <h4 class="text-danger ff_mon">
+      <img class="" src="{{ asset('hos/img/HOS-logo.png') }}" style="width:auto;height: 30px"><br>
+      <b class="text_shadow">NUPCO HOSPITAL ORDERING PORTAL</b></h4>
     </div>
     <div class="col-3 text-right px-0" style="font-size: 11px;font-weight: 600;"> 
       <div class="row">
