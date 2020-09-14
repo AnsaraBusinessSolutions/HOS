@@ -71,7 +71,7 @@
                         <a href="{{ url('/home') }}">Home</a>
                     @else
                         <a href="{{ route('admin.login') }}">Admin</a>
-                        <a href="{{ route('login') }}">HOS/Approve</a>
+                        <a href="{{ route('login') }}">HOS</a>
                         <!-- <a href="{{ url('approve/login') }}">Aproove</a> -->
                         <!-- @if (Route::has('register'))
                             <a href="{{ route('register') }}">Register</a>

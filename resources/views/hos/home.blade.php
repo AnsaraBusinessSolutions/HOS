@@ -33,10 +33,6 @@
 
           <form id="store_order_form" method="POST">
 
-          <div class="col-12 text-right">
-              <button id="store_order_submit">Save</button>
-          </div>
-
                 <div class="col-12 text-center">
                   <table id="store_order" class="table table-striped table-bordered text-center">
                     <thead>
@@ -53,11 +49,6 @@
                     <tbody>
                         
                     </tbody>
-                    <!-- <tfoot>
-                      <tr>
-                        <td colspan="7"></td>
-                      </tr>
-                    </tfoot> -->
                   </table>
                 </div>
                 <div class="col-12 text-center">
@@ -77,7 +68,6 @@ $(function() {
     });
     var counter = 1;
     $('#addRow').on( 'click', function (e) { 
-      //alert("sdfgh");
       e.preventDefault();
       table.row.add( [
             '<td><input type="hidden" data-row_id ="'+counter+'" data-name="material_master_id" id="material_master_id_'+counter+'" name="material_master_id[]">'+counter+'</td>',
@@ -130,11 +120,11 @@ function autoSearchMaterial(){
       var input_name = $(this).data('name');
       if(input_data != '')
       {
-        var _token = $('input[name="_token"]').val();
+        var token = "{{ csrf_token() }}";
         $.ajax({
           url:"{{ route('hos.search.data') }}",
           method:"POST",
-          data:{input_data:input_data,input_name:input_name,_token:_token},
+          data:{input_data:input_data,input_name:input_name,_token:token},
           success:function(data){
             $('#'+input_name+'_list_'+row_id).html('');
             if(data != ''){
