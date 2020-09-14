@@ -42,7 +42,7 @@
         </span> -->
         <span style="color:#197c89;"><?php echo date("Y/m/d"); ?></span> |
         <span style="color:#8a8c8d;"><?php date_default_timezone_set('Asia/Kolkata');
-$currentTime = date( 'h:i:s A', time () );
+$currentTime = date( 'h:i A', time () );
 echo $currentTime; ?></span> |
         <span style="color:#8a8c8d;">Help</span>
     </div>
