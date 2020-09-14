@@ -32,11 +32,13 @@
           @endif
 
           <form id="store_order_form" method="POST">
+
           <div class="col-12 text-right">
               <button id="store_order_submit">Save</button>
           </div>
+
                 <div class="col-12 text-center">
-                  <table id="store_order" class="table table-striped table-bordered">
+                  <table id="store_order" class="table table-striped table-bordered text-center">
                     <thead>
                         <tr class="bg_color">
                             <th class="text-nowrap px-3">Item #</th>
@@ -51,12 +53,15 @@
                     <tbody>
                         
                     </tbody>
-                    <tfoot>
+                    <!-- <tfoot>
                       <tr>
-                        <td colspan="7"><button id="addRow" class="btn btn-info w-100">Add New Row</button></td>
+                        <td colspan="7"></td>
                       </tr>
-                    </tfoot>
+                    </tfoot> -->
                   </table>
+                </div>
+                <div class="col-12 text-center">
+                  <button id="store_order_submit" class="btn btn-info my-2">Save</button>
                 </div>
           </form>
         </div>
@@ -71,7 +76,8 @@ $(function() {
       "paging": false,
     });
     var counter = 1;
-    $('#addRow').on( 'click', function (e) {
+    $('#addRow').on( 'click', function (e) { 
+      //alert("sdfgh");
       e.preventDefault();
       table.row.add( [
             '<td><input type="hidden" data-row_id ="'+counter+'" data-name="material_master_id" id="material_master_id_'+counter+'" name="material_master_id[]">'+counter+'</td>',

@@ -23,7 +23,7 @@
 .sidenav .navbar-nav .nav-link {
   padding: 13px 20px!important;
   color: #0e5099!important;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
 }
 .sidenav .navbar-nav .nav-item .nav-link:hover{
@@ -49,8 +49,14 @@
   margin-right: 40px;
 }
 .topsecnav .navbar-nav .nav-link {
-  padding :1px 25px!important; 
+  padding :8px 25px!important; 
   color: black!important;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: inset 0px -2px 3px 0 rgb(186 208 217), 0 0px 3px 0 rgb(186 208 217);
+}
+.fs_18 {
+  font-size: 18px;
 }
 .topsecnav .navbar-nav .nav-item .nav-link:hover{
   background: #EBF2F9!important;
@@ -63,17 +69,17 @@
 .topsecnav .navbar-nav{
   text-align: center;
 }
-#example_wrapper{
+#store_order_wrapper{
   width: 100%!important;
   font-size: 12px!important;
   text-align: center!important;
 }
-#example_wrapper .table th, .table td {
+#store_order_wrapper .table th, .table td {
   padding: 4px 2px!important;
   vertical-align: top;
   border-top: 1px solid #dee2e6!important;
 }
-#example_wrapper table th {
+#store_order_wrapper table th {
   background: lightgray!important;
 }
 .main_content{
@@ -83,9 +89,33 @@
   overflow-y: auto;
   overflow-x: auto;
 }
-#example_length{
+#store_order_length{
   text-align: left;
 }
-#example_info{
+#store_order_info{
   text-align: left;
+}
+/*================store order===============*/
+  #store_order.bg_color{
+      background-color: steelblue!important;
+      color: #fff!important;
+  }
+  #store_order_wrapper .table .bg_color th {
+      background-color: steelblue!important;
+      color: #fff!important;
+  }
+  #store_order_wrapper .table tr:nth-child(1) th {
+      background-color: white!important;
+  }
+  #store_order_wrapper .table{
+      font-size: 13px;
+  }
+  table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_desc_disabled:before { 
+      right: 1px;
+  }
+  .bg-blue{
+    background: #3276b1!important;
+  }
+  #store_order_wrapper .table tr:nth-child(1) th {
+  background-color: #3276b1!important;
 }
