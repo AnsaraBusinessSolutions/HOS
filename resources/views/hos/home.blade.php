@@ -36,7 +36,7 @@
               <button id="store_order_submit">Submit form</button>
           </div>
                 <div class="col-12 text-center">
-                  <table id="store_order" class="table table-striped table-bordered">
+                  <table id="store_order" class="table table-striped table-bordered text-center">
                     <thead>
                         <tr class="bg_color">
                             <th class="text-nowrap px-3">Item #</th>
