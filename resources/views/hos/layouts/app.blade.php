@@ -4,7 +4,7 @@
   <title>{{ config('app.name', 'HOS') }}</title>
   <meta name="theme-color" content="#557eb0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 shrink-to-fit=no, user-scalable=0">
-  <link rel="icon" type="image/png" href="{{ asset('hos/img/HOS-logo.png') }}" sizes="194x194">
+  <link rel="icon" type="image/png" href="{{ asset('hos/img/favicon.png') }}" sizes="194x194">
   <link rel="stylesheet" href="{{ asset('hos/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed|Titillium+Web|Changa|Montserrat|Ubuntu&display=swap" rel="stylesheet">
