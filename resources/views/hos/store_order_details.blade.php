@@ -48,7 +48,7 @@
 @push('scripts')
 <script type="text/javascript">
   $(document).ready(function() {
-      $('.example').DataTable({
+      $('#example').DataTable({
           "scrollY":        "55vh",
           "scrollCollapse": true,
           "paging":         false,
