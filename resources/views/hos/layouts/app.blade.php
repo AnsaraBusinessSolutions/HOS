@@ -55,11 +55,19 @@ echo $currentTime; ?></span> |
           <i class="fas fa-minus-square"></i></li>
       </ul>
       <ul class="navbar-nav">
+        @if(Request::path() == 'store/home')
         <li class="nav-item my-1 active">
+        @else
+        <li class="nav-item my-1 ">
+        @endif
           <a class="nav-link" href="{{ route('hos.home') }}">
           <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Dashboard</a>
         </li>
+        @if(Request::path() == 'store/order')
         <li class="nav-item my-1 active">
+        @else
+        <li class="nav-item my-1 ">
+        @endif
           <a class="nav-link" href="{{ route('hos.store.order') }}">
           <i class="fas fa-store fs_18"></i>&ensp; Store Order</a>
         </li>

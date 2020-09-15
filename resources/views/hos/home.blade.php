@@ -48,8 +48,8 @@
               </thead>
               <tbody>
               @foreach($all_order as $key=>$val)
-                  <tr>
-                      <td>{{$key+1}}</td>
+                  <tr onclick="window.location.href='{{url('store/order_detail/'.$val->order_code)}}'">
+                      <td>{{$val->order_code}}</td>
                       <td>{{$val->wh_name}}</td>
                       <td>{{$val->delivery_date}}</td>
                       <td>{{$val->buom}}</td>
