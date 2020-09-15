@@ -48,10 +48,12 @@
 @push('scripts')
 <script>
   $(document).ready(function() {
+
       $('#order_detail').DataTable({
         "searching": false,
         "paging": false,
         "ordering": false
+
       } );
   } );
 </script>
