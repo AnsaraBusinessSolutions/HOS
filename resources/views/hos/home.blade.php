@@ -73,7 +73,7 @@
   </div>
   @stop
 @push('scripts')
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $('.example').DataTable( {
             "order": [[ 1, "desc" ]],
@@ -84,6 +84,8 @@
             "lengthMenu": [ [15, 30, 50, 100, 250, 500, 1000, 1500], [15, 20, 50, 100, 250, 500, 1000, 1500] ],
             "iDisplayLength": 1000,
         } );
+
     } );
   </script>
   @endpush
+  
