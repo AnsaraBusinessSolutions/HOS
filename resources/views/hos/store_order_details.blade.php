@@ -12,7 +12,7 @@
           <form action="{{route('hos.order.update')}}" method="POST">
           @csrf
           <div class="col-12 text-center">
-            <table id="#example" class="table table-striped table-bordered example">
+            <table id="order_detail" class="table table-striped table-bordered example">
               <thead>
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">Item #</th>
@@ -46,15 +46,12 @@
         </div>
         @stop
 @push('scripts')
-<script type="text/javascript">
+<script>
   $(document).ready(function() {
-      $('.example').DataTable({
-          "scrollY":        "55vh",
-          "scrollCollapse": true,
-          "paging":         false,
-          "searching": false,
-          "lengthMenu": [ [15, 30, 50, 100, 250, 500, 1000, 1500], [15, 20, 50, 100, 250, 500, 1000, 1500] ],
-          "iDisplayLength": 1000,
+      $('#order_detail').DataTable({
+        "searching": false,
+        "paging": false,
+        "ordering": false
       } );
   } );
 </script>
