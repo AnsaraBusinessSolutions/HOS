@@ -17,9 +17,13 @@ class HomeController extends Controller
         $user_id = Auth::user()->id;
         $all_order = DB::table('order_details')
                                 ->join('material_master', 'order_details.material_master_id', '=', 'material_master.id')
+                                ->join('users', 'users.id', '=', 'order_details.user_id')
+                                ->join('hss_master', 'hss_master.hospital_code', '=', 'users.hospital_code')
+                                ->join('warehouse', 'warehouse.wh_id', '=', 'hss_master.wh_id')
                                 ->where('user_id','=',$user_id)
                                 ->groupBy("order_code")
                                 ->get();
+   
         return view('hos.home', array('all_order'=>$all_order));
     }
 
@@ -103,6 +107,10 @@ class HomeController extends Controller
             return $status;
         }
         
-       
+    }
+
+    public function orderDetail($order_code){
+        echo $order_code;
+        exit;
     }
 }

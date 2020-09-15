@@ -39,10 +39,10 @@
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">Store Order #</th>
                       <th class="text-nowrap px-3">Supplying Plant</th>
-                      <th class="text-nowrap px-3">Status</th>
                       <th class="text-nowrap px-3">Delivery date</th>
                       <th class="text-nowrap px-3">Item Count</th>
                       <th class="text-nowrap px-3">Qty Ordered</th>
+                      <th class="text-nowrap px-3">Status</th>
                       <th class="text-nowrap px-3">Report</th>
                   </tr>
               </thead>
@@ -50,7 +50,10 @@
               @foreach($all_order as $key=>$val)
                   <tr>
                       <td>{{$key+1}}</td>
-                      <td>material</td>
+                      <td>{{$val->wh_name}}</td>
+                      <td>{{$val->delivery_date}}</td>
+                      <td>{{$val->buom}}</td>
+                      <td>{{$val->qty}}</td>
                       <td>
                         @if($val->status == 0)
                            New
@@ -60,9 +63,6 @@
                             Rejected
                         @endif
                       </td>
-                      <td>nupco</td>
-                      <td>{{$val->buom}}</td>
-                      <td>{{$val->qty}}</td>
                       <td>available</td>
                   </tr>
                @endforeach   
