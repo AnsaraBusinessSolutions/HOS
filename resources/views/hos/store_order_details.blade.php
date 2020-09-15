@@ -53,7 +53,6 @@
         "searching": false,
         "paging": false,
         "ordering": false
-
       } );
   } );
 </script>

@@ -12,6 +12,11 @@ ini_set('memory_limit', '-1');
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {   
         $user_id = Auth::user()->id;

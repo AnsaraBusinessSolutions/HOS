@@ -67,9 +67,13 @@ class LoginController extends Controller
         if ($user->user_type == 1) {
             return redirect('/store/home');
         } else if ($user->user_type == 2) {
+            return redirect('/inbound/home');
+        }else if ($user->user_type == 3) {
             return redirect('/3pl/home');
         } else {
             return redirect('/');
         }
    }
 }
+
+

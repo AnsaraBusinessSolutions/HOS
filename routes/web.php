@@ -29,10 +29,13 @@ Route::prefix('store')->group(function () {
     Route::post('/add_order', 'Hos\HomeController@addOrder')->name('hos.add.order')->middleware('auth');
     Route::get('/order_detail/{order_code}', 'Hos\HomeController@orderDetail')->name('hos.order.detail')->middleware('auth');
     Route::post('/order_detail', 'Hos\HomeController@orderUpdate')->name('hos.order.update')->middleware('auth');
-    
+    Route::post('search_data', 'Hos\HomeController@searchData')->name('hos.search.data');
+    Route::post('material_data', 'Hos\HomeController@materialData')->name('hos.material.data');
 });
-Route::post('search_data', 'Hos\HomeController@searchData')->name('hos.search.data');
-Route::post('material_data', 'Hos\HomeController@materialData')->name('hos.material.data');
+
+Route::prefix('inbound')->group(function () {
+    Route::get('/home', 'Inbound\HomeController@index')->name('inbound.home');
+});
 
 // Route::group(['middleware' => ['auth', 'approve']],function() {
 //     Route::prefix('3pl')->group(function () {
