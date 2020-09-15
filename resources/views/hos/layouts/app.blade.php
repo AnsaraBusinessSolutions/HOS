@@ -194,5 +194,11 @@ echo $currentTime; ?></span> |
       $( this ).parent( '.nav-item' ).addClass( 'active' );
     });
   </script>
+  <script type="text/javascript">
+    $(".selectAll").click(function(){
+        $("input[type=checkbox]").prop('checked', $(this).prop('checked'));
+
+   });
+  </script>
 </body>
 </html>
