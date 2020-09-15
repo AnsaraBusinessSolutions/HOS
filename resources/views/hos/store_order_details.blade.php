@@ -12,7 +12,7 @@
           <form action="{{route('hos.order.update')}}" method="POST">
           @csrf
           <div class="col-12 text-center">
-            <table id="order_details" class="table table-striped table-bordered example">
+            <table id="#example" class="table table-striped table-bordered example">
               <thead>
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">Item #</th>
