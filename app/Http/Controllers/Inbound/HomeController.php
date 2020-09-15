@@ -16,4 +16,8 @@ class HomeController extends Controller
     {
         return view('inbound.home');
     }
+
+    public function requestOrderDetail($order_code){
+        return view('inbound.request_order_details');
+    }
 }

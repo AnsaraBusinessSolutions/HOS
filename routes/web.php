@@ -23,8 +23,8 @@ Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('/login', 'Auth\LoginController@login');
 
 Route::prefix('store')->group(function () {
-    Route::get('/home', 'Hos\HomeController@index')->name('hos.home');
-    Route::get('/order', 'Hos\HomeController@storeOrder')->name('hos.store.order');
+    Route::get('/home', 'Hos\HomeController@index')->name('hos.home')->middleware('auth');
+    Route::get('/order', 'Hos\HomeController@storeOrder')->name('hos.store.order')->middleware('auth');
     Route::get('/profile', 'Hos\HomeController@profile')->name('hos.profile')->middleware('auth');
     Route::post('/add_order', 'Hos\HomeController@addOrder')->name('hos.add.order')->middleware('auth');
     Route::get('/order_detail/{order_code}', 'Hos\HomeController@orderDetail')->name('hos.order.detail')->middleware('auth');
@@ -34,7 +34,8 @@ Route::prefix('store')->group(function () {
 });
 
 Route::prefix('inbound')->group(function () {
-    Route::get('/home', 'Inbound\HomeController@index')->name('inbound.home');
+    Route::get('/home', 'Inbound\HomeController@index')->name('inbound.home')->middleware('auth');
+    Route::get('/request_order_detail/{order_code}', 'Inbound\HomeController@requestOrderDetail')->name('inbound.order.detail')->middleware('auth');
 });
 
 // Route::group(['middleware' => ['auth', 'approve']],function() {
