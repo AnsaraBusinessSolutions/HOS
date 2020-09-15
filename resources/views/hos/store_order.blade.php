@@ -100,8 +100,14 @@ $(function() {
                  processData: false,
                  success:function(data)
                  {
-                   console.log(data);
-                  location.reload(true);
+                   //console.log(data);
+                    
+                    if(data == 0){
+                      location.reload(true);
+                    }else{
+                        window.location.href='{{route('hos.home')}}';
+                    }
+                    
                  }
             })
        });

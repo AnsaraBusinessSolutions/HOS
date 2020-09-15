@@ -76,6 +76,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('.example').DataTable( {
+            "order": [[ 1, "desc" ]],
             "scrollY":        "55vh",
             "scrollCollapse": true,
             "paging":         false,
