@@ -38,9 +38,10 @@
           </div>
           <div class="col-12 text-center">
             <button class="btn btn-success">Accept</button>
-            <button class="btn btn-danger">Reject</button>
+            <button class="btn btn-danger" data-toggle="modal" data-target="#rejected_reason">Reject</button>
           </div>
         </div>
+
         @stop
 @push('scripts')
 <script type="text/javascript">
@@ -57,3 +58,4 @@
     } );
   </script>
   @endpush
+
