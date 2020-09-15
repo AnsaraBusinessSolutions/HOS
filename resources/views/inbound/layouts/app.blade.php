@@ -19,14 +19,12 @@
 <body class="bg-light">
   <nav class="navbar fixed-top navbar-light bg-white topnav px-2 py-0" style="height: 108px;">
    <div class="col-3">
-       <a class="navbar-brand py-3" href="store_order.html">
-         <img src="{{ asset('hos/img/king.jpg') }}" height="70px" width="auto">
-       </a>
+      
    </div>
     <div class="col-6 text-center px-0">
       <h4 class="text-danger ff_mon">
       <img class="" src="{{ asset('hos/img/HOS-logo.png') }}" style="width:auto;height: 30px"><br>
-      <b class="text_shadow">NUPCO HOSPITAL ORDERING PORTAL</b></h4>
+      <b class="text_shadow">NUPCO CENTRAL REGION DAMMAM</b></h4>
     </div>
     <div class="col-3 text-right px-0" style="font-size: 11px;font-weight: 600;"> 
       <div class="row">
@@ -55,7 +53,7 @@ echo $currentTime; ?></span> |
           <i class="fas fa-minus-square"></i></li>
       </ul>
       <ul class="navbar-nav">
-        @if(Request::path() == 'store/home' || Request::is('store/order_detail/*'))
+        @if(Request::path() == 'inbound/home')
         <li class="nav-item my-1 active">
         @else
         <li class="nav-item my-1 ">
