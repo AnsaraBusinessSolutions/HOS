@@ -110,6 +110,11 @@ echo $currentTime; ?></span> |
             <li class="nav-item">
               <a class="nav-link" href="#">
               <i class="fas fa-file-export fs_18"></i><br> 
+              Import</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+              <i class="fas fa-file-import fs_18"></i><br> 
               Export</a>
             </li>
             <li class="nav-item">
