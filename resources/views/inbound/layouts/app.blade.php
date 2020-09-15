@@ -58,7 +58,7 @@ echo $currentTime; ?></span> |
         @else
         <li class="nav-item my-1 ">
         @endif
-          <a class="nav-link" href="{{ route('hos.home') }}">
+          <a class="nav-link" href="{{ route('inbound.home') }}">
           <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Dashboard</a>
         </li>
       
@@ -73,7 +73,7 @@ echo $currentTime; ?></span> |
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent" style="height: 57px">
         <ul class="navbar-nav mr-auto">
-        @if(Request::path() == 'store/order')
+        @if(Request::path() == 'inbound/order')
             <li class="nav-item">
               <a class="nav-link" href="">
               <i class="fas fa-copy fs_18"></i><br> 
