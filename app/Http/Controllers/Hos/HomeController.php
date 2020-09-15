@@ -13,8 +13,14 @@ ini_set('memory_limit', '-1');
 class HomeController extends Controller
 {
     public function index()
-    {
-        return view('hos.home');
+    {   
+        $user_id = Auth::user()->id;
+        $all_order = DB::table('order_details')
+                                ->join('material_master', 'order_details.material_master_id', '=', 'material_master.id')
+                                ->where('user_id','=',$user_id)
+                                ->groupBy("order_code")
+                                ->get();
+        return view('hos.home', array('all_order'=>$all_order));
     }
 
     public function storeOrder()
