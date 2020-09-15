@@ -119,3 +119,30 @@
   #store_order_wrapper .table tr:nth-child(1) th {
   background-color: #3276b1!important;
 }
+
+#example_wrapper{
+  width: 100%!important;
+  font-size: 12px!important;
+  text-align: center!important;
+}
+#example_wrapper .table th, .table td {
+  padding: 4px 2px!important;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6!important;
+}
+#example_wrapper table th {
+  background: lightgray!important;
+}
+.main_content{
+  height: 85%;
+  margin: 30px 2px;
+  border-radius: 10px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+#example_length{
+  text-align: left;
+}
+#example_info{
+  text-align: left;
+}
