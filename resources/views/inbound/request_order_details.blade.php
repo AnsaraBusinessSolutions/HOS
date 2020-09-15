@@ -1,3 +1,5 @@
+@extends('inbound.layouts.app')
+@section('content')
 <div class="container-fluid main_content bg-white p-2">
         <div class="row mx-0">
           <div class="col-12 text-center">
@@ -19,15 +21,17 @@
                   </tr>
               </thead>
               <tbody>
+              @foreach($order_detail as $key=>$val)
                   <tr>
-                      <td>1</td>
-                      <td><input type="text" name="" value="material" readonly></td>
-                      <td><input type="text" name="" value="material" readonly></td>
-                      <td><input type="text" name="" value="material" readonly></td>
-                      <td><input type="text" name="" value="material" readonly></td>
-                      <td><input type="text" name="" value="material" readonly></td>
-                      <td><input type="text" name="" value="material" readonly></td>
+                      <td>{{$key+1}}</td>
+                      <td>{{$val->nupco_material_generic_code}}</td>
+                      <td>{{$val->customer_bp}}</td>
+                      <td>{{$val->material_description}}</td>
+                      <td>{{$val->buom}}</td>
+                      <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" name="qty[]" value="{{$val->qty}}"></td>
+                      <td>available</td>
                   </tr>
+                 @endforeach
                  
               </tbody>
             </table>
@@ -37,3 +41,19 @@
             <button class="btn btn-danger">Reject</button>
           </div>
         </div>
+        @stop
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.example').DataTable( {
+            "order": [[ 1, "desc" ]],
+            "scrollY":        "55vh",
+            "scrollCollapse": true,
+            "paging":         false,
+            "searching": false,
+            "lengthMenu": [ [15, 30, 50, 100, 250, 500, 1000, 1500], [15, 20, 50, 100, 250, 500, 1000, 1500] ],
+            "iDisplayLength": 1000,
+        } );
+    } );
+  </script>
+  @endpush
