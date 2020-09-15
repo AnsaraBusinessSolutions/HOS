@@ -56,7 +56,7 @@ echo $currentTime; ?></span> |
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item my-1 active">
-          <a class="nav-link" href="{{ route('hos.home') }}">
+          <a class="nav-link" href="{{ route('hos.stroe.order') }}">
           <i class="fas fa-store fs_18"></i>&ensp;  Store Order</a>
         </li>
         <li class="nav-item mb-1">
@@ -82,6 +82,7 @@ echo $currentTime; ?></span> |
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent" style="height: 57px">
         <ul class="navbar-nav mr-auto">
+           
             <li class="nav-item">
               <a class="nav-link" href="">
               <i class="fas fa-copy fs_18"></i><br> 

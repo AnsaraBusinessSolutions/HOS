@@ -12,10 +12,14 @@ ini_set('memory_limit', '-1');
 
 class HomeController extends Controller
 {
-    
     public function index()
     {
         return view('hos.home');
+    }
+
+    public function storeOrder()
+    {
+        return view('hos.store_order');
     }
 
     public function profile(){

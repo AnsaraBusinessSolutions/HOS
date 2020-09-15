@@ -24,12 +24,13 @@ Route::post('/login', 'Auth\LoginController@login');
 
 Route::prefix('store')->group(function () {
     Route::get('/home', 'Hos\HomeController@index')->name('hos.home');
+    Route::get('/order', 'Hos\HomeController@storeOrder')->name('hos.stroe.order');
     Route::get('/profile', 'Hos\HomeController@profile')->name('hos.profile')->middleware('auth');
     Route::post('/add_order', 'Hos\HomeController@addOrder')->name('hos.add.order')->middleware('auth');
-    Route::post('search_data', 'Hos\HomeController@searchData')->name('hos.search.data');
-    Route::post('material_data', 'Hos\HomeController@materialData')->name('hos.material.data');
+    
 });
-   
+Route::post('search_data', 'Hos\HomeController@searchData')->name('hos.search.data');
+Route::post('material_data', 'Hos\HomeController@materialData')->name('hos.material.data');
 
 // Route::group(['middleware' => ['auth', 'approve']],function() {
 //     Route::prefix('3pl')->group(function () {
