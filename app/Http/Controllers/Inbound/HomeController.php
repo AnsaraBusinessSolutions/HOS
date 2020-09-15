@@ -24,6 +24,7 @@ class HomeController extends Controller
                                 ->join('warehouse as w', 'w.wh_id', '=', 'hm.wh_id')
                                 ->orderBy('od.order_code','DESC')
                                 ->groupBy("od.order_code")
+                                ->where('u.user_type',1)
                                 ->select('od.order_code','w.wh_name','od.delivery_date','mm.buom','od.qty','od.status')
                                 ->get();
    
