@@ -140,10 +140,10 @@
   overflow-y: auto;
   overflow-x: auto;
 }
-.example_length{
+.dataTables_length{
   text-align: left;
 }
-.example_info{
+.dataTables_info{
   text-align: left;
 }
 /*===========checkbox==========*/
