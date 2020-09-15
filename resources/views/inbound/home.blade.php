@@ -31,11 +31,11 @@
                       <td>{{$val->qty}}</td>
                       <td>
                         @if($val->status == 0)
-                           New
+                            <span class="text-warning"><b>NEW</b></span>
                         @elseif($val->status == 1)
-                           Approved
-                        @else
-                            Rejected
+                            <span class="text-success"><b>APPROVED</b></span>
+                        @elseif($val->status == 2)
+                        <span class="text-danger"><b>REJECTED</b></span>
                         @endif
                       </td>
                       
