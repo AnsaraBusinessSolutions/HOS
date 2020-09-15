@@ -32,7 +32,8 @@ class HomeController extends Controller
     public function searchData(Request $request){
         $input_data = $request->input_data;
         $input_name = $request->input_name;
-        $search_data = MaterialMaster::select('id',$input_name)->where($input_name,'LIKE',"%{$input_data}%")->get();
+        //$search_data = MaterialMaster::select('id',$input_name)->where($input_name,'LIKE',"%{$input_data}%")->get();
+        $search_data = MaterialMaster::where($input_name,'LIKE',"%{$input_data}%")->select('id',$input_name)->get();
 
         if(count($search_data) > 0){
             $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
