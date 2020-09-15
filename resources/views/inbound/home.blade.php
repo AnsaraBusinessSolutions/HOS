@@ -23,7 +23,7 @@
                  
 
                   @foreach($all_order as $key=>$val)
-                  <tr onclick="window.location.href='{{url('inbound/order_detail/'.$val->order_code)}}'">
+                  <tr onclick="window.location.href='{{url('inbound/request_order_detail/'.$val->order_code)}}'">
                       <td>{{$val->order_code}}</td>
                       <td>{{$val->wh_name}}</td>
                       <td>{{$val->delivery_date}}</td>

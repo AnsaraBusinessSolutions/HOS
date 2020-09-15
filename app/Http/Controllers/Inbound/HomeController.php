@@ -32,6 +32,10 @@ class HomeController extends Controller
     }
 
     public function requestOrderDetail($order_code){
-        return view('inbound.request_order_details');
+        $order_detail = DB::table('order_details as od')->select('od.id','mm.nupco_material_generic_code','mm.customer_bp','mm.material_description','mm.buom','od.qty')
+                                        ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
+                                        ->where('od.order_code', $order_code)
+                                        ->get();
+        return view('inbound.request_order_details',array('order_detail'=>$order_detail,'order_code'=>$order_code));
     }
 }
