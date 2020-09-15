@@ -71,7 +71,7 @@ $(function() {
     $('#addRow').on('click', function (e) { 
       e.preventDefault();
       table.row.add( [
-            '<td><input type="checkbox">'+counter+'</td>',
+            '<td><input type="checkbox"></td>',
             '<td><input type="hidden" data-row_id ="'+counter+'" data-name="material_master_id" id="material_master_id_'+counter+'" name="material_master_id[]">'+counter+'</td>',
             '<td ><input type="text" class="material_data" data-row_id ="'+counter+'" data-name="nupco_material_generic_code" id="nupco_material_generic_code_'+counter+'" name="nupco_material_generic_code[]"><div id="nupco_material_generic_code_list_'+counter+'"></div></td>',
             '<td><input type="text"  class="material_data"  data-row_id ="'+counter+'" data-name="customer_bp" id="customer_bp_'+counter+'" name="customer_bp[]"><div id="customer_bp_list_'+counter+'"></div></td>',
