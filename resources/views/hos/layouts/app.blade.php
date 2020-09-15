@@ -82,7 +82,7 @@ echo $currentTime; ?></span> |
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent" style="height: 57px">
         <ul class="navbar-nav mr-auto">
-           
+        @if(Request::path() == 'store/orde')
             <li class="nav-item">
               <a class="nav-link" href="">
               <i class="fas fa-copy fs_18"></i><br> 
@@ -133,11 +133,7 @@ echo $currentTime; ?></span> |
               <i class="fas fa-plus fs_18"></i><br> 
               Add&nbsp;Row</a>
             </li>
-           <!--  <li class="nav-item">
-              <a class="nav-link" href="#">
-              <img src="assets/images/market.png" style="height:30px;width:auto;"><br> 
-              Marketplace</a>
-            </li> -->
+          @endif
           </ul>
           <ul class="navbar-nav ml-auto">
           <li class="nav-item px-2">
