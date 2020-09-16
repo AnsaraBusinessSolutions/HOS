@@ -52,12 +52,18 @@
                       <td>{{$val->buom}}</td>
                       <td>{{$val->qty}}</td>
                       <td>
-                        @if($val->status == 0)
-                           New
+                      @if($val->status == 0)
+                          <span class="text-warning"><b>NEW</b></span>
                         @elseif($val->status == 1)
-                           Approved
-                        @else
-                            Rejected
+                          <span class="text-success"><b>APPROVED</b></span>
+                        @elseif($val->status == 2)
+                          <span class="text-danger"><b>REJECTED</b></span>
+                        @elseif($val->status == 3)
+                          <span class="text-danger"><b>DISPATCHED</b></span>
+                        @elseif($val->status == 4)
+                          <span class="text-info"><b>DELIVERED</b></span>
+                        @elseif($val->status == 5)
+                          <span class="text-danger"><b>CANCELLED</b></span>
                         @endif
                       </td>
                       <td>available</td>

@@ -36,6 +36,12 @@
                             <span class="text-success"><b>APPROVED</b></span>
                         @elseif($val->status == 2)
                         <span class="text-danger"><b>REJECTED</b></span>
+                        @elseif($val->status == 3)
+                        <span class="text-info"><b>DISPATCHED</b></span>
+                        @elseif($val->status == 4)
+                        <span class="text-danger"><b>DELIVERED</b></span>
+                        @elseif($val->status == 5)
+                        <span class="text-danger"><b>CANCELLED</b></span>
                         @endif
                       </td>
                       

@@ -10,7 +10,7 @@
           </div>
            
           </div>
-          <form action="{{route('hos.order.update')}}" method="POST">
+          <form action="{{route('inbound.order.update')}}" method="POST">
           @csrf
           <div class="col-12 text-center">
             <table id="example" class="table table-striped table-bordered example">
@@ -61,37 +61,39 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <!-- Modal body -->
+      <form id="rejection_form" method="POST" action="{{route('inbound.order.reject')}}">
+      @csrf
+      <input type="hidden" value="{{$order_code}}" name="order_code">
       <div class="modal-body">
-      <form name="" method="post" action="">
-              <h5 class="mb-3 text-danger text-center"><b>Reason For Rejection</b></h5>
-              <table id="" class="table table-borderless reason_table mb-0">
-                <tbody><tr>
-                  <td class="py-0 px-1" width="20%" style="border:0"><b>Reason</b></td>
-                  <td class="py-0 px-0" width="1%">:</td>
-                  <td class="py-0 px-1">
-                    <textarea class="form-control py-0 mb-1" rows="2" name="rejection_reason" style="width: 80%;"></textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="3">
-                    <p class="text-center"><b>New Suggested Date</b></p>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="py-0 px-1" width="20%"><b>Date</b></td>
-                  <td class="py-0 px-0" width="1%">:</td>
-                  <td class="py-0 px-1">
-                    <input type="" class="datepicker form-control" name="">
-
-                  </td>
-                </tr>
-              </tbody></table>
-            </form>
+        <h5 class="mb-3 text-danger text-center"><b>Reason For Rejection</b></h5>
+        <table id="" class="table table-borderless reason_table mb-0">
+          <tbody><tr>
+            <td class="py-0 px-1" width="20%" style="border:0"><b>Reason</b></td>
+            <td class="py-0 px-0" width="1%">:</td>
+            <td class="py-0 px-1">
+              <textarea class="form-control py-0 mb-1" rows="2" name="rejection_reason" style="width: 80%;"></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <p class="text-center"><b>New Suggested Date</b></p>
+            </td>
+          </tr>
+          <tr>
+            <td class="py-0 px-1" width="20%"><b>Date</b></td>
+            <td class="py-0 px-0" width="1%">:</td>
+            <td class="py-0 px-1">
+              <input type="" class="datepicker form-control" name="rejection_date">
+            </td>
+          </tr>
+        </tbody>
+        </table>
       </div>
       <!-- Modal footer -->
       <div class="modal-footer py-2 my-3 border-0">
         <button name="submit" type="submit" value="submit" class="btn btn-info px-5 mx-auto">Submit</button>
       </div>
+      </form>
     </div>
   </div>
 </div>

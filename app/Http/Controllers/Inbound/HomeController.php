@@ -58,12 +58,13 @@ class HomeController extends Controller
 
     public function orderRejected(Request $request){
          $order_code = $request->input('order_code');
+         $rejection_date = date("Y-m-d", strtotime($request->input('rejection_date')));
          if($order_code != ''){
             DB::table('order_details')
-                ->where('id',$order_code)
+                ->where('order_code',$order_code)
                 ->update([
                     'rejection_reason' => $request->input('rejection_reason'),
-                    'rejection_date'=>$request->input('rejection_date'),
+                    'rejection_date'=>$rejection_date,
                     'status'=>2
             ]);
         }
