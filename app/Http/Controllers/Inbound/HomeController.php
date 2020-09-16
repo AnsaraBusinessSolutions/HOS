@@ -54,6 +54,21 @@ class HomeController extends Controller
         }
 
         return back()->with("message","<div class='col-12 text-center alert alert-success' role='alert'>Request Updated Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
-        
     }
+
+    public function orderRejected(Request $request){
+         $order_code = $request->input('order_code');
+         if($order_code != ''){
+            DB::table('order_details')
+                ->where('id',$order_code)
+                ->update([
+                    'rejection_reason' => $request->input('rejection_reason'),
+                    'rejection_date'=>$request->input('rejection_date'),
+                    'status'=>2
+            ]);
+        }
+        return redirect('inbound/home');
+    }
+
+
 }
