@@ -36,6 +36,7 @@ Route::prefix('store')->group(function () {
 Route::prefix('inbound')->group(function () {
     Route::get('/home', 'Inbound\HomeController@index')->name('inbound.home')->middleware('auth');
     Route::get('/request_order_detail/{order_code}', 'Inbound\HomeController@requestOrderDetail')->name('inbound.order.detail')->middleware('auth');
+    Route::post('/order_detail', 'Inbound\HomeController@orderUpdate')->name('inbound.order.update')->middleware('auth');
 });
 
 // Route::group(['middleware' => ['auth', 'approve']],function() {

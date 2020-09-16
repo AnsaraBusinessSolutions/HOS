@@ -38,4 +38,22 @@ class HomeController extends Controller
                                         ->get();
         return view('inbound.request_order_details',array('order_detail'=>$order_detail,'order_code'=>$order_code));
     }
+
+    public function orderUpdate(Request $request){
+        $order_id_arr = $request->input('order_id');
+        $qty_arr = $request->input('qty');
+      
+
+        foreach($order_id_arr as $key=>$val){
+            DB::table('order_details')
+                ->where('id',$val)
+                ->update([
+                    'qty' => $qty_arr[$key],
+                    'updated_at'=>date("Y-m-d H:i:s")
+            ]);
+        }
+
+        return back()->with("message","<div class='col-12 text-center alert alert-success' role='alert'>Request Updated Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
+        
+    }
 }

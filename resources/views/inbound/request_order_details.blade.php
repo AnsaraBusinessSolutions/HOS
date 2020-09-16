@@ -1,13 +1,16 @@
 @extends('inbound.layouts.app')
 @section('content')
 <div class="container-fluid main_content bg-white p-2">
+        @if(Session::has('message'))
+          {!! Session::get('message') !!}
+        @endif
         <div class="row mx-0">
           <div class="col-12 text-center">
             <h5 style="color: steelblue"> <b>Order Details</b> </h5>
           </div>
            
           </div>
-          <form action="{{route('inbound.order.update')}}" method="POST">
+          <form action="{{route('hos.order.update')}}" method="POST">
           @csrf
           <div class="col-12 text-center">
             <table id="example" class="table table-striped table-bordered example">
@@ -48,32 +51,27 @@
           </div>
           </form>
         </div>
+@stop
 <!-- The Modal -->
 <div class="modal" id="myModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-
       <!-- Modal Header -->
       <div class="modal-header">
         <h4 class="modal-title">Modal Heading</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
-
       <!-- Modal body -->
       <div class="modal-body">
         Modal body..
       </div>
-
       <!-- Modal footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
-
     </div>
   </div>
 </div>
-
-        @stop
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function() {
