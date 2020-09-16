@@ -43,7 +43,7 @@
           </div>
           <div class="col-12 text-center">
           @if($order_detail[0]->status == 0)
-          <button class="btn btn-success">Accept</button>
+          <button class="btn btn-success" data-toggle="modal" data-target="#myModal2">Accept</button>
           <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#myModal">Reject</button>
           @elseif($order_detail[0]->status == 1)
             <button class="btn btn-success">Update</button>
@@ -84,6 +84,40 @@
             <td class="py-0 px-0" width="1%">:</td>
             <td class="py-0 px-1">
               <input type="" class="datepicker form-control" name="rejection_date">
+            </td>
+          </tr>
+        </tbody>
+        </table>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer py-2 my-3 border-0">
+        <button name="submit" type="submit" value="submit" class="btn btn-info px-5 mx-auto">Submit</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="myModal2">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header border-0">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <form id="rejection_form" method="POST" action="{{route('inbound.order.reject')}}">
+      @csrf
+      <input type="hidden" value="{{$order_code}}" name="order_code">
+      <div class="modal-body">
+        <h5 class="mb-3 text-danger text-center"><b>Additional Comment</b></h5>
+        <table id="" class="table table-borderless reason_table mb-0">
+          <tbody><tr>
+            <td class="py-0 px-1" width="20%" style="border:0"><b>commant</b></td>
+            <td class="py-0 px-0" width="1%">:</td>
+            <td class="py-0 px-1">
+              <textarea class="form-control py-0 mb-1" rows="2" name="rejection_reason" style="width: 80%;"></textarea>
             </td>
           </tr>
         </tbody>
