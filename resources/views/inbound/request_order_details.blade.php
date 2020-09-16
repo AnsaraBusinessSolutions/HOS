@@ -57,17 +57,40 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Modal Heading</h4>
+      <div class="modal-header border-0">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <!-- Modal body -->
       <div class="modal-body">
-        Modal body..
+      <form name="" method="post" action="">
+              <h5 class="mb-3 text-danger text-center"><b>Reason For Rejection</b></h5>
+              <table id="" class="table table-borderless reason_table mb-0">
+                <tbody><tr>
+                  <td class="py-0 px-1" width="20%" style="border:0"><b>Reason</b></td>
+                  <td class="py-0 px-0" width="1%">:</td>
+                  <td class="py-0 px-1">
+                    <textarea class="form-control py-0 mb-1" rows="2" name="rejection_reason" style="width: 80%;"></textarea>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <p class="text-center"><b>New Suggested Date</b></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="py-0 px-1" width="20%"><b>Date</b></td>
+                  <td class="py-0 px-0" width="1%">:</td>
+                  <td class="py-0 px-1">
+                    <input type="" class="datepicker form-control" name="">
+
+                  </td>
+                </tr>
+              </tbody></table>
+            </form>
       </div>
       <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      <div class="modal-footer py-2 my-3 border-0">
+        <button name="submit" type="submit" value="submit" class="btn btn-info px-5 mx-auto">Submit</button>
       </div>
     </div>
   </div>
