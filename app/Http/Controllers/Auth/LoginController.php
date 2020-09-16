@@ -38,11 +38,19 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('guest:admin')->except('logout');
+        $this->middleware('guest:inbound')->except('logout');
     }
+
+    
 
     public function showLoginForm()
     {
         return view('hos.hos_login');
+    }
+
+    protected function credentials(Request $request)
+    {
+        return $request->only($this->username(), 'password','user_type');
     }
 
      public function showAdminLoginForm()
@@ -58,7 +66,27 @@ class LoginController extends Controller
         ]);
 
         if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
-            return redirect()->intended('/admin');
+           return redirect()->intended('/admin');
+            
+        }
+        return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
+    }
+
+    public function showInboundLoginForm()
+    {
+        return view('inbound.inbound_login', ['url' => 'admin']);
+    }
+
+    public function inboundLogin(Request $request)
+    {
+        $this->validate($request, [
+            'email'   => 'required|email',
+            'password' => 'required|min:6'
+        ]);
+
+        if (Auth::guard('inbound')->attempt(['email' => $request->email, 'password' => $request->password,'user_type'=>2], $request->get('remember'))) {
+            return redirect()->intended('/inbound/home');
+            //return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
         }
         return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
     }

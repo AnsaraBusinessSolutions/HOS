@@ -11,12 +11,14 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth.inbound');
+        
     }
 
     public function index()
     {
-        $user_id = Auth::user()->id;
+        $user_id = auth()->guard('inbound')->user()->id;
+       // $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
                                 ->join('users as u', 'u.id', '=', 'od.user_id')
@@ -52,7 +54,6 @@ class HomeController extends Controller
                     'updated_at'=>date("Y-m-d H:i:s")
             ]);
         }
-
         return back()->with("message","<div class='col-12 text-center alert alert-success' role='alert'>Request Updated Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
     }
 

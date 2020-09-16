@@ -51,6 +51,11 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+
+        'inbound' => [
+            'driver' => 'session',
+            'provider' => 'inbounds',
+        ],
     ],
 
     /*
@@ -79,6 +84,11 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Admin::class,
+        ],
+
+        'inbounds' => [
+            'driver' => 'eloquent',
+            'model' => App\Inbound::class,
         ],
 
         // 'users' => [

@@ -107,7 +107,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <!-- Modal body -->
-      <form id="rejection_form" method="POST" action="{{route('inbound.order.approve')}}">
+      <form id="approve_form" method="POST" action="{{route('inbound.order.approve')}}">
       @csrf
       <input type="hidden" value="{{$order_code}}" name="order_code">
       <div class="modal-body">

@@ -15,12 +15,13 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        //dd(Session::all());
+        
         $this->middleware('auth');
     }
 
     public function index()
     {   
+        
         $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')

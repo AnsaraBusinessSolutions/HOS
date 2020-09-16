@@ -62,11 +62,10 @@ form.user .btn-user {
               <div class="col-lg-12 ff_mon">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">HOS LOGIN</h1>
+                    <h1 class="h4 text-gray-900 mb-4">HOS INBOUND LOGIN</h1>
                   </div>
-                  <form class="user" method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
+                  <form class="user" method="POST" action="{{ route('inbound.login') }}" aria-label="{{ __('Login') }}">
                     @csrf
-                    <input type="hidden" name="user_type" value="1">
                     <div class="form-group">
                       <!-- <input type="" class="form-control form-control-user" id="username" aria-describedby="usernameHelp" placeholder="Enter username..." required/> -->
                       <input id="email" type="text" class="form-control form-control-user @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" aria-describedby="usernameHelp" placeholder="Email" autofocus>
