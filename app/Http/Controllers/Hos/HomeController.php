@@ -8,12 +8,14 @@ use App\Model\Hos\MaterialMaster;
 use App\Model\Hos\OrderDetail;
 use Auth;
 use DB;
+use Session;
 ini_set('memory_limit', '-1');
 
 class HomeController extends Controller
 {
     public function __construct()
     {
+        //dd(Session::all());
         $this->middleware('auth');
     }
 

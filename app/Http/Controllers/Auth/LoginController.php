@@ -64,6 +64,7 @@ class LoginController extends Controller
     }
 
     protected function authenticated(Request $request, $user) {
+        $request->session()->put('user_type', $user->user_type);
         if ($user->user_type == 1) {
             return redirect('/store/home');
         } else if ($user->user_type == 2) {
