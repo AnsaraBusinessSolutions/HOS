@@ -141,7 +141,7 @@ class HomeController extends Controller
                     'updated_at'=>date("Y-m-d H:i:s")
             ]);
         }
-
+        
         return back()->with("message","<div class='col-12 text-center alert alert-success' role='alert'>Request Updated Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
         
     }

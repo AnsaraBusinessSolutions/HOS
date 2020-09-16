@@ -70,7 +70,7 @@ class LoginController extends Controller
         } else if ($user->user_type == 2) {
             return redirect('/inbound/home');
         }else if ($user->user_type == 3) {
-            return redirect('/3pl/home');
+            return redirect('/hos3pl/home');
         } else {
             return redirect('/');
         }

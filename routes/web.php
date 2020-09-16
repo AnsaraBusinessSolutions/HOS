@@ -39,6 +39,13 @@ Route::prefix('inbound')->group(function () {
     Route::get('/request_order_detail/{order_code}', 'Inbound\HomeController@requestOrderDetail')->name('inbound.order.detail')->middleware('auth');
     Route::post('/order_detail', 'Inbound\HomeController@orderUpdate')->name('inbound.order.update')->middleware('auth');
     Route::post('/order_reject', 'Inbound\HomeController@orderRejected')->name('inbound.order.reject')->middleware('auth');
+    Route::post('/order_approve', 'Inbound\HomeController@orderApprove')->name('inbound.order.approve')->middleware('auth');
+});
+
+Route::prefix('hos3pl')->group(function () {
+    Route::get('/home', 'Hos_3pl\HomeController@index')->name('hos3pl.home')->middleware('auth');
+    Route::get('/order_detail/{order_code}', 'Hos_3pl\HomeController@requestOrderDetail')->name('hos3pl.order.detail')->middleware('auth');
+    Route::post('/order_status', 'Hos_3pl\HomeController@orderStatusUpdate')->name('hos3pl.order.status.update')->middleware('auth');
 });
 
 // Route::group(['middleware' => ['auth', 'approve']],function() {

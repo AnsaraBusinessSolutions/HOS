@@ -24,13 +24,15 @@
     <div class="col-6 text-center px-0">
       <h4 class="text-danger ff_mon">
       <img class="" src="{{ asset('hos/img/HOS-logo.png') }}" style="width:auto;height: 30px"><br>
-      <b class="text_shadow">NUPCO CENTRAL REGION DAMMAM</b></h4>
+      <b class="text_shadow">3PL PORTAL</b></h4>
     </div>
     <div class="col-3 text-right px-0" style="font-size: 11px;font-weight: 600;"> 
       <div class="row">
-         <div class="col-12 text-center">
+      <div class="col-5 text-center"></div>
+         <div class="col-7 text-center">
            <img class="" src="{{ asset('hos/img/logo2.png') }}" height="50px" width="auto" style="margin:16px 10px">
          </div>
+         
       </div>
         <!-- <span class="dropdown">
           <span class="dropdown-toggle" data-toggle="dropdown" style="color:#197c89">White Pharmacy</span> |
@@ -53,12 +55,12 @@ echo $currentTime; ?></span> |
           <i class="fas fa-minus-square"></i></li>
       </ul>
       <ul class="navbar-nav">
-        @if(Request::path() == 'inbound/home')
+        @if(Request::path() == 'hos3pl/home')
         <li class="nav-item my-1 active">
         @else
         <li class="nav-item my-1 ">
         @endif
-          <a class="nav-link" href="{{ route('inbound.home') }}">
+          <a class="nav-link" href="{{ route('hos3pl.home') }}">
           <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Dashboard</a>
         </li>
       
@@ -73,8 +75,8 @@ echo $currentTime; ?></span> |
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent" style="height: 57px">
         <ul class="navbar-nav mr-auto">
-          </ul>
-          <ul class="navbar-nav ml-auto">
+        </ul>
+        <ul class="navbar-nav ml-auto">
           <li class="nav-item px-2">
             <a>
               <form name="lang_switch" id="lang_switch">

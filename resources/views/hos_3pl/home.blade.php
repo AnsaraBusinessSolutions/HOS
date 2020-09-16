@@ -1,4 +1,4 @@
-@extends('inbound.layouts.app')
+@extends('hos_3pl.layouts.app')
 @section('content')
       <div class="container-fluid main_content bg-white p-2">
         <div class="row mx-0">
@@ -15,14 +15,13 @@
                       <th class="text-nowrap px-3">Uom</th>
                       <th class="text-nowrap px-3">Qty Ordered</th>
                       <th class="text-nowrap px-3">Status</th>
-                      
                   </tr>
               </thead>
               <tbody>
                  
 
                   @foreach($all_order as $key=>$val)
-                  <tr onclick="window.location.href='{{url('inbound/request_order_detail/'.$val->order_code)}}'">
+                  <tr onclick="window.location.href='{{url('hos3pl/order_detail/'.$val->order_code)}}'">
                       <td>{{$val->order_code}}</td>
                       <td>{{$val->wh_name}}</td>
                       <td>{{$val->delivery_date}}</td>
