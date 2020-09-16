@@ -40,16 +40,16 @@
           </div>
           <div class="col-12 text-center">
           @if($order_detail[0]->status == 0)
-            <button class="btn btn-success">Accept</button>
-            <button class="btn btn-danger" data-toggle="modal" data-target="#rejected_reason">Reject</button>
+          <button class="btn btn-success">Accept</button>
+          <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#myModal">Reject</button>
           @elseif($order_detail[0]->status == 1)
             <button class="btn btn-success">Update</button>
           @endif
           </div>
           </form>
         </div>
-        <!-- The Modal -->
-<div class="modal" id="rejected_reason">
+<!-- The Modal -->
+<div class="modal" id="myModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
