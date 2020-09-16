@@ -7,6 +7,8 @@
           </div>
            
           </div>
+          <form action="{{route('inbound.order.update')}}" method="POST">
+          @csrf
           <div class="col-12 text-center">
             <table id="example" class="table table-striped table-bordered example">
               <thead>
@@ -37,9 +39,14 @@
             </table>
           </div>
           <div class="col-12 text-center">
+          @if($order_detail[0]->status == 0)
             <button class="btn btn-success">Accept</button>
             <button class="btn btn-danger" data-toggle="modal" data-target="#rejected_reason">Reject</button>
+          @elseif($order_detail[0]->status == 1)
+            <button class="btn btn-success">Update</button>
+          @endif
           </div>
+          </form>
         </div>
         <!-- The Modal -->
 <div class="modal" id="rejected_reason">
