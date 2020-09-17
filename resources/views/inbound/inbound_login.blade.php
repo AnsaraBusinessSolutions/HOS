@@ -64,6 +64,9 @@ form.user .btn-user {
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">HOS INBOUND LOGIN</h1>
                   </div>
+                  @if($errors->has('common-error'))
+                    <h6 class="text-center text-danger">{{ $errors->first('common-error') }}</h6>
+                  @endif
                   <form class="user" method="POST" action="{{ route('inbound.login') }}" aria-label="{{ __('Login') }}">
                     @csrf
                     <div class="form-group">
