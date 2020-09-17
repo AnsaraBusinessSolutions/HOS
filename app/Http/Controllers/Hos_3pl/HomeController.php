@@ -26,7 +26,7 @@ class HomeController extends Controller
                                 ->orderBy('od.order_code','DESC')
                                 ->groupBy("od.order_code")
                                 ->where('u.user_type',1)
-                                ->whereIn('od.status',[1,3,4])
+                                ->whereIn('od.status',[1,3])
                                 ->select('od.order_code','w.wh_name','od.delivery_date','mm.buom','od.qty','od.status')
                                 ->get();
    

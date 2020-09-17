@@ -86,11 +86,11 @@ form.user .btn-user {
                             @enderror
                     </div>
                     <div class="form-group">
-                      <div class="custom-control custom-checkbox small">
+                      <!-- <div class="custom-control custom-checkbox small"> -->
                         <!-- <input type="checkbox" class="custom-control-input" id="customCheck"/> -->
-                        <input class="custom-control-input" type="checkbox" name="remember" id="customCheck" {{ old('remember') ? 'checked' : '' }}>
-                        <label class="custom-control-label" for="customCheck">Remember Me</label>
-                      </div>
+                        <!-- <input class="custom-control-input" type="checkbox" name="remember" id="customCheck" {{ old('remember') ? 'checked' : '' }}>
+                        <label class="custom-control-label" for="customCheck">Remember Me</label> -->
+                      <!-- </div> -->
                     </div>
                     <button class="btn btn-primary btn-user btn-block" type="submit">
                       Login

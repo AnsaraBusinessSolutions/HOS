@@ -46,9 +46,6 @@
               @if($order_detail[0]->status == 1)
                 <input type="hidden" value="3" name="order_status">
                 <button class="btn btn-success" type="submit" >Dispatch</button>
-              @elseif($order_detail[0]->status == 3)
-                <input type="hidden" value="4" name="order_status">
-                <button class="btn btn-success" type="submit" >Delivery</button>
               @endif
               </div>
           </form>
