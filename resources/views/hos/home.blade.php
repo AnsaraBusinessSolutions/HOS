@@ -50,7 +50,7 @@
                       <td>{{$val->wh_name}}</td>
                       <td>{{$val->delivery_date}}</td>
                       <td>{{$val->buom}}</td>
-                      <td>{{$val->qty}}</td>
+                      <td>{{$val->total_qty}}</td>
                       <td>
                       @if($val->status == 0)
                           <span class="text-warning"><b>NEW</b></span>

@@ -53,7 +53,7 @@ echo $currentTime; ?></span> |
           <i class="fas fa-minus-square"></i></li>
       </ul>
       <ul class="navbar-nav">
-        @if(Request::path() == 'inbound/home')
+        @if(Request::path() == 'inbound/home' || Request::is('inbound/request_order_detail/*'))
         <li class="nav-item my-1 active">
         @else
         <li class="nav-item my-1 ">

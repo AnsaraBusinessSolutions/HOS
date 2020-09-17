@@ -28,6 +28,7 @@ class HomeController extends Controller
                                 ->groupBy("od.order_code")
                                 ->where('u.user_type',1)
                                 ->select('od.order_code','w.wh_name','od.delivery_date','mm.buom','od.qty','od.status')
+                                ->selectRaw('sum(od.qty) as total_qty')
                                 ->get();
    
         return view('inbound.home', array('all_order'=>$all_order));

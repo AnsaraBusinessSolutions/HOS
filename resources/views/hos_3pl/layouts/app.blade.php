@@ -55,7 +55,7 @@ echo $currentTime; ?></span> |
           <i class="fas fa-minus-square"></i></li>
       </ul>
       <ul class="navbar-nav">
-        @if(Request::path() == 'hos3pl/home')
+        @if(Request::path() == 'hos3pl/home' || Request::is('hos3pl/order_detail/*'))
         <li class="nav-item my-1 active">
         @else
         <li class="nav-item my-1 ">
