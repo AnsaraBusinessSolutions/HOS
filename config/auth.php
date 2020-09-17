@@ -56,6 +56,11 @@ return [
             'driver' => 'session',
             'provider' => 'inbounds',
         ],
+
+        'hos3pl' => [
+            'driver' => 'session',
+            'provider' => 'hos3pls',
+        ],
     ],
 
     /*
@@ -90,6 +95,14 @@ return [
             'driver' => 'eloquent',
             'model' => App\Inbound::class,
         ],
+
+        
+        'hos3pls' => [
+            'driver' => 'eloquent',
+            'model' => App\Hos3pl::class,
+        ],
+
+        
 
         // 'users' => [
         //     'driver' => 'database',

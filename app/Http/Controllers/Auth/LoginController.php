@@ -91,6 +91,26 @@ class LoginController extends Controller
         return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
     }
 
+    
+    public function showHos3plLoginForm()
+    {
+        return view('hos_3pl.hos3pl_login', ['url' => 'admin']);
+    }
+
+    public function hos3plLogin(Request $request)
+    {
+        $this->validate($request, [
+            'email'   => 'required|email',
+            'password' => 'required|min:6'
+        ]);
+
+        if (Auth::guard('hos3pl')->attempt(['email' => $request->email, 'password' => $request->password,'user_type'=>3], $request->get('remember'))) {
+            return redirect()->intended('/hos3pl/home');
+            //return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
+        }
+        return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
+    }
+
     protected function authenticated(Request $request, $user) {
         $request->session()->put('user_type', $user->user_type);
         if ($user->user_type == 1) {

@@ -11,12 +11,13 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth.hos3pl');
     }
 
     public function index()
     {
-        $user_id = Auth::user()->id;
+        $user_id = auth()->guard('hos3pl')->user()->id;
+       // $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
                                 ->join('users as u', 'u.id', '=', 'od.user_id')
