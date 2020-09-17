@@ -88,9 +88,9 @@ echo $currentTime; ?></span> |
             </a>
           </li>
           <li class="nav-item px-2 py-1">
-            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="badge badge-dark p-2" title="logout"><i class="fas fa-power-off"></i></span>
+            <a href="{{ route('hos3pl.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="badge badge-dark p-2" title="logout"><i class="fas fa-power-off"></i></span>
             </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
+            <form id="logout-form" action="{{ route('hos3pl.logout') }}" method="POST" style="display: none;">@csrf</form>
           </li>
           <li class="nav-item px-2 py-1">
             <a>

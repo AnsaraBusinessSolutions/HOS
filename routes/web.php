@@ -38,6 +38,7 @@ Route::prefix('store')->group(function () {
 Route::prefix('inbound')->group(function () {
     Route::get('/login', 'Auth\LoginController@showInboundLoginForm')->name('inbound.login');
     Route::post('/login', 'Auth\LoginController@inboundLogin')->name('inbound.login');
+    Route::post('/logout', 'Auth\LoginController@inboundLogout')->name('inbound.logout');
 
     Route::get('/home', 'Inbound\HomeController@index')->name('inbound.home');
     Route::get('/request_order_detail/{order_code}', 'Inbound\HomeController@requestOrderDetail')->name('inbound.order.detail');
@@ -49,6 +50,7 @@ Route::prefix('inbound')->group(function () {
 Route::prefix('hos3pl')->group(function () {
     Route::get('/login', 'Auth\LoginController@showHos3plLoginForm')->name('hos3pl.login');
     Route::post('/login', 'Auth\LoginController@hos3plLogin')->name('hos3pl.login');
+    Route::post('/logout', 'Auth\LoginController@hos3plLogout')->name('hos3pl.logout');
 
     Route::get('/home', 'Hos_3pl\HomeController@index')->name('hos3pl.home');
     Route::get('/order_detail/{order_code}', 'Hos_3pl\HomeController@requestOrderDetail')->name('hos3pl.order.detail');

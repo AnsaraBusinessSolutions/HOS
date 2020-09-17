@@ -38,8 +38,8 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('guest:admin')->except('logout');
-        $this->middleware('guest:inbound')->except('logout');
-        $this->middleware('guest:hos3pl')->except('logout');
+        $this->middleware('guest:inbound')->except('inboundLogout');
+        $this->middleware('guest:hos3pl')->except('hos3plLogout');
     }
 
     
@@ -92,6 +92,13 @@ class LoginController extends Controller
         return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
     }
 
+    public function inboundLogout(Request $request){
+       Auth::guard('inbound')->logout();
+        $request->session()->flush();
+        $request->session()->regenerate();
+        return redirect()->guest(route( 'inbound.login' ));
+    }
+
     
     public function showHos3plLoginForm()
     {
@@ -110,6 +117,13 @@ class LoginController extends Controller
             //return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
         }
         return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
+    }
+
+    public function hos3plLogout(Request $request){
+        Auth::guard('hos3pl')->logout();
+        $request->session()->flush();
+        $request->session()->regenerate();
+        return redirect()->guest(route( 'hos3pl.login' ));
     }
 
     protected function authenticated(Request $request, $user) {
