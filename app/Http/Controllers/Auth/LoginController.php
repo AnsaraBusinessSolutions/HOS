@@ -37,7 +37,7 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware('guest:admin')->except('logout');
+        $this->middleware('guest:admin')->except('adminLogout');
         $this->middleware('guest:inbound')->except('inboundLogout');
         $this->middleware('guest:hos3pl')->except('hos3plLogout');
     }
@@ -67,10 +67,17 @@ class LoginController extends Controller
         ]);
 
         if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
-           return redirect()->intended('/admin');
+           return redirect()->intended('/admin/home');
             
         }
         return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
+    }
+
+    public function adminLogout(Request $request){
+        Auth::guard('admin')->logout();
+        $request->session()->flush();
+        $request->session()->regenerate();
+        return redirect()->guest(route( 'admin.login' ));
     }
 
     public function showInboundLoginForm()

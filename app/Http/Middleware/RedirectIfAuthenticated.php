@@ -23,6 +23,9 @@ class RedirectIfAuthenticated
         if ($guard == "hos3pl" && Auth::guard($guard)->check()) {
             return redirect('/hos3pl/home');
         }
+        if ($guard == "admin" && Auth::guard($guard)->check()) {
+            return redirect('/admin/home');
+        }
         if (Auth::guard($guard)->check()) {
             return redirect('/store/home');
         }

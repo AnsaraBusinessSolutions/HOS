@@ -17,10 +17,10 @@ Auth::routes();
 
 Route::prefix('admin')->group(function () {
     Route::get('/login', 'Auth\LoginController@showAdminLoginForm')->name('admin.login');
-    Route::post('/login', 'Auth\LoginController@adminLogin');
+    Route::post('/login', 'Auth\LoginController@adminLogin')->name('admin.login');
+    Route::post('/logout', 'Auth\LoginController@adminLogout')->name('admin.logout');
+    Route::get('/home', 'Admin\HomeController@index')->name('admin.home');
 });
-
-
 
 Route::prefix('store')->group(function () {
     Route::get('/login', 'Auth\LoginController@showLoginForm')->name('hos.login');
@@ -65,4 +65,3 @@ Route::prefix('hos3pl')->group(function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');

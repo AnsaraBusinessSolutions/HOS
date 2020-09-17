@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Middleware;
-
-use Closure;
 use Illuminate\Support\Facades\Auth;
+use Closure;
 
-class ApproveMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -14,12 +13,10 @@ class ApproveMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-  
-
-     public function handle($request, Closure $next,$guard = 'inbound')
+    public function handle($request, Closure $next,$guard = 'admin')
     {
          if (!Auth::guard($guard)->check()) {
-            return redirect('inbound/login');
+            return redirect('admin/login');
          }
          return $next($request);
     }

@@ -1,4 +1,4 @@
-@extends('layouts.auth')
+@extends('admin.layouts.app')
 
 @section('content')
 <div class="container">
@@ -8,7 +8,7 @@
                 <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
-                    Hi boss!
+                   Admin home 
                 </div>
             </div>
         </div>

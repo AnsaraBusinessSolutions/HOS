@@ -37,11 +37,8 @@
                     <h6 class="text-center text-danger">{{ $errors->first('common-error') }}</h6>
                     @endif
 
-                    @isset($url)
-                    <form method="POST" action='{{ url("login/$url") }}' aria-label="{{ __('Login') }}">
-                    @else
-                    <form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
-                    @endisset
+                   
+                    <form method="POST" action="{{ route('admin.login') }}" aria-label="{{ __('Login') }}">
                         @csrf
                     <div class="form-group">
                         <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder="Email" required autocomplete="email" autofocus aria-describedby="usernameHelp">
