@@ -37,10 +37,9 @@
                       <th class="text-nowrap px-3">Store Order #</th>
                       <th class="text-nowrap px-3">Supplying Plant</th>
                       <th class="text-nowrap px-3">Delivery date</th>
-                      <th class="text-nowrap px-3">Uom</th>
+                      <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3">Qty Ordered</th>
                       <th class="text-nowrap px-3">Status</th>
-                      <th class="text-nowrap px-3">Report</th>
                   </tr>
               </thead>
               <tbody>
@@ -66,7 +65,6 @@
                           <span class="text-danger"><b>CANCELLED</b></span>
                         @endif
                       </td>
-                      <td>available</td>
                   </tr>
                @endforeach   
                  

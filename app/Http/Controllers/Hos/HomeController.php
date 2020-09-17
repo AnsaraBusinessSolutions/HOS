@@ -50,7 +50,7 @@ class HomeController extends Controller
     public function materialData(Request $request){
         $input_data = $request->input_data;
         $input_name = $request->input_name;
-        $material_data = MaterialMaster::select('id','nupco_material_generic_code','customer_bp','material_description','buom')->where($input_name, $input_data)->get();
+        $material_data = MaterialMaster::select('id','nupco_material_generic_code','customer_trade_code','material_description','buom')->where($input_name, $input_data)->get();
         return response()->json(array('data'=>$material_data));
     }
 
@@ -58,7 +58,7 @@ class HomeController extends Controller
         $input_data = $request->input_data;
         $input_name = $request->input_name;
         //$search_data = MaterialMaster::select('id',$input_name)->where($input_name,'LIKE',"%{$input_data}%")->get();
-        $search_data = MaterialMaster::where($input_name,'LIKE',"%{$input_data}%")->select('id',$input_name)->get();
+        $search_data = DB::table('material_master')->where($input_name,'LIKE',"%{$input_data}%")->select('id',$input_name)->take(5)->get();
 
         if(count($search_data) > 0){
             $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
@@ -123,7 +123,7 @@ class HomeController extends Controller
     }
 
     public function orderDetail($order_code){
-        $order_detail = DB::table('order_details as od')->select('od.id','mm.nupco_material_generic_code','mm.customer_bp','mm.material_description','mm.buom','od.qty')
+        $order_detail = DB::table('order_details as od')->select('od.id','mm.nupco_material_generic_code','mm.customer_trade_code','mm.material_description','mm.buom','od.qty')
                                         ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
                                         ->where('od.order_code', $order_code)
                                         ->get();

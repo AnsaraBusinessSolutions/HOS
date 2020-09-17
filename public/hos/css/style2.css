@@ -94,6 +94,7 @@
 }
 #store_order_info{
   text-align: left;
+  display: none;
 }
 /*================store order===============*/
   #store_order.bg_color, .dataTables_wrapper .example.bg_color{

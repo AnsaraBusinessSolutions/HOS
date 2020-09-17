@@ -52,7 +52,7 @@ echo $currentTime; ?></span> |
     <div class="sidenav px-0 mt-2 bg-grey">
       <ul class="list-group">
         <li  class="nav-item bg-white" style="padding: 18px 20px;font-size: 16px">
-          <i class="fas fa-minus-square"></i></li>
+        &ensp;</li>
       </ul>
       <ul class="navbar-nav">
         @if(Request::path() == 'store/home' || Request::is('store/order_detail/*'))

@@ -29,7 +29,7 @@
                   <tr>
                       <td>{{$key+1}}</td>
                       <td>{{$val->nupco_material_generic_code}}</td>
-                      <td>{{$val->customer_bp}}</td>
+                      <td>{{$val->customer_trade_code}}</td>
                       <td>{{$val->material_description}}</td>
                       <td>{{$val->buom}}</td>
                       <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" name="qty[]" value="{{$val->qty}}"></td>
