@@ -58,7 +58,7 @@ class HomeController extends Controller
         $input_data = $request->input_data;
         $input_name = $request->input_name;
         //$search_data = MaterialMaster::select('id',$input_name)->where($input_name,'LIKE',"%{$input_data}%")->get();
-        $search_data = DB::table('material_master')->where($input_name,'LIKE',"%{$input_data}%")->select('id',$input_name)->take(5)->get();
+        $search_data = DB::table('material_master')->where($input_name,'LIKE',"{$input_data}%")->select('id',$input_name)->take(5)->get();
 
         if(count($search_data) > 0){
             $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
