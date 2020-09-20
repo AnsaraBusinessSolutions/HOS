@@ -12,7 +12,7 @@
           <form action="{{route('hos.order.update')}}" method="POST">
           @csrf
           <div class="col-12 text-center">
-            <table id="order_detail" class="table table-striped table-bordered example">
+            <table id="order_detail" class="table table-striped table-bordered example text-center">
               <thead>
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">Item #</th>
@@ -32,10 +32,10 @@
                       <td>{{$val->customer_trade_code}}</td>
                       <td>{{$val->material_description}}</td>
                       <td>{{$val->buom}}</td>
-                      <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" name="qty[]" value="{{$val->qty}}"></td>
+                      <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" class="form-control h_sm" name="qty[]" value="{{$val->qty}}"></td>
                       <td>
                       @if($val->batch_count > 0)
-                      <button class="btn btn-warning btn_batch" data-order_id="{{$val->id}}">Batch</button>
+                      <button class="btn btn-warning btn_batch btn-sm" data-order_id="{{$val->id}}">Batch</button>
                       @endif
                       </td>
                   </tr>

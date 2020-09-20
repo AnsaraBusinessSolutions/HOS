@@ -98,3 +98,6 @@
 .table tbody tr:hover{
   background-color: #63b6ff!important;
 }
+.h_sm{
+  height: calc(1.8125rem + 2px)!important;
+}
