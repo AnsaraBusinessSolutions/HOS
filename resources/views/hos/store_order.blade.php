@@ -32,9 +32,11 @@
     font-size: 21px;
     top: 6px;
     left: 9px;
+    border: 1px solid #c20e1a4f;
 }
 .h_sm{
   height: calc(1.8125rem + 2px)!important;
+  border: 1px solid #c20e1a4f;
 }
 
 </style>
