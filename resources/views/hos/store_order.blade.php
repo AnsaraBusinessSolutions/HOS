@@ -104,7 +104,7 @@ $(function() {
     table = $('#store_order').DataTable({
       "searching": false,
       "paging": false,
-      "scrollY": "55vh"
+      "scrollY": "54vh"
     });
     var counter = 1;
     $('#addRow').on('click', function (e) { 
