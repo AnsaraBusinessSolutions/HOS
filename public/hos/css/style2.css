@@ -130,6 +130,7 @@
   padding: 4px 2px!important;
   vertical-align: middle!important;
   border-top: 1px solid #dee2e6!important;
+  text-align: center;
 }
 .dataTables_wrapper table th {
   background: lightgray!important;

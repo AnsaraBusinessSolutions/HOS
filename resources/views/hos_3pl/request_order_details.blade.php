@@ -34,7 +34,7 @@
                       <td>{{$val->material_description}}</td>
                       <td>{{$val->buom}}</td>
                       <td>{{$val->qty}}</td>
-                      <td><button class="btn btn-small btn-warning batch_btn" data-order_id="{{$val->id}}">Batch</button></td>
+                      <td><button class="btn btn-small btn-warning batch_btn btn-sm" data-order_id="{{$val->id}}">Batch</button></td>
                   </tr>
                  @endforeach
               </tbody>
@@ -101,7 +101,6 @@
       <!-- Modal Header -->
       <div class="modal-header">
         <h5 class="text-center w-100"><b>Batch Details</b></h5>
-        <button name="submit" type="button"  class="btn btn-success" id="add_batch">Add Batch</button>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <!-- Modal body -->
@@ -120,6 +119,7 @@
               </tr>
           </thead>
           <tbody>
+          <button name="submit" type="button"  class="btn btn-success" id="add_batch">Add Batch</button>
               
         </tbody>
         </table>
@@ -151,16 +151,16 @@ $(function() {
     $('#add_batch').click(function () {
         var tr = $('<tr><td><input class="form-control" type="text" name="batch_qty[]" id="batch_qty_'+counter+'" required maxlength="10"></td>'
                   +'<td><input class="form-control" type="text" name="batch_no[]" id="batch_no_'+counter+'" required maxlength="10"></td>'
-                  +'<td><input class="manufacture_date form-control" type="" name="manufacture_date[]" id="manufacture_date_'+counter+'" required></td>'
-                  +'<td><input class="expiry_date form-control" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required></td></tr>');
+                  +'<td><input class="manufacture_date form-control datepicker" type="" name="manufacture_date[]" id="manufacture_date_'+counter+'" required></td>'
+                  +'<td><input class="expiry_date form-control datepicker" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required></td></tr>');
 
-        $('#batch_table tbody').append(tr);
-        $(tr).find('.expiry_date').datepicker({
-                autoclose: true
-        });
-        $(tr).find('.manufacture_date').datepicker({
-                autoclose: true
-        });
+        // $('#batch_table tbody').append(tr);
+        // $(tr).find('.expiry_date').datepicker({
+        //         autoclose: true
+        // });
+        // $(tr).find('.manufacture_date').datepicker({
+        //         autoclose: true
+        // });
         counter++;
     });
 
