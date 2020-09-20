@@ -156,10 +156,12 @@ $(function() {
 
         $('#batch_table tbody').append(tr);
         $(tr).find('.expiry_date').datepicker({
-                autoclose: true
+                autoclose: true,
+                uiLibrary: 'bootstrap4'
         });
         $(tr).find('.manufacture_date').datepicker({
-                autoclose: true
+                autoclose: true,
+                uiLibrary: 'bootstrap4'
         });
         counter++;
     });
