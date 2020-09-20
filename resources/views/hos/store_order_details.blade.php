@@ -66,7 +66,7 @@
        <div class="table-responsive">
         <table id="batch_table" class="table table-bordered table-sm text-center">
           <thead>
-              <tr class="table-primary text-white">
+              <tr class="table-primary">
                   <th>Batch QTY</th>
                   <th>Batch No</th>
                   <th>Manufacture Date</th>
