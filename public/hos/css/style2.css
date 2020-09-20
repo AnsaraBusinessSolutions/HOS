@@ -226,3 +226,6 @@
   border-top: 0px!important;
   vertical-align: middle;
 }
+.h_sm{
+  height: calc(1.8125rem + 2px)!important;
+}
