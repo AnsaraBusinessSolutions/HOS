@@ -154,13 +154,13 @@ $(function() {
                   +'<td><input class="manufacture_date form-control datepicker" type="" name="manufacture_date[]" id="manufacture_date_'+counter+'" required></td>'
                   +'<td><input class="expiry_date form-control datepicker" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required></td></tr>');
 
-        // $('#batch_table tbody').append(tr);
-        // $(tr).find('.expiry_date').datepicker({
-        //         autoclose: true
-        // });
-        // $(tr).find('.manufacture_date').datepicker({
-        //         autoclose: true
-        // });
+        $('#batch_table tbody').append(tr);
+        $(tr).find('.expiry_date').datepicker({
+                autoclose: true
+        });
+        $(tr).find('.manufacture_date').datepicker({
+                autoclose: true
+        });
         counter++;
     });
 
