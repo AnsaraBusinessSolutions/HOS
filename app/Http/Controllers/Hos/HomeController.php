@@ -38,7 +38,9 @@ class HomeController extends Controller
 
     public function storeOrder()
     {
-        $suppling_plants = DB::table('supplying_plant')->where('status',1)->get();
+        $supplying_plant_id = Auth::user()->supplying_plant_id;
+        $suppling_plants = DB::table('supplying_plant')->where('id',$supplying_plant_id)->get();
+    
         return view('hos.store_order',array('suppling_plants'=>$suppling_plants));
     }
 
