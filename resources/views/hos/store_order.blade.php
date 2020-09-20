@@ -27,7 +27,17 @@
   height: calc(1.5rem + 2px)!important;
   font-size: .80rem!important;
 }
-  </style>
+#store_order_form .head_table .gj-datepicker-bootstrap [role=right-icon] button .gj-icon {
+    position: absolute;
+    font-size: 21px;
+    top: 6px;
+    left: 9px;
+}
+.h_sm{
+  height: calc(1.8125rem + 2px)!important;
+}
+
+</style>
 @section('content')
 <div class="container-fluid main_content bg-white p-2">
         <div class="row mx-0">
@@ -36,14 +46,14 @@
           @endif
 
           <form id="store_order_form" class="mb-0" method="POST">
-            <table class="table table-borderless text-center mb-0">
+            <table class="table table-borderless head_table text-center mb-0">
               <thead>
                  <tr>
                   <th width="6%" class="p-0">&ensp;</th>
                    <th width="10%" class="p-0">
                     <label for="supplying-plant">Supplying Plant:</label></th>
                    <th width="20%" class="p-0">
-                    <select class="form-control" id="supplying_plant_id" name="supplying_plant_id">
+                    <select class="form-control h_sm" id="supplying_plant_id" name="supplying_plant_id">
                     @foreach($suppling_plants as $key=>$val)
                       <option value="{{$val->id}}">{{$val->plant_name}}</option>
                     @endforeach
@@ -52,7 +62,7 @@
                    <th width="10%" class="p-0">
                     <label for="delivery-date">Delivery Date:</label></th>
                    <th width="20%" class="p-0">
-                    <input type="" class="datepicker form-control" name="delivery_date"></th>
+                    <input type="" class="datepicker form-control h_sm" name="delivery_date"></th>
                      <th width="6%" class="p-0">&ensp;</th>
                  </tr>
               </thead>
