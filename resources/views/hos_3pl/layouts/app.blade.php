@@ -4,16 +4,16 @@
   <title>{{ config('app.name', 'HOS') }}</title>
   <meta name="theme-color" content="#557eb0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 shrink-to-fit=no, user-scalable=0">
-  <link rel="icon" type="image/png" href="{{ URL::asset('hos/img/favicon.png') }}" sizes="194x194">
-  <link rel="stylesheet" href="{{ URL::asset('hos/css/bootstrap.min.css') }}">
+  <link rel="icon" type="image/png" href="{{ url('hos/img/favicon.png') }}" sizes="194x194">
+  <link rel="stylesheet" href="{{ url('hos/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed|Titillium+Web|Changa|Montserrat|Ubuntu&display=swap" rel="stylesheet">
-  <link rel="manifest" href="{{ URL::asset('hos/manifest.json') }}">
-  <link rel="stylesheet" type="text/css" href="{{ URL::asset('hos/css/style.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ URL::asset('hos/css/style2.css') }}">
+  <link rel="manifest" href="{{ url('hos/manifest.json') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url('hos/css/style.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url('hos/css/style2.css') }}">
   <!--------table style lib------------------------>
-  <link rel="stylesheet" type="text/css" href="{{ URL::asset('hos/css/bootstrap.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ URL::asset('hos/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url('hos/css/bootstrap.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url('hos/css/dataTables.bootstrap4.min.css') }}">
   
 </head>
 <body class="bg-light">
@@ -23,14 +23,14 @@
    </div>
     <div class="col-6 text-center px-0">
       <h4 class="text-danger ff_mon">
-      <img class="" src="{{ URL::asset('hos/img/HOS-logo.png') }}" style="width:auto;height: 30px"><br>
+      <img class="" src="{{ url('hos/img/HOS-logo.png') }}" style="width:auto;height: 30px"><br>
       <b class="text_shadow">3PL PORTAL</b></h4>
     </div>
     <div class="col-3 text-right px-0" style="font-size: 11px;font-weight: 600;"> 
       <div class="row">
       <div class="col-5 text-center"></div>
          <div class="col-7 text-center">
-           <img class="" src="{{ URL::asset('hos/img/logo2.png') }}" height="50px" width="auto" style="margin:16px 10px">
+           <img class="" src="{{ url('hos/img/logo2.png') }}" height="50px" width="auto" style="margin:16px 10px">
          </div>
          
       </div>
@@ -109,16 +109,16 @@ echo $currentTime; ?></span> |
 
 
 <!-- script files -->
-  <script src="{{ URL::asset('hos/js/jquery.min.js') }}"></script>
-  <script src="{{ URL::asset('hos/js/jquery-3.3.1.js') }}"></script>
-  <script src="{{ URL::asset('hos/js/popper.min.js') }}"></script>
-  <script src="{{ URL::asset('hos/js/bootstrap.min.js') }}"></script>
-  <script src="{{ URL::asset('hos/js/crs.min.js') }}"></script>
-  <script src="{{ URL::asset('hos/js/script.js') }}"></script>
+  <script src="{{ url('hos/js/jquery.min.js') }}"></script>
+  <script src="{{ url('hos/js/jquery-3.3.1.js') }}"></script>
+  <script src="{{ url('hos/js/popper.min.js') }}"></script>
+  <script src="{{ url('hos/js/bootstrap.min.js') }}"></script>
+  <script src="{{ url('hos/js/crs.min.js') }}"></script>
+  <script src="{{ url('hos/js/script.js') }}"></script>
   <!--------table style lib------------------------>
   
-  <script src="{{ URL::asset('hos/js/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ URL::asset('hos/js/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="{{ url('hos/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ url('hos/js/dataTables.bootstrap4.min.js') }}"></script>
   <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
   <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
   
