@@ -38,9 +38,9 @@
           <form id="store_order_form" class="mb-0" method="POST">
               <div class="row">
                 <div class="col-6">
-                  <div class="form-group col-8">
-                    <label for="supplying-plant">Supplying Plant:</label>
-                    <select class="form-control" id="supplying_plant_id" name="supplying_plant_id">
+                  <div class="form-group mb-0">
+                    <label for="supplying-plant" class="col-4">Supplying Plant:</label>
+                    <select class="form-control-sm col-4" id="supplying_plant_id" name="supplying_plant_id">
                     @foreach($suppling_plants as $key=>$val)
                       <option value="{{$val->id}}">{{$val->plant_name}}</option>
                     @endforeach
@@ -48,9 +48,9 @@
                   </div>
                 </div>
                 <div class="col-6">
-                  <div class="form-group col-8">
-                    <label for="delivery-date">Delivery Date:</label>
-                    <input type="" class="datepicker form-control" name="delivery_date">
+                  <div class="form-group mb-0">
+                    <label for="delivery-date" class="col-4">Delivery Date:</label>
+                    <input type="" class="datepicker form-control-sm col-4" name="delivery_date">
                   </div>
                 </div>
               </div>
