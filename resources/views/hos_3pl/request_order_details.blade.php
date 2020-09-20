@@ -116,6 +116,7 @@
                   <th>Batch No</th>
                   <th>Manufacture Date</th>
                   <th>Expiry Date</th>
+                  <th>Action</th>
               </tr>
           </thead>
           <tbody>
