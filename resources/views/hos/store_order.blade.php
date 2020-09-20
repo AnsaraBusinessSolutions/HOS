@@ -39,20 +39,21 @@
             <table class="table table-borderless text-center mb-0">
               <thead>
                  <tr>
-                  <th class="p-0"></th>
-                   <th class="p-0">
+                  <th width="6%" class="p-0">&ensp;</th>
+                   <th width="10%" class="p-0">
                     <label for="supplying-plant">Supplying Plant:</label></th>
-                   <th class="p-0">
+                   <th width="20%" class="p-0">
                     <select class="form-control" id="supplying_plant_id" name="supplying_plant_id">
                     @foreach($suppling_plants as $key=>$val)
                       <option value="{{$val->id}}">{{$val->plant_name}}</option>
                     @endforeach
                     </select></th>
-                   <th class="p-0">
+                    <th width="6%" class="p-0">&ensp;</th>
+                   <th width="10%" class="p-0">
                     <label for="delivery-date">Delivery Date:</label></th>
-                   <th class="p-0">
+                   <th width="20%" class="p-0">
                     <input type="" class="datepicker form-control" name="delivery_date"></th>
-                     <th class="p-0"></th>
+                     <th width="6%" class="p-0">&ensp;</th>
                  </tr>
               </thead>
             </table>
@@ -103,7 +104,7 @@ $(function() {
     table = $('#store_order').DataTable({
       "searching": false,
       "paging": false,
-      "scrollY": "53vh"
+      "scrollY": "55vh"
     });
     var counter = 1;
     $('#addRow').on('click', function (e) { 
