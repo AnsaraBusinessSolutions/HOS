@@ -103,7 +103,7 @@ $(function() {
     table = $('#store_order').DataTable({
       "searching": false,
       "paging": false,
-      "scrollY": "50vh"
+      "scrollY": "53vh"
     });
     var counter = 1;
     $('#addRow').on('click', function (e) { 
