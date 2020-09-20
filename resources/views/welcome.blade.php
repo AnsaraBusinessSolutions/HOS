@@ -72,7 +72,7 @@
                     @else
                         <a href="{{ route('admin.login') }}">Admin</a>
                         <a href="{{ route('hos.login') }}">HOS</a>
-                        <a href="{{ route('inbound.login') }}">Inbound</a>
+                        <a href="{{ route('inbound.login') }}">Department</a>
                         <a href="{{ route('hos3pl.login') }}">3PL</a>
                         <!-- <a href="{{ url('approve/login') }}">Aproove</a> -->
                         <!-- @if (Route::has('register'))
