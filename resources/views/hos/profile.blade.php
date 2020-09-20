@@ -9,7 +9,7 @@
           <div class="col-3">
             <div class="card shadow border-0 py-3">
               <div class="form-group text-center my-2">
-                 <img src="{{ asset('hos/img/prof.png') }}" class="bg-light" alt="prof" style="width: 90px;height: auto;border-radius: 50px">
+                 <img src="{{ asset('public/hos/img/prof.png') }}" class="bg-light" alt="prof" style="width: 90px;height: auto;border-radius: 50px">
               </div>
               <h5 class="text-center"><b>{{ Auth::user()->name }}</b></h5>
               <h6 class="text-center text-primary"><b>admin</b></h6>

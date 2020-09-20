@@ -4,16 +4,16 @@
   <title>HOS</title>
   <meta name="theme-color" content="#557eb0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 shrink-to-fit=no, user-scalable=0">
-  <link rel="icon" type="image/png" href="{{ asset('hos/img/HOS-logo.png') }}" sizes="194x194">
-  <link rel="stylesheet" href="{{ asset('hos/css/bootstrap.min.css') }}">
+  <link rel="icon" type="image/png" href="{{ asset('public/hos/img/HOS-logo.png') }}" sizes="194x194">
+  <link rel="stylesheet" href="{{ asset('public/hos/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed|Titillium+Web|Changa|Montserrat|Ubuntu&display=swap" rel="stylesheet">
   <link rel="manifest" href="assets/lib/manifest.json">
-  <link rel="stylesheet" type="text/css" href="{{ asset('hos/css/style.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ asset('hos/css/style2.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('public/hos/css/style.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('public/hos/css/style2.css') }}">
   <!--------table style lib------------------------>
-  <link rel="stylesheet" type="text/css" href="{{ asset('hos/css/bootstrap.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ asset('hos/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('public/hos/css/bootstrap.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('public/hos/css/dataTables.bootstrap4.min.css') }}">
   <style type="text/css">
 .bg-gradient-primary {
   background-image: linear-gradient(90deg,#BAD0D9 10%,#92a5ac 100%);
@@ -101,7 +101,7 @@ form.user .btn-user {
                     <hr>
                   </form>
                   <div class="text-center">
-                    <img class="" src="{{ asset('hos/img/HOS-logo.png') }}" style="width:auto;height: 30px">
+                    <img class="" src="{{ asset('public/hos/img/HOS-logo.png') }}" style="width:auto;height: 30px">
                   </div>
                 </div>
               </div>
@@ -113,11 +113,11 @@ form.user .btn-user {
   </div>
 
   <!-- script files -->
-  <script src="{{ asset('hos/js/jquery.min.js') }}"></script>
-  <script src="{{ asset('hos/js/popper.min.js') }}"></script>
-  <script src="{{ asset('hos/js/bootstrap.min.js') }}"></script>
-  <script src="{{ asset('hos/js/crs.min.js') }}"></script>
-  <script src="{{ asset('hos/js/script.js') }}"></script>
+  <script src="{{ asset('public/hos/js/jquery.min.js') }}"></script>
+  <script src="{{ asset('public/hos/js/popper.min.js') }}"></script>
+  <script src="{{ asset('public/hos/js/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('public/hos/js/crs.min.js') }}"></script>
+  <script src="{{ asset('public/hos/js/script.js') }}"></script>
 
 </body>
 
