@@ -119,7 +119,7 @@
               </tr>
           </thead>
           <tbody>
-          <button name="submit" type="button"  class="btn btn-success" id="add_batch">Add Batch</button>
+          <button name="submit" type="button"  class="btn btn-success float-right" id="add_batch">Add Batch</button>
               
         </tbody>
         </table>
