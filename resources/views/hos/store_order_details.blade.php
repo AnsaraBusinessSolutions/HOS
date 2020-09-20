@@ -6,7 +6,7 @@
             {!! Session::get('message') !!}
           @endif
           <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>Order Details {{$order_code}}</b> </h5>
+            <h5 style="color: steelblue"> <b>Order {{$order_code}} Details</b> </h5>
           </div>
           </div>
           <form action="{{route('hos.order.update')}}" method="POST">
@@ -17,35 +17,41 @@
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">Item #</th>
                       <th class="text-nowrap px-3">NUPCO Material</th>
+                      <th class="text-nowrap px-3">NUPCO Trade Code</th>
                       <th class="text-nowrap px-3">Customer Code</th>
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3">Qty</th>
-                      <th class="text-nowrap px-3">Batch</th>
+                      <th class="text-nowrap px-3">Delivery Date</th>
+                      
                   </tr>
               </thead>
               <tbody>
                   @foreach($order_detail as $key=>$val)
                   <tr>
                       <td>{{$key+1}}</td>
-                      <td>{{$val->nupco_material_generic_code}}</td>
-                      <td>{{$val->customer_trade_code}}</td>
-                      <td>{{$val->material_description}}</td>
-                      <td>{{$val->buom}}</td>
+                      <td>{{$val->nupco_generic_code}}</td>
+                      <td>{{$val->nupco_trade_code}}</td>
+                      <td>{{$val->customer_code}}</td>
+                      <td>{{$val->nupco_desc}}</td>
+                      <td>{{$val->uom}}</td>
+                      @if($val->status == 0 || $val->status == 2)
                       <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" class="form-control h_sm" name="qty[]" value="{{$val->qty}}"></td>
-                      <td>
-                      @if($val->batch_count > 0)
-                      <button class="btn btn-warning btn_batch btn-sm" data-order_id="{{$val->id}}">Batch</button>
+                      @else
+                      <td>{{$val->qty}}</td>
                       @endif
-                      </td>
+                      <td>{{$val->delivery_date}}</td>
+                      
                   </tr>
                  @endforeach
               </tbody>
             </table>
           </div>
+          @if(count($order_detail) > 0 && ($order_detail[0]->status == 0 || $order_detail[0]->status == 2))
           <div class="col-12 text-center">
-                  <button id="store_order_submit" class="btn btn-info my-2">Update</button>
+              <button id="store_order_submit" class="btn btn-info my-2">Resubmit</button>
           </div>
+          @endif
           </form>
         </div>
         @stop

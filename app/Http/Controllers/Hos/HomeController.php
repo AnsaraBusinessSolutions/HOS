@@ -25,11 +25,12 @@ class HomeController extends Controller
         $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
-                                ->join('supplying_plant as sp', 'sp.id', '=', 'od.supplying_plant_id')
+                                ->join('users as u', 'u.id', '=', 'od.user_id')
+                                ->join('hss_master as hs', 'hs.id', '=', 'u.hss_master_id')
                                 ->where('od.user_id','=',$user_id)
                                 ->orderBy('od.order_code','DESC')
                                 ->groupBy("od.order_code")
-                                ->select('od.order_code','sp.plant_name','od.delivery_date','mm.buom','od.qty','od.status','od.created_at')
+                                ->select('od.order_code','hs.delivery_wh_name','od.delivery_date','mm.uom','od.qty','od.status','od.created_at')
                                 ->selectRaw('sum(od.qty) as total_qty')
                                 ->get();
    
@@ -38,10 +39,10 @@ class HomeController extends Controller
 
     public function storeOrder()
     {
-        $supplying_plant_id = Auth::user()->supplying_plant_id;
-        $suppling_plants = DB::table('supplying_plant')->where('id',$supplying_plant_id)->get();
+        $hss_master_id = Auth::user()->hss_master_id;
+        $delivery_wh = DB::table('hss_master')->where('id',$hss_master_id)->get();
     
-        return view('hos.store_order',array('suppling_plants'=>$suppling_plants));
+        return view('hos.store_order',array('delivery_wh'=>$delivery_wh));
     }
 
     public function profile(){
@@ -51,7 +52,7 @@ class HomeController extends Controller
     public function materialData(Request $request){
         $input_data = $request->input_data;
         $input_name = $request->input_name;
-        $material_data = MaterialMaster::select('id','nupco_material_generic_code','customer_trade_code','material_description','buom')->where($input_name, $input_data)->get();
+        $material_data = MaterialMaster::select('id','nupco_generic_code','customer_code','nupco_desc','uom')->where($input_name, $input_data)->get();
         return response()->json(array('data'=>$material_data));
     }
 
@@ -100,7 +101,6 @@ class HomeController extends Controller
                            
                     $order_data[] = array('order_code' => $ord_no,
                                         'material_master_id' => $material_master_id_array[$key],
-                                        'supplying_plant_id' => $request->input('supplying_plant_id'),
                                         'user_id'=>Auth::user()->id,
                                         'qty'=>$val,
                                         'delivery_date'=>$delivery_date,
@@ -126,7 +126,7 @@ class HomeController extends Controller
 
     public function orderDetail($order_code){
         $order_detail = DB::table('order_details as od')
-                                        ->select('od.id','mm.nupco_material_generic_code','mm.customer_trade_code','mm.material_description','mm.buom','od.qty',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                                        ->select('od.id','mm.nupco_generic_code','mm.nupco_trade_code','mm.customer_code','mm.nupco_desc','mm.uom','od.qty','od.delivery_date','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
                                         ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
                                         ->where('od.order_code', $order_code)
                                         ->get();
@@ -143,7 +143,8 @@ class HomeController extends Controller
                 ->where('id',$val)
                 ->update([
                     'qty' => $qty_arr[$key],
-                    'updated_at'=>date("Y-m-d H:i:s")
+                    'updated_at'=>date("Y-m-d H:i:s"),
+                    'status'=>0
             ]);
         }
         
