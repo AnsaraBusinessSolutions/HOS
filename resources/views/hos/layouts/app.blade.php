@@ -181,14 +181,17 @@ echo $currentTime; ?></span> |
 
 <!-- script files -->
   <script src="{{ asset('hos/js/jquery.min.js') }}"></script>
+  <script src="{{ asset('hos/js/jquery-3.3.1.js') }}"></script>
   <script src="{{ asset('hos/js/popper.min.js') }}"></script>
   <script src="{{ asset('hos/js/bootstrap.min.js') }}"></script>
   <script src="{{ asset('hos/js/crs.min.js') }}"></script>
   <script src="{{ asset('hos/js/script.js') }}"></script>
   <!--------table style lib------------------------>
-  <script src="{{ asset('hos/js/jquery-3.3.1.js') }}"></script>
+  
   <script src="{{ asset('hos/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ asset('hos/js/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+  <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
   
   @stack('scripts')
   <script>
@@ -208,6 +211,11 @@ echo $currentTime; ?></span> |
         $("input[type=checkbox]").prop('checked', $(this).prop('checked'));
 
    });
+  </script>
+  <script>
+      $('.datepicker').datepicker({
+          uiLibrary: 'bootstrap4'
+      });
   </script>
 </body>
 </html>

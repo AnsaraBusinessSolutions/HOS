@@ -27,6 +27,7 @@ Route::prefix('store')->group(function () {
     Route::post('/login', 'Auth\LoginController@login')->name('hos.login');
     Route::get('/home', 'Hos\HomeController@index')->name('hos.home')->middleware('auth');
     Route::get('/order', 'Hos\HomeController@storeOrder')->name('hos.store.order')->middleware('auth');
+    Route::post('/batch_data', 'Hos\HomeController@batchData')->name('hos.order.batch.data')->middleware('auth');
     Route::get('/profile', 'Hos\HomeController@profile')->name('hos.profile')->middleware('auth');
     Route::post('/add_order', 'Hos\HomeController@addOrder')->name('hos.add.order')->middleware('auth');
     Route::get('/order_detail/{order_code}', 'Hos\HomeController@orderDetail')->name('hos.order.detail')->middleware('auth');
@@ -43,6 +44,7 @@ Route::prefix('inbound')->group(function () {
     Route::get('/home', 'Inbound\HomeController@index')->name('inbound.home');
     Route::get('/request_order_detail/{order_code}', 'Inbound\HomeController@requestOrderDetail')->name('inbound.order.detail');
     Route::post('/order_detail', 'Inbound\HomeController@orderUpdate')->name('inbound.order.update');
+    Route::post('/batch_data', 'Inbound\HomeController@batchData')->name('inbound.order.batch.data');
     Route::post('/order_reject', 'Inbound\HomeController@orderRejected')->name('inbound.order.reject');
     Route::post('/order_approve', 'Inbound\HomeController@orderApprove')->name('inbound.order.approve');
 });
@@ -55,6 +57,7 @@ Route::prefix('hos3pl')->group(function () {
     Route::get('/home', 'Hos_3pl\HomeController@index')->name('hos3pl.home');
     Route::get('/order_detail/{order_code}', 'Hos_3pl\HomeController@requestOrderDetail')->name('hos3pl.order.detail');
     Route::post('/order_status', 'Hos_3pl\HomeController@orderStatusUpdate')->name('hos3pl.order.status.update');
+    Route::post('/order_batch_insert', 'Hos_3pl\HomeController@orderBatchInsert')->name('hos3pl.order.batch.insert');
 });
 
 // Route::group(['middleware' => ['auth', 'approve']],function() {

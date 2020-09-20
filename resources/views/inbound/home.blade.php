@@ -11,23 +11,22 @@
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">Store Order #</th>
                       <th class="text-nowrap px-3">Supplying Plant</th>
-                      <th class="text-nowrap px-3">Delivery date</th>
+                      <th class="text-nowrap px-3">Delivery Date</th>
                       <th class="text-nowrap px-3">Uom</th>
                       <th class="text-nowrap px-3">Qty Ordered</th>
+                      <th class="text-nowrap px-3">Created Date</th>
                       <th class="text-nowrap px-3">Status</th>
-                      
                   </tr>
               </thead>
               <tbody>
-                 
-
                   @foreach($all_order as $key=>$val)
                   <tr onclick="window.location.href='{{url('inbound/request_order_detail/'.$val->order_code)}}'">
                       <td>{{$val->order_code}}</td>
-                      <td>{{$val->wh_name}}</td>
+                      <td>{{$val->plant_name}}</td>
                       <td>{{$val->delivery_date}}</td>
                       <td>{{$val->buom}}</td>
                       <td>{{$val->total_qty}}</td>
+                      <td>{{date('Y-m-d', strtotime($val->created_at))}}</td>
                       <td>
                         @if($val->status == 0)
                             <span class="text-warning"><b>NEW</b></span>
@@ -43,7 +42,6 @@
                         <span class="text-danger"><b>CANCELLED</b></span>
                         @endif
                       </td>
-                      
                   </tr>
                @endforeach 
                   

@@ -21,13 +21,11 @@ class HomeController extends Controller
        // $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
-                                ->join('users as u', 'u.id', '=', 'od.user_id')
-                                ->join('hss_master as hm', 'hm.hospital_code', '=', 'u.hospital_code')
-                                ->join('warehouse as w', 'w.wh_id', '=', 'hm.wh_id')
+                                ->join('supplying_plant as sp', 'sp.id', '=', 'od.supplying_plant_id')
                                 ->orderBy('od.order_code','DESC')
                                 ->groupBy("od.order_code")
-                                ->where('u.user_type',1)
-                                ->select('od.order_code','w.wh_name','od.delivery_date','mm.buom','od.qty','od.status')
+                                ->whereIn('od.status',[0,1,2])
+                                ->select('od.order_code','sp.plant_name','od.delivery_date','mm.buom','od.qty','od.status','od.created_at')
                                 ->selectRaw('sum(od.qty) as total_qty')
                                 ->get();
    
@@ -35,7 +33,7 @@ class HomeController extends Controller
     }
 
     public function requestOrderDetail($order_code){
-        $order_detail = DB::table('order_details as od')->select('od.id','mm.nupco_material_generic_code','mm.customer_bp','mm.material_description','mm.buom','od.qty','od.status')
+        $order_detail = DB::table('order_details as od')->select('od.id','mm.nupco_material_generic_code','mm.customer_bp','mm.material_description','mm.buom','od.qty','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
                                         ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
                                         ->where('od.order_code', $order_code)
                                         ->get();
@@ -60,7 +58,7 @@ class HomeController extends Controller
 
     public function orderRejected(Request $request){
          $order_code = $request->input('order_code');
-         $rejection_date = date("Y-m-d", strtotime($request->input('rejection_date')));
+         $rejection_date = date("Y-m-d");
          if($order_code != ''){
             DB::table('order_details')
                 ->where('order_code',$order_code)
@@ -76,17 +74,29 @@ class HomeController extends Controller
     public function orderApprove(Request $request){
         $order_code = $request->input('order_code');
         if($order_code != ''){
+        $approve_date = date("Y-m-d");
            DB::table('order_details')
                ->where('order_code',$order_code)
                ->update([
                    'approve_comment' => $request->input('approve_comment'),
+                   'approve_date' => $approve_date,
                    'status'=>1
            ]);
        }
        return redirect('inbound/home');
    }
 
-    
 
+   public function batchData(Request $request){
+        $order_id = $request->input('order_id');
+        
+        $batch_data = array();
+        if($order_id != ''){
+            $batch_data = DB::table('batch_list')
+                                    ->select('batch_qty','batch_no','manufacture_date','expiry_date')
+                                    ->where('order_id',$order_id)->get();
+        }
+        return $batch_data;
+    }
 
 }

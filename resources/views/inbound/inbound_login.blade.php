@@ -62,7 +62,7 @@ form.user .btn-user {
               <div class="col-lg-12 ff_mon">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">HOS INBOUND LOGIN</h1>
+                    <h1 class="h4 text-gray-900 mb-4">HOS DEPARTMENT LOGIN</h1>
                   </div>
                   @if($errors->has('common-error'))
                     <h6 class="text-center text-danger">{{ $errors->first('common-error') }}</h6>

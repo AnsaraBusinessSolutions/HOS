@@ -36,8 +36,17 @@
           @endif
 
           <form id="store_order_form" class="mb-0" method="POST">
-
-                <div class="col-12 text-center">
+              <div class="form-group col-4">
+                <label for="supplying-plant">Supplying Plant:</label>
+                <select class="form-control" id="supplying_plant_id" name="supplying_plant_id">
+                @foreach($suppling_plants as $key=>$val)
+                  <option value="{{$val->id}}">{{$val->plant_name}}</option>
+                @endforeach
+                </select>
+                <label for="delivery-date">Delivery Date:</label>
+                <input type="" class="datepicker form-control" name="delivery_date">
+              </div>
+              <div class="col-12 text-center">
                   <table id="store_order" class="table table-striped table-bordered text-center">
                     <thead>
                         <tr class="bg_color">

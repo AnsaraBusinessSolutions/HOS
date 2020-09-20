@@ -50,7 +50,7 @@ echo $currentTime; ?></span> |
     <div class="sidenav px-0 mt-2 bg-grey">
       <ul class="list-group">
         <li  class="nav-item bg-white" style="padding: 18px 20px;font-size: 16px">
-          <i class="fas fa-minus-square"></i></li>
+        &ensp;</li>
       </ul>
       <ul class="navbar-nav">
         @if(Request::path() == 'inbound/home' || Request::is('inbound/request_order_detail/*'))
@@ -108,12 +108,12 @@ echo $currentTime; ?></span> |
 
 <!-- script files -->
   <script src="{{ asset('hos/js/jquery.min.js') }}"></script>
+  <script src="{{ asset('hos/js/jquery-3.3.1.js') }}"></script>
   <script src="{{ asset('hos/js/popper.min.js') }}"></script>
   <script src="{{ asset('hos/js/bootstrap.min.js') }}"></script>
   <script src="{{ asset('hos/js/crs.min.js') }}"></script>
   <script src="{{ asset('hos/js/script.js') }}"></script>
   <!--------table style lib------------------------>
-  <script src="{{ asset('hos/js/jquery-3.3.1.js') }}"></script>
   <script src="{{ asset('hos/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ asset('hos/js/dataTables.bootstrap4.min.js') }}"></script>
   <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>

@@ -21,7 +21,7 @@
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3">Qty</th>
-                      <th class="text-nowrap px-3">Available</th>
+                      <th class="text-nowrap px-3">Batch</th>
                   </tr>
               </thead>
               <tbody>
@@ -34,7 +34,7 @@
                       <td>{{$val->material_description}}</td>
                       <td>{{$val->buom}}</td>
                       <td>{{$val->qty}}</td>
-                      <td>available</td>
+                      <td><button class="btn btn-small btn-warning batch_btn" data-order_id="{{$val->id}}">Batch</button></td>
                   </tr>
                  @endforeach
               </tbody>
@@ -49,7 +49,7 @@
         </div>
     </div>
 @stop
-<!-- The Modal -->
+<!-- Dispatch Modal -->
 <div class="modal" id="dipatch_modal">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
@@ -93,19 +93,93 @@
     </div>
   </div>
 </div>
+
+<!-- Batch Modal -->
+<div class="modal" id="batch_modal">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="text-center w-100"><b>Batch Details</b></h5>
+        <button name="submit" type="button"  class="btn btn-success" id="add_batch">Add Batch</button>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <form id="approve_form" method="POST" action="{{route('hos3pl.order.batch.insert')}}">
+      @csrf
+      <input type="hidden" name="order_id" id="order_id">
+      <div class="modal-body">
+       <div class="table-responsive">
+        <table id="batch_table" class="table table-bordered table-sm text-center">
+          <thead>
+              <tr class="table-primary">
+                  <th>Batch QTY</th>
+                  <th>Batch No</th>
+                  <th>Manufacture Date</th>
+                  <th>Expiry Date</th>
+              </tr>
+          </thead>
+          <tbody>
+              
+        </tbody>
+        </table>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer py-2 my-3 border-0 justify-content-center">
+        <button name="submit" type="submit" value="submit" class="btn btn-success">Submit</button>
+        <button type="button" data-dismiss="modal" class="btn btn-danger">Close</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
 @push('scripts')
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('.example').DataTable( {
-            "order": [[ 1, "desc" ]],
-            "scrollY":        "55vh",
-            "scrollCollapse": true,
-            "paging":         false,
-            "searching": false,
-            "lengthMenu": [ [15, 30, 50, 100, 250, 500, 1000, 1500], [15, 20, 50, 100, 250, 500, 1000, 1500] ],
-            "iDisplayLength": 1000,
-        } );
-    } );
-  </script>
-  @endpush
+<script>
+$(function() {
+    $('.example').DataTable( {
+        "order": [[ 1, "desc" ]],
+        "scrollY":        "55vh",
+        "scrollCollapse": true,
+        "paging":         false,
+        "searching": false,
+        "lengthMenu": [ [15, 30, 50, 100, 250, 500, 1000, 1500], [15, 20, 50, 100, 250, 500, 1000, 1500] ],
+        "iDisplayLength": 1000,
+    });
+
+    var counter = 1;
+    $('#add_batch').click(function () {
+        var tr = $('<tr><td><input class="form-control" type="text" name="batch_qty[]" id="batch_qty_'+counter+'" required maxlength="10"></td>'
+                  +'<td><input class="form-control" type="text" name="batch_no[]" id="batch_no_'+counter+'" required maxlength="10"></td>'
+                  +'<td><input class="manufacture_date form-control" type="" name="manufacture_date[]" id="manufacture_date_'+counter+'" required></td>'
+                  +'<td><input class="expiry_date form-control" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required></td></tr>');
+
+        $('#batch_table tbody').append(tr);
+        $(tr).find('.expiry_date').datepicker({
+                autoclose: true
+        });
+        $(tr).find('.manufacture_date').datepicker({
+                autoclose: true
+        });
+        counter++;
+    });
+
+    $('.batch_btn').click(function(){
+        var order_id = $(this).data('order_id');
+        $('#order_id').val(order_id);
+        if(order_id != ''){
+          $('#batch_modal').modal('show');
+          $('#add_batch').click();
+        }
+    });
+
+    $('#batch_modal').on('hidden.bs.modal', function () {
+      $('#batch_modal').find('tr').remove();
+      counter = 1;
+    });
+
+});
+  
+</script>
+@endpush
 

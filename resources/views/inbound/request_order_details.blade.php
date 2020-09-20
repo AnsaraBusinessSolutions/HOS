@@ -22,7 +22,7 @@
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3">Qty</th>
-                      <th class="text-nowrap px-3">Available</th>
+                      <th class="text-nowrap px-3">Batch</th>
                   </tr>
               </thead>
               <tbody>
@@ -34,7 +34,11 @@
                       <td>{{$val->material_description}}</td>
                       <td>{{$val->buom}}</td>
                       <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" name="qty[]" value="{{$val->qty}}"></td>
-                      <td>available</td>
+                      <td>
+                      @if($val->batch_count > 0)
+                      <button class="btn btn-warning btn_batch" data-order_id="{{$val->id}}">Batch</button>
+                      @endif
+                      </td>
                   </tr>
                  @endforeach
                  
@@ -72,18 +76,6 @@
             <td class="py-0 px-0" width="1%">:</td>
             <td class="py-0 px-1">
               <textarea class="form-control py-0 mb-1" rows="2" name="rejection_reason" style="width: 80%;"></textarea>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              <p class="text-center"><b>New Suggested Date</b></p>
-            </td>
-          </tr>
-          <tr>
-            <td class="py-0 px-1" width="20%"><b>Date</b></td>
-            <td class="py-0 px-0" width="1%">:</td>
-            <td class="py-0 px-1">
-              <input type="" class="datepicker form-control" name="rejection_date">
             </td>
           </tr>
         </tbody>
@@ -131,19 +123,79 @@
     </div>
   </div>
 </div>
+
+ <!-- Batch Modal -->
+ <div class="modal" id="batch_modal">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="text-center w-100"><b>Batch Details</b></h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <form id="approve_form">
+      @csrf
+      <input type="hidden" name="order_id" id="order_id">
+      <div class="modal-body">
+       <div class="table-responsive">
+        <table id="batch_table" class="table table-bordered table-sm text-center">
+          <thead>
+              <tr class="table-primary">
+                  <th>Batch QTY</th>
+                  <th>Batch No</th>
+                  <th>Manufacture Date</th>
+                  <th>Expiry Date</th>
+              </tr>
+          </thead>
+          <tbody>
+              
+        </tbody>
+        </table>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
 @push('scripts')
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('.example').DataTable( {
-            "order": [[ 1, "desc" ]],
-            "scrollY":        "55vh",
-            "scrollCollapse": true,
-            "paging":         false,
-            "searching": false,
-            "lengthMenu": [ [15, 30, 50, 100, 250, 500, 1000, 1500], [15, 20, 50, 100, 250, 500, 1000, 1500] ],
-            "iDisplayLength": 1000,
-        } );
-    } );
+  $(document).ready(function() {
+    $('.example').DataTable( {
+        "order": [[ 1, "desc" ]],
+        "scrollY":        "55vh",
+        "scrollCollapse": true,
+        "paging":         false,
+        "searching": false,
+        "lengthMenu": [ [15, 30, 50, 100, 250, 500, 1000, 1500], [15, 20, 50, 100, 250, 500, 1000, 1500] ],
+        "iDisplayLength": 1000,
+    });
+
+    $('#batch_table').DataTable({
+      "searching": false,
+      "paging": false,
+      "ordering": false,
+      "bInfo": false,
+    });
+
+    $('.btn_batch').click(function(e){
+      e.preventDefault();
+      var order_id = $(this).data('order_id');
+      $.ajax({
+            url: "{{route('inbound.order.batch.data')}}",
+            type: 'POST',
+            data: {"order_id":order_id,'_token':"{{ csrf_token() }}"},
+            success : function(response) {
+              var batch_tr = '';
+              $.each(response, function(i, item) {
+                batch_tr += '<tr><td>'+item.batch_qty+'<td>'+item.batch_no+'<td>'+item.manufacture_date+'<td>'+item.expiry_date+'</tr>';
+              });
+              $('#batch_table tbody').html(batch_tr);
+              $('#batch_modal').modal('show');
+            }
+          });
+    });
+  });
   </script>
   @endpush
 

@@ -20,14 +20,11 @@ class HomeController extends Controller
        // $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
-                                ->join('users as u', 'u.id', '=', 'od.user_id')
-                                ->join('hss_master as hm', 'hm.hospital_code', '=', 'u.hospital_code')
-                                ->join('warehouse as w', 'w.wh_id', '=', 'hm.wh_id')
+                                ->join('supplying_plant as sp', 'sp.id', '=', 'od.supplying_plant_id')
                                 ->orderBy('od.order_code','DESC')
                                 ->groupBy("od.order_code")
-                                ->where('u.user_type',1)
                                 ->whereIn('od.status',[1,3])
-                                ->select('od.order_code','w.wh_name','od.delivery_date','mm.buom','od.qty','od.status')
+                                ->select('od.id','od.order_code','sp.plant_name','od.delivery_date','mm.buom','od.qty','od.status','od.created_at')
                                 ->selectRaw('sum(od.qty) as total_qty')
                                 ->get();
    
@@ -61,5 +58,40 @@ class HomeController extends Controller
         }
         return redirect()->route('hos3pl.home');
     }
+
+    public function orderBatchInsert(Request $request){
+        $batch_qty_array = $request->input('batch_qty');
+        $batch_no_array = $request->input('batch_no');
+        $manufacture_date_array = $request->input('manufacture_date');
+        $expiry_date_array = $request->input('expiry_date');
+        $order_id = $request->input('order_id');
+        foreach($batch_qty_array as $key=>$val) {
+            if(!empty($val) && $order_id != ''){ 
+                $batch_data[] = array('order_id' => $order_id,
+                                    'batch_qty' => $val,
+                                    'batch_no' => $batch_no_array[$key],
+                                    'manufacture_date'=>$manufacture_date_array[$key],
+                                    'expiry_date'=>$expiry_date_array[$key],
+                                    'created_at'=>date('Y-m-d H:i:s'),
+                                    'updated_at'=>date('Y-m-d H:i:s') );
+            }
+        }
+        $result = 0;
+        if(!empty($batch_data)){
+            $result = DB::table('batch_list')->insert($batch_data);
+        }
+
+        if($result){
+            $status = 1;
+            $request->session()->flash("message","<div class='col-12 text-center alert alert-success' role='alert'>Batch Added Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
+        }else{
+            $status = 0;
+            $request->session()->flash("message","<div class='col-12 text-center alert alert-danger' role='alert'>Something went wrong.Please try again or contact to admin<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
+        }
+
+        return back();
+
+    }
+    
 
 }
