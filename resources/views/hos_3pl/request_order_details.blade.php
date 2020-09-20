@@ -155,12 +155,12 @@ $(function() {
                   +'<td><input class="expiry_date form-control datepicker" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required></td></tr>');
 
         $('#batch_table tbody').append(tr);
-        $(tr).find('.expiry_date').datepicker({
-                autoclose: true
-        });
-        $(tr).find('.manufacture_date').datepicker({
-                autoclose: true
-        });
+        // $(tr).find('.expiry_date').datepicker({
+        //         autoclose: true
+        // });
+        // $(tr).find('.manufacture_date').datepicker({
+        //         autoclose: true
+        // });
         counter++;
     });
 
