@@ -24,13 +24,10 @@ class HomeController extends Controller
         
         $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
-                                ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
-                                ->join('users as u', 'u.id', '=', 'od.user_id')
-                                ->join('hss_master as hs', 'hs.id', '=', 'u.hss_master_id')
                                 ->where('od.user_id','=',$user_id)
                                 ->orderBy('od.order_code','DESC')
                                 ->groupBy("od.order_code")
-                                ->select('od.order_code','hs.delivery_wh_name','od.delivery_date','mm.uom','od.qty','od.status','od.created_at')
+                                ->select('od.order_code','od.supplying_plant','od.delivery_date','mm.uom','od.qty','od.status','od.created_at')
                                 ->selectRaw('sum(od.qty) as total_qty')
                                 ->get();
    
@@ -123,6 +120,7 @@ class HomeController extends Controller
                                 'supplying_plant'=>$supplying_plant,
                                 'hss_master_no'=>$hss_master_no,
                                 'status'=>0 );
+
                 }
                 $order_item = $order_item + 10;
             }
