@@ -24,13 +24,10 @@ class HomeController extends Controller
         
         $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
-                                ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
-                                ->join('users as u', 'u.id', '=', 'od.user_id')
-                                ->join('hss_master as hs', 'hs.id', '=', 'u.hss_master_id')
                                 ->where('od.user_id','=',$user_id)
                                 ->orderBy('od.order_code','DESC')
                                 ->groupBy("od.order_code")
-                                ->select('od.order_code','hs.delivery_wh_name','od.delivery_date','mm.uom','od.qty','od.status','od.created_at')
+                                ->select('od.order_code','od.supplying_plant','od.delivery_date','mm.uom','od.qty','od.status','od.created_at')
                                 ->selectRaw('sum(od.qty) as total_qty')
                                 ->get();
    
@@ -52,7 +49,7 @@ class HomeController extends Controller
     public function materialData(Request $request){
         $input_data = $request->input_data;
         $input_name = $request->input_name;
-        $material_data = MaterialMaster::select('id','nupco_generic_code','customer_code','nupco_desc','uom')->where($input_name, $input_data)->get();
+        $material_data = MaterialMaster::select('id','nupco_generic_code','nupco_trade_code','customer_code','customer_code_cat','nupco_desc','uom')->where($input_name, $input_data)->get();
         return response()->json(array('data'=>$material_data));
     }
 
@@ -76,17 +73,23 @@ class HomeController extends Controller
     }
 
     public function addOrder(Request $request){
-        $qty_array = $request->input('qty');
-        $material_master_id_array = $request->input('material_master_id');
-    
-        if(count($qty_array) > 0){
+        $qty_arr = $request->input('qty');
+        $nupco_generic_code_arr = $request->input('nupco_generic_code');
+        $nupco_trade_code_arr = $request->input('nupco_trade_code');
+        $customer_trade_code_arr = $request->input('customer_code');
+        $category_arr = $request->input('customer_code_cat');
+        $material_desc_arr = $request->input('nupco_desc');
+        $uom_arr = $request->input('uom');
+        $supplying_plant = $request->input('supplying_plant');
+        $hss_master_no = $request->input('hss_master_no');
+        if(count($qty_arr) > 0){
             $order_data = array();
             $ord_no = '000-000-001';
-            $last_ord_id= $last3 = DB::table('order_details')->select('order_code')->orderBy('id', 'DESC')->first();
+            $last_ord_id= $last3 = DB::table('order_details')->select('order_id')->orderBy('id', 'DESC')->first();
             if(empty($last_ord_id)){
                 $lasts_ord_id = '000-000-000';
             }else{
-                $lasts_ord_id=$last_ord_id->order_code;
+                $lasts_ord_id=$last_ord_id->order_id;
             }
             
             if($lasts_ord_id!==''){
@@ -96,16 +99,30 @@ class HomeController extends Controller
                 $ord_no = implode('-',str_split($ord_no,3));
             }
             $delivery_date = date("Y-m-d", strtotime($request->input('delivery_date')));
-            foreach($qty_array as $key=>$val) {
+            $order_item = 10;
+            foreach($qty_arr as $key=>$val) {
                 if(!empty($val)){ 
                            
-                    $order_data[] = array('order_code' => $ord_no,
-                                        'material_master_id' => $material_master_id_array[$key],
-                                        'user_id'=>Auth::user()->id,
-                                        'qty'=>$val,
-                                        'delivery_date'=>$delivery_date,
-                                        'status'=>0 );
+                $order_data[] = array('order_id' => $ord_no,
+                                'order_item'=>$order_item,
+                                'created_date'=>date('Y-m-d H:i:s'),
+                                'last_updated_date'=>date('Y-m-d H:i:s'),
+                                'user_id'=>Auth::user()->id,
+                                'user'=>Auth::user()->name,
+                                'category'=>$category_arr[$key],
+                                'nupco_generic_code'=>$nupco_generic_code_arr[$key],
+                                'nupco_trade_code'=>$nupco_trade_code_arr[$key],
+                                'customer_trade_code'=>$customer_trade_code_arr[$key],
+                                'material_desc'=>$material_desc_arr[$key],
+                                'qty_ordered'=>$val,
+                                'uom'=>$uom_arr[$key],
+                                'delivery_date'=>$delivery_date,
+                                'supplying_plant'=>$supplying_plant,
+                                'hss_master_no'=>$hss_master_no,
+                                'status'=>0 );
+                    $order_item = $order_item + 10;
                 }
+                
             }
             $result = 0;
             if(!empty($order_data)){
