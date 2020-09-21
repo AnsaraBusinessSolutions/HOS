@@ -14,7 +14,7 @@
                       <th class="text-nowrap px-3">Delivery Date</th>
                       <th class="text-nowrap px-3">Uom</th>
                       <th class="text-nowrap px-3">Qty Ordered</th>
-                      <th class="text-nowrap px-3">Ordered Date</th>
+                      <th class="text-nowrap px-3">Created Date</th>
                       <th class="text-nowrap px-3">Status</th>
                   </tr>
               </thead>
@@ -22,9 +22,9 @@
                   @foreach($all_order as $key=>$val)
                   <tr onclick="window.location.href='{{url('inbound/request_order_detail/'.$val->order_code)}}'">
                       <td>{{$val->order_code}}</td>
-                      <td>{{$val->delivery_wh_name}}</td>
+                      <td>{{$val->plant_name}}</td>
                       <td>{{$val->delivery_date}}</td>
-                      <td>{{$val->uom}}</td>
+                      <td>{{$val->buom}}</td>
                       <td>{{$val->total_qty}}</td>
                       <td>{{date('Y-m-d', strtotime($val->created_at))}}</td>
                       <td>

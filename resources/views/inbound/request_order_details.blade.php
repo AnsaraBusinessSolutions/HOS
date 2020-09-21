@@ -18,29 +18,27 @@
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">Item #</th>
                       <th class="text-nowrap px-3">NUPCO Material</th>
-                      <th class="text-nowrap px-3">NUPCO Trade Code</th>
                       <th class="text-nowrap px-3">Customer Code</th>
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3">Qty</th>
-                      <th class="text-nowrap px-3">Delivery Date</th>
+                      <th class="text-nowrap px-3">Batch</th>
                   </tr>
               </thead>
               <tbody>
               @foreach($order_detail as $key=>$val)
                   <tr>
                       <td>{{$key+1}}</td>
-                      <td>{{$val->nupco_generic_code}}</td>
-                      <td>{{$val->nupco_trade_code}}</td>
-                      <td>{{$val->customer_code}}</td>
-                      <td>{{$val->nupco_desc}}</td>
-                      <td>{{$val->uom}}</td>
-                      @if($order_detail[0]->status == 1)
+                      <td>{{$val->nupco_material_generic_code}}</td>
+                      <td>{{$val->customer_bp}}</td>
+                      <td>{{$val->material_description}}</td>
+                      <td>{{$val->buom}}</td>
                       <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" name="qty[]" value="{{$val->qty}}"></td>
-                      @else
-                      <td>{{$val->qty}}</td>
+                      <td>
+                      @if($val->batch_count > 0)
+                      <button class="btn btn-warning btn_batch" data-order_id="{{$val->id}}">Batch</button>
                       @endif
-                      <td>{{$val->delivery_date}}</td>
+                      </td>
                   </tr>
                  @endforeach
                  
@@ -52,7 +50,7 @@
           <button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal2">Approve</button>
           <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#myModal">Reject</button>
           @elseif($order_detail[0]->status == 1)
-            <button class="btn btn-success">Resubmit</button>
+            <button class="btn btn-success">Update</button>
           @endif
           </div>
           </form>

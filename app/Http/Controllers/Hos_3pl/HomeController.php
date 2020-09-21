@@ -20,12 +20,11 @@ class HomeController extends Controller
        // $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
-                                ->join('users as u', 'u.id', '=', 'od.user_id')
-                                ->join('hss_master as hs', 'hs.id', '=', 'u.hss_master_id')
+                                ->join('supplying_plant as sp', 'sp.id', '=', 'od.supplying_plant_id')
                                 ->orderBy('od.order_code','DESC')
                                 ->groupBy("od.order_code")
                                 ->whereIn('od.status',[1,3])
-                                ->select('od.id','od.order_code','hs.delivery_wh_name','od.delivery_date','mm.uom','od.qty','od.status','od.created_at')
+                                ->select('od.id','od.order_code','sp.plant_name','od.delivery_date','mm.buom','od.qty','od.status','od.created_at')
                                 ->selectRaw('sum(od.qty) as total_qty')
                                 ->get();
    
@@ -34,7 +33,7 @@ class HomeController extends Controller
 
     public function requestOrderDetail($order_code){
         $order_detail = DB::table('order_details as od')
-                            ->select('od.id','mm.nupco_generic_code','mm.nupco_trade_code','mm.customer_code','mm.nupco_desc','mm.uom','od.qty','od.status','od.delivery_date')
+                            ->select('od.id','mm.nupco_material_generic_code','mm.customer_bp','mm.material_description','mm.buom','od.qty','od.status','od.delivery_date')
                             ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
                             ->where('od.order_code', $order_code)
                             ->get();
