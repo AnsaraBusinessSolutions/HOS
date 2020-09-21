@@ -6,7 +6,7 @@
         @endif
         <div class="row mx-0">
           <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>Order Details</b> </h5>
+            <h5 style="color: steelblue"> <b>Order {{$order_code}} Details</b> </h5>
           </div>
            
           </div>
@@ -17,11 +17,13 @@
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">Item #</th>
                       <th class="text-nowrap px-3">NUPCO Material</th>
+                      <th class="text-nowrap px-3">NUPCO Trade Code</th>
                       <th class="text-nowrap px-3">Customer Code</th>
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3">Qty</th>
-                      <th class="text-nowrap px-3">Batch</th>
+                      <th class="text-nowrap px-3">Delivery Date</th>
+                     
                   </tr>
               </thead>
               <tbody>
@@ -29,12 +31,14 @@
               @foreach($order_detail as $key=>$val)
                   <tr>
                       <td>{{$key+1}}</td>
-                      <td>{{$val->nupco_material_generic_code}}</td>
-                      <td>{{$val->customer_bp}}</td>
-                      <td>{{$val->material_description}}</td>
-                      <td>{{$val->buom}}</td>
+                      <td>{{$val->nupco_generic_code}}</td>
+                      <td>{{$val->nupco_trade_code}}</td>
+                      <td>{{$val->customer_code}}</td>
+                      <td>{{$val->nupco_desc}}</td>
+                      <td>{{$val->uom}}</td>
                       <td>{{$val->qty}}</td>
-                      <td><button class="btn btn-small btn-warning batch_btn btn-sm" data-order_id="{{$val->id}}">Batch</button></td>
+                      <td>{{$val->delivery_date}}</td>
+                      
                   </tr>
                  @endforeach
               </tbody>

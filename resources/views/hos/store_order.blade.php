@@ -50,19 +50,17 @@
               <thead>
                  <tr>
                   <th width="6%" class="p-0">&ensp;</th>
-                   <th width="10%" class="p-0">
-                    <label for="supplying-plant">Supplying Plant:</label></th>
-                   <th width="20%" class="p-0">
-                    <select class="form-control h_sm" id="supplying_plant_id" name="supplying_plant_id">
-                    @foreach($suppling_plants as $key=>$val)
-                      <option value="{{$val->id}}">{{$val->plant_name}}</option>
-                    @endforeach
-                    </select></th>
+                   <th width="14%" class="p-0">
+                    <label for="supplying-plant">Supplying Plant: </label>
+                    </th>
+                    @if(count($delivery_wh) > 0)
+                    <th>{{$delivery_wh[0]->delivery_wh_name}}</th>
+                    @endif
                     <th width="6%" class="p-0">&ensp;</th>
                    <th width="10%" class="p-0">
                     <label for="delivery-date">Delivery Date:</label></th>
                    <th width="20%" class="p-0">
-                    <input type="" class="datepicker form-control h_sm" name="delivery_date"></th>
+                    <input type="" class="datepicker form-control h_sm" name="delivery_date" id="delivery_date" require></th>
                      <th width="6%" class="p-0">&ensp;</th>
                  </tr>
               </thead>
@@ -87,7 +85,7 @@
                 </div>
                 <div class="col-12 text-center">
                   <!-- <button id="store_order_submit" class="btn btn-info my-2">Create Order</button> -->
-                  <button id="store_order_submit" class="btn btn-info btn-sm my-0 mt-2" data-toggle="modal" data-target="#conformation_modal" onclick="event.preventDefault()">Create Order</button>
+                  <button id="store_order_submit" class="btn btn-info btn-sm my-0 mt-2">Create Order</button>
                 </div>
           </form>
         </div>
@@ -121,10 +119,10 @@ $(function() {
       e.preventDefault();
       table.row.add( [
             '<td class="p-0"><input type="hidden" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="material_master_id" id="material_master_id_'+counter+'" name="material_master_id[]">'+counter+'</td>',
-            '<td class="p-0"><input type="text" class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_material_generic_code" id="nupco_material_generic_code_'+counter+'" name="nupco_material_generic_code[]" maxlength="20" autocomplete="off"><div id="nupco_material_generic_code_list_'+counter+'"></div></td>',
-            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_trade_code" id="customer_trade_code_'+counter+'" name="customer_trade_code[]" maxlength="20" autocomplete="off"><div id="customer_trade_code_list_'+counter+'"></div></td>',
-            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="material_description" id="material_description_'+counter+'" name="material_description[]" autocomplete="off"><div id="material_description_list_'+counter+'"></div></td>',
-            '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="buom" id="buom_'+counter+'" name="buom[]" readonly></td>',
+            '<td class="p-0"><input type="text" class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_generic_code" id="nupco_generic_code_'+counter+'" name="nupco_generic_code[]" maxlength="20" autocomplete="off"><div id="nupco_generic_code_list_'+counter+'"></div></td>',
+            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code" id="customer_code_'+counter+'" name="customer_code[]" maxlength="20" autocomplete="off"><div id="customer_code_list_'+counter+'"></div></td>',
+            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'"></div></td>',
+            '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="uom[]" readonly></td>',
             '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off"></td>',
             '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="available[]" readonly></td>',
            ]).draw( false );
@@ -135,6 +133,16 @@ $(function() {
     for (var add_i = 0; add_i < 10; add_i++) {
        $('#addRow').click(); 
     }
+
+  $('#store_order_submit').click(function(e){
+    e.preventDefault();
+    if($('#delivery_date').val() == ''){
+      alert('Please select Delivery Date');
+    }else{
+      $('#conformation_modal').modal('show');
+    }
+    
+  });
 
   $('#save_order').click(function (e) { 
     //         event.preventDefault();
@@ -213,10 +221,10 @@ function setMaterialData(element,input_name,row_id){
           {
               if(response.data.length > 0){
                   $('#material_master_id_'+row_id).val(response.data[0].id);
-                  $('#nupco_material_generic_code_'+row_id).val(response.data[0].nupco_material_generic_code);
-                  $('#customer_trade_code_'+row_id).val(response.data[0].customer_trade_code);
-                  $('#material_description_'+row_id).val(response.data[0].material_description);
-                  $('#buom_'+row_id).val(response.data[0].buom);
+                  $('#nupco_generic_code_'+row_id).val(response.data[0].nupco_generic_code);
+                  $('#customer_code_'+row_id).val(response.data[0].customer_code);
+                  $('#nupco_desc_'+row_id).val(response.data[0].nupco_desc);
+                  $('#uom_'+row_id).val(response.data[0].uom);
                   $('#available_'+row_id).val('available');
               }else{
                   $('#'+input_name+'_'+row_id).val('');
