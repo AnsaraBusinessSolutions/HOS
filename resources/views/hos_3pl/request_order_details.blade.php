@@ -120,11 +120,10 @@
                   <th>Batch No</th>
                   <th>Manufacture Date</th>
                   <th>Expiry Date</th>
-                  <th>Action</th>
               </tr>
           </thead>
           <tbody>
-          <button name="submit" type="button"  class="btn btn-success float-right" id="add_batch">Add Batch</button>
+          <button name="submit" type="button"  class="btn btn-success" id="add_batch">Add Batch</button>
               
         </tbody>
         </table>
@@ -157,16 +156,14 @@ $(function() {
         var tr = $('<tr><td><input class="form-control" type="text" name="batch_qty[]" id="batch_qty_'+counter+'" required maxlength="10"></td>'
                   +'<td><input class="form-control" type="text" name="batch_no[]" id="batch_no_'+counter+'" required maxlength="10"></td>'
                   +'<td><input class="manufacture_date form-control datepicker" type="" name="manufacture_date[]" id="manufacture_date_'+counter+'" required></td>'
-                  +'<td><input class="expiry_date form-control datepicker" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required></td><td><i onclick="deleteRow(this)" class="fas fas fa-times"></i></i></td></tr>');
+                  +'<td><input class="expiry_date form-control datepicker" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required></td></tr>');
 
         $('#batch_table tbody').append(tr);
         $(tr).find('.expiry_date').datepicker({
-                autoclose: true,
-                uiLibrary: 'bootstrap4'
+                autoclose: true
         });
         $(tr).find('.manufacture_date').datepicker({
-                autoclose: true,
-                uiLibrary: 'bootstrap4'
+                autoclose: true
         });
         counter++;
     });
@@ -186,10 +183,7 @@ $(function() {
     });
 
 });
-  function deleteRow(btn) {
-  var row = btn.parentNode.parentNode;
-  row.parentNode.removeChild(row);
-}
+  
 </script>
 @endpush
 
