@@ -12,7 +12,7 @@
                       <th class="text-nowrap px-3">Store Order #</th>
                       <th class="text-nowrap px-3">Supplying Plant</th>
                       <th class="text-nowrap px-3">Delivery date</th>
-                      <th class="text-nowrap px-3">Uom</th>
+                      <th class="text-nowrap px-3">Order Item</th>
                       <th class="text-nowrap px-3">Qty Ordered</th>
                       <th class="text-nowrap px-3">Ordered Date</th>
                       <th class="text-nowrap px-3">Status</th>
@@ -26,7 +26,7 @@
                       <td>{{$val->order_id}}</td>
                       <td>{{$val->supplying_plant}}</td>
                       <td>{{$val->delivery_date}}</td>
-                      <td>{{$val->uom}}</td>
+                      <td>{{$val->total_item}}</td>
                       <td>{{$val->total_qty}}</td>
                       <td>{{date('Y-m-d', strtotime($val->created_date))}}</td>
                       <td>
