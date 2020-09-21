@@ -52,9 +52,9 @@ return [
             'provider' => 'admins',
         ],
 
-        'inbound' => [
+        'custodian' => [
             'driver' => 'session',
-            'provider' => 'inbounds',
+            'provider' => 'custodians',
         ],
 
         'hos3pl' => [
@@ -91,9 +91,9 @@ return [
             'model' => App\Admin::class,
         ],
 
-        'inbounds' => [
+        'custodians' => [
             'driver' => 'eloquent',
-            'model' => App\Inbound::class,
+            'model' => App\Custodian::class,
         ],
 
         

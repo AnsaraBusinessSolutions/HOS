@@ -4,6 +4,9 @@
   <title>HOS</title>
   <meta name="theme-color" content="#557eb0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 shrink-to-fit=no, user-scalable=0">
+  <meta http-equiv='cache-control' content='no-cache'> 
+  <meta http-equiv='expires' content='0'> 
+  <meta http-equiv='pragma' content='no-cache'>
   <link rel="icon" type="image/png" href="{{ asset('public/hos/img/HOS-logo.png') }}" sizes="194x194">
   <link rel="stylesheet" href="{{ asset('public/hos/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -62,12 +65,12 @@ form.user .btn-user {
               <div class="col-lg-12 ff_mon">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">HOS DEPARTMENT LOGIN</h1>
+                    <h1 class="h4 text-gray-900 mb-4">HOS CUSTODIAN LOGIN</h1>
                   </div>
                   @if($errors->has('common-error'))
                     <h6 class="text-center text-danger">{{ $errors->first('common-error') }}</h6>
                   @endif
-                  <form class="user" method="POST" action="{{ route('inbound.login') }}" aria-label="{{ __('Login') }}">
+                  <form class="user" method="POST" action="{{ route('custodian.login') }}" aria-label="{{ __('Login') }}">
                     @csrf
                     <div class="form-group">
                       <!-- <input type="" class="form-control form-control-user" id="username" aria-describedby="usernameHelp" placeholder="Enter username..." required/> -->

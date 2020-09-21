@@ -1,4 +1,4 @@
-@extends('inbound.layouts.app')
+@extends('custodian.layouts.app')
 @section('content')
       <div class="container-fluid main_content bg-white p-2">
         <div class="row mx-0">
@@ -12,7 +12,7 @@
                       <th class="text-nowrap px-3">Store Order #</th>
                       <th class="text-nowrap px-3">Supplying Plant</th>
                       <th class="text-nowrap px-3">Delivery Date</th>
-                      <th class="text-nowrap px-3">Uom</th>
+                      <th class="text-nowrap px-3">Order Item</th>
                       <th class="text-nowrap px-3">Qty Ordered</th>
                       <th class="text-nowrap px-3">Ordered Date</th>
                       <th class="text-nowrap px-3">Status</th>
@@ -20,20 +20,20 @@
               </thead>
               <tbody>
                   @foreach($all_order as $key=>$val)
-                  <tr onclick="window.location.href='{{url('inbound/request_order_detail/'.$val->order_code)}}'">
-                      <td>{{$val->order_code}}</td>
-                      <td>{{$val->delivery_wh_name}}</td>
+                  <tr onclick="window.location.href='{{url('custodian/request_order_detail/'.$val->order_id)}}'">
+                      <td>{{$val->order_id}}</td>
+                      <td>{{$val->supplying_plant}}</td>
                       <td>{{$val->delivery_date}}</td>
-                      <td>{{$val->uom}}</td>
+                      <td>{{$val->total_item}}</td>
                       <td>{{$val->total_qty}}</td>
-                      <td>{{date('Y-m-d', strtotime($val->created_at))}}</td>
+                      <td>{{date('Y-m-d', strtotime($val->created_date))}}</td>
                       <td>
                         @if($val->status == 0)
                             <span class="text-warning"><b>NEW</b></span>
                         @elseif($val->status == 1)
-                            <span class="text-success"><b>APPROVED</b></span>
+                            <span class="text-success"><b>REJECTED</b></span>
                         @elseif($val->status == 2)
-                        <span class="text-danger"><b>REJECTED</b></span>
+                        <span class="text-danger"><b>APPROVED</b></span>
                         @elseif($val->status == 3)
                         <span class="text-info"><b>DISPATCHED</b></span>
                         @elseif($val->status == 4)

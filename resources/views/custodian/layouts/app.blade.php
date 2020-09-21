@@ -4,6 +4,9 @@
   <title>{{ config('app.name', 'HOS') }}</title>
   <meta name="theme-color" content="#557eb0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 shrink-to-fit=no, user-scalable=0">
+  <meta http-equiv='cache-control' content='no-cache'> 
+  <meta http-equiv='expires' content='0'> 
+  <meta http-equiv='pragma' content='no-cache'>
   <link rel="icon" type="image/png" href="{{ asset('public/hos/img/favicon.png') }}" sizes="194x194">
   <link rel="stylesheet" href="{{ asset('public/hos/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -53,12 +56,12 @@ echo $currentTime; ?></span> |
         &ensp;</li>
       </ul>
       <ul class="navbar-nav">
-        @if(Request::path() == 'inbound/home' || Request::is('inbound/request_order_detail/*'))
+        @if(Request::path() == 'custodian/home' || Request::is('custodian/request_order_detail/*'))
         <li class="nav-item my-1 active">
         @else
         <li class="nav-item my-1 ">
         @endif
-          <a class="nav-link" href="{{ route('inbound.home') }}">
+          <a class="nav-link" href="{{ route('custodian.home') }}">
           <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Dashboard</a>
         </li>
       
@@ -86,9 +89,9 @@ echo $currentTime; ?></span> |
             </a>
           </li>
           <li class="nav-item px-2 py-1">
-            <a href="{{ route('inbound.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="badge badge-dark p-2" title="logout"><i class="fas fa-power-off"></i></span>
+            <a href="{{ route('custodian.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="badge badge-dark p-2" title="logout"><i class="fas fa-power-off"></i></span>
             </a>
-            <form id="logout-form" action="{{ route('inbound.logout') }}" method="POST" style="display: none;">@csrf</form>
+            <form id="logout-form" action="{{ route('custodian.logout') }}" method="POST" style="display: none;">@csrf</form>
           </li>
           <li class="nav-item px-2 py-1">
             <a>

@@ -1,4 +1,4 @@
-@extends('inbound.layouts.app')
+@extends('custodian.layouts.app')
 @section('content')
 <div class="container-fluid main_content bg-white p-2">
         @if(Session::has('message'))
@@ -6,11 +6,11 @@
         @endif
         <div class="row mx-0">
           <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>Order Details</b> </h5>
+            <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b> </h5>
           </div>
            
           </div>
-          <form action="{{route('inbound.order.update')}}" method="POST">
+          <form action="{{route('custodian.order.update')}}" method="POST">
           @csrf
           <div class="col-12 text-center">
             <table id="example" class="table table-striped table-bordered example">
@@ -20,9 +20,10 @@
                       <th class="text-nowrap px-3">NUPCO Material</th>
                       <th class="text-nowrap px-3">NUPCO Trade Code</th>
                       <th class="text-nowrap px-3">Customer Code</th>
+                      <th class="text-nowrap px-3">Category</th>
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
-                      <th class="text-nowrap px-3">Qty</th>
+                      <th class="text-nowrap px-3" >Qty</th>
                       <th class="text-nowrap px-3">Delivery Date</th>
                   </tr>
               </thead>
@@ -32,13 +33,14 @@
                       <td>{{$key+1}}</td>
                       <td>{{$val->nupco_generic_code}}</td>
                       <td>{{$val->nupco_trade_code}}</td>
-                      <td>{{$val->customer_code}}</td>
-                      <td>{{$val->nupco_desc}}</td>
+                      <td>{{$val->customer_trade_code}}</td>
+                      <td>{{$val->category}}</td>
+                      <td>{{$val->material_desc}}</td>
                       <td>{{$val->uom}}</td>
-                      @if($order_detail[0]->status == 1)
-                      <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" name="qty[]" value="{{$val->qty}}"></td>
+                      @if($order_detail[0]->status == 2)
+                      <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" name="qty_ordered[]" value="{{$val->qty_ordered}}"></td>
                       @else
-                      <td>{{$val->qty}}</td>
+                      <td>{{$val->qty_ordered}}</td>
                       @endif
                       <td>{{$val->delivery_date}}</td>
                   </tr>
@@ -51,8 +53,8 @@
           @if($order_detail[0]->status == 0)
           <button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal2">Approve</button>
           <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#myModal">Reject</button>
-          @elseif($order_detail[0]->status == 1)
-            <button class="btn btn-success">Resubmit</button>
+          @elseif($order_detail[0]->status == 2)
+            <button class="btn btn-success">Update and Resubmit</button>
           @endif
           </div>
           </form>
@@ -67,9 +69,9 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <!-- Modal body -->
-      <form id="rejection_form" method="POST" action="{{route('inbound.order.reject')}}">
+      <form id="rejection_form" method="POST" action="{{route('custodian.order.reject')}}">
       @csrf
-      <input type="hidden" value="{{$order_code}}" name="order_code">
+      <input type="hidden" value="{{$order_id}}" name="order_id">
       <div class="modal-body">
         <h5 class="mb-3 text-danger text-center"><b>Reason For Rejection</b></h5>
         <table id="" class="table table-borderless reason_table mb-0">
@@ -101,9 +103,9 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <!-- Modal body -->
-      <form id="approve_form" method="POST" action="{{route('inbound.order.approve')}}">
+      <form id="approve_form" method="POST" action="{{route('custodian.order.approve')}}">
       @csrf
-      <input type="hidden" value="{{$order_code}}" name="order_code">
+      <input type="hidden" value="{{$order_id}}" name="order_id">
       <div class="modal-body">
         <h5 class="mb-3 text-danger text-center"><b>Additional Comment</b></h5>
         <table id="" class="table table-borderless reason_table mb-0">
@@ -184,13 +186,13 @@
       e.preventDefault();
       var order_id = $(this).data('order_id');
       $.ajax({
-            url: "{{route('inbound.order.batch.data')}}",
+            url: "{{route('custodian.order.batch.data')}}",
             type: 'POST',
             data: {"order_id":order_id,'_token':"{{ csrf_token() }}"},
             success : function(response) {
               var batch_tr = '';
               $.each(response, function(i, item) {
-                batch_tr += '<tr><td>'+item.batch_qty+'<td>'+item.batch_no+'<td>'+item.manufacture_date+'<td>'+item.expiry_date+'</tr>';
+                batch_tr += '<tr><td>'+item.batch_qty_ordered+'<td>'+item.batch_no+'<td>'+item.manufacture_date+'<td>'+item.expiry_date+'</tr>';
               });
               $('#batch_table tbody').html(batch_tr);
               $('#batch_modal').modal('show');

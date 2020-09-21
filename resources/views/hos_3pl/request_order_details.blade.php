@@ -6,7 +6,7 @@
         @endif
         <div class="row mx-0">
           <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>Order {{$order_code}} Details</b> </h5>
+            <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b> </h5>
           </div>
            
           </div>
@@ -19,6 +19,7 @@
                       <th class="text-nowrap px-3">NUPCO Material</th>
                       <th class="text-nowrap px-3">NUPCO Trade Code</th>
                       <th class="text-nowrap px-3">Customer Code</th>
+                      <th class="text-nowrap px-3">Category</th>
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3">Qty</th>
@@ -33,10 +34,11 @@
                       <td>{{$key+1}}</td>
                       <td>{{$val->nupco_generic_code}}</td>
                       <td>{{$val->nupco_trade_code}}</td>
-                      <td>{{$val->customer_code}}</td>
-                      <td>{{$val->nupco_desc}}</td>
+                      <td>{{$val->customer_trade_code}}</td>
+                      <td>{{$val->category}}</td>
+                      <td>{{$val->material_desc}}</td>
                       <td>{{$val->uom}}</td>
-                      <td>{{$val->qty}}</td>
+                      <td>{{$val->qty_ordered}}</td>
                       <td>{{$val->delivery_date}}</td>
                       
                   </tr>
@@ -45,7 +47,7 @@
             </table>
           </div>
               <div class="col-12 text-center">
-              @if($order_detail[0]->status == 1)
+              @if($order_detail[0]->status == 2)
                 <input type="hidden" value="3" name="order_status">
                 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#dipatch_modal">Dispatch</button>
               @endif
@@ -65,7 +67,7 @@
       <!-- Modal body -->
       <form id="approve_form" method="POST" action="{{route('hos3pl.order.status.update')}}">
       @csrf
-      <input type="hidden" value="{{$order_code}}" name="order_code">
+      <input type="hidden" value="{{$order_id}}" name="order_id">
       <div class="modal-body">
        <div class="table-responsive">
         <table id="dispatch_table" class="table table-bordered table-sm text-center">

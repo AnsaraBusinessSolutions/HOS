@@ -6,7 +6,7 @@
             {!! Session::get('message') !!}
           @endif
           <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>Order {{$order_code}} Details</b> </h5>
+            <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b> </h5>
           </div>
           </div>
           <form action="{{route('hos.order.update')}}" method="POST">
@@ -19,6 +19,7 @@
                       <th class="text-nowrap px-3">NUPCO Material</th>
                       <th class="text-nowrap px-3">NUPCO Trade Code</th>
                       <th class="text-nowrap px-3">Customer Code</th>
+                      <th class="text-nowrap px-3">Category</th>
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3">Qty</th>
@@ -32,24 +33,24 @@
                       <td>{{$key+1}}</td>
                       <td>{{$val->nupco_generic_code}}</td>
                       <td>{{$val->nupco_trade_code}}</td>
-                      <td>{{$val->customer_code}}</td>
-                      <td>{{$val->nupco_desc}}</td>
+                      <td>{{$val->customer_trade_code}}</td>
+                      <td>{{$val->category}}</td>
+                      <td>{{$val->material_desc}}</td>
                       <td>{{$val->uom}}</td>
-                      @if($val->status == 0 || $val->status == 2)
-                      <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" class="form-control h_sm" name="qty[]" value="{{$val->qty}}"></td>
+                      @if($val->status == 0 || $val->status == 1)
+                      <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" class="form-control h_sm" name="qty_ordered[]" value="{{$val->qty_ordered}}"></td>
                       @else
-                      <td>{{$val->qty}}</td>
+                      <td>{{$val->qty_ordered}}</td>
                       @endif
                       <td>{{$val->delivery_date}}</td>
-                      
                   </tr>
                  @endforeach
               </tbody>
             </table>
           </div>
-          @if(count($order_detail) > 0 && ($order_detail[0]->status == 0 || $order_detail[0]->status == 2))
+          @if(count($order_detail) > 0 && ($order_detail[0]->status == 0 || $order_detail[0]->status == 1))
           <div class="col-12 text-center">
-              <button id="store_order_submit" class="btn btn-info my-2">Resubmit</button>
+              <button id="store_order_submit" class="btn btn-info my-2">Update and Resubmit</button>
           </div>
           @endif
           </form>
@@ -115,7 +116,7 @@
               success : function(response) {
                 var batch_tr = '';
                 $.each(response, function(i, item) {
-                  batch_tr += '<tr><td>'+item.batch_qty+'<td>'+item.batch_no+'<td>'+item.manufacture_date+'<td>'+item.expiry_date+'</tr>';
+                  batch_tr += '<tr><td>'+item.batch_qty_ordered+'<td>'+item.batch_no+'<td>'+item.manufacture_date+'<td>'+item.expiry_date+'</tr>';
                 });
                 $('#batch_table tbody').html(batch_tr);
                 $('#batch_modal').modal('show');

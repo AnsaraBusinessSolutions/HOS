@@ -19,42 +19,40 @@ class HomeController extends Controller
         $user_id = auth()->guard('hos3pl')->user()->id;
        // $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
-                                ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
-                                ->join('users as u', 'u.id', '=', 'od.user_id')
-                                ->join('hss_master as hs', 'hs.id', '=', 'u.hss_master_id')
-                                ->orderBy('od.order_code','DESC')
-                                ->groupBy("od.order_code")
-                                ->whereIn('od.status',[1,3])
-                                ->select('od.id','od.order_code','hs.delivery_wh_name','od.delivery_date','mm.uom','od.qty','od.status','od.created_at')
-                                ->selectRaw('sum(od.qty) as total_qty')
+                                ->orderBy('od.status','ASC')
+                                ->groupBy("od.order_id")
+                                ->whereIn('od.status',[2,3])
+                                ->select('od.order_id','od.supplying_plant','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date')
+                                ->selectRaw('sum(od.qty_ordered) as total_qty')
+                                ->selectRaw('count(od.order_id) as total_item')
                                 ->get();
    
         return view('hos_3pl.home', array('all_order'=>$all_order));
     }
 
-    public function requestOrderDetail($order_code){
+    public function requestOrderDetail($order_id){
         $order_detail = DB::table('order_details as od')
-                            ->select('od.id','mm.nupco_generic_code','mm.nupco_trade_code','mm.customer_code','mm.nupco_desc','mm.uom','od.qty','od.status','od.delivery_date')
-                            ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
-                            ->where('od.order_code', $order_code)
-                            ->get();
+                        ->select('od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                        ->where('od.order_id', $order_id)
+                        ->get();
         
         $total_qty = 0;
         foreach ($order_detail as $key=>$value) {
-            $total_qty += $value->qty;
+            $total_qty += $value->qty_ordered;
         }
-        return view('hos_3pl.request_order_details',array('order_detail'=>$order_detail,'order_code'=>$order_code,'total_qty'=>$total_qty));
+        return view('hos_3pl.request_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty));
     }
 
     public function orderStatusUpdate(Request $request){
-        $order_code = $request->input('order_code');
-        if($order_code != ''){
+        $order_id = $request->input('order_id');
+        if($order_id != ''){
         DB::table('order_details')
-        ->where('order_code',$order_code)
+        ->where('order_id',$order_id)
         ->update([
             'status' => 3,
             'vehicle_no' => $request->input('vehical_number'),
-            'updated_at'=>date("Y-m-d H:i:s") 
+            'last_updated_date'=>date("Y-m-d H:i:s"),
+            'last_updated_user'=>auth()->guard('hos3pl')->user()->name
             ]);
         }
         return redirect()->route('hos3pl.home');

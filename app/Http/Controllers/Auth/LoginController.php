@@ -38,7 +38,7 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('guest:admin')->except('adminLogout');
-        $this->middleware('guest:inbound')->except('inboundLogout');
+        $this->middleware('guest:custodian')->except('custodianLogout');
         $this->middleware('guest:hos3pl')->except('hos3plLogout');
     }
 
@@ -80,30 +80,30 @@ class LoginController extends Controller
         return redirect()->guest(route( 'admin.login' ));
     }
 
-    public function showInboundLoginForm()
+    public function showCustodianLoginForm()
     {
-        return view('inbound.inbound_login', ['url' => 'admin']);
+        return view('custodian.custodian_login', ['url' => 'admin']);
     }
 
-    public function inboundLogin(Request $request)
+    public function custodianLogin(Request $request)
     {
         $this->validate($request, [
             'email'   => 'required|email',
             'password' => 'required|min:6'
         ]);
 
-        if (Auth::guard('inbound')->attempt(['email' => $request->email, 'password' => $request->password,'user_type'=>2], $request->get('remember'))) {
-            return redirect()->intended('/inbound/home');
+        if (Auth::guard('custodian')->attempt(['email' => $request->email, 'password' => $request->password,'user_type'=>2], $request->get('remember'))) {
+            return redirect()->intended('/custodian/home');
             //return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
         }
         return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
     }
 
-    public function inboundLogout(Request $request){
-       Auth::guard('inbound')->logout();
+    public function custodianLogout(Request $request){
+       Auth::guard('custodian')->logout();
         $request->session()->flush();
         $request->session()->regenerate();
-        return redirect()->guest(route( 'inbound.login' ));
+        return redirect()->guest(route( 'custodian.login' ));
     }
 
     
@@ -138,7 +138,7 @@ class LoginController extends Controller
         if ($user->user_type == 1) {
             return redirect('/store/home');
         } else if ($user->user_type == 2) {
-            return redirect('/inbound/home');
+            return redirect('/custodian/home');
         }else if ($user->user_type == 3) {
             return redirect('/hos3pl/home');
         } else {

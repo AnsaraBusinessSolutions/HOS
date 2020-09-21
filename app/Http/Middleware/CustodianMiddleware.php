@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Closure;
 
-class InboundMiddleware
+class CustodianMiddleware
 {
     /**
      * Handle an incoming request.
@@ -13,10 +13,10 @@ class InboundMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next,$guard = 'inbound')
+    public function handle($request, Closure $next,$guard = 'custodian')
     {
          if (!Auth::guard($guard)->check()) {
-            return redirect('inbound/login');
+            return redirect('custodian/login');
          }
          return $next($request);
     }

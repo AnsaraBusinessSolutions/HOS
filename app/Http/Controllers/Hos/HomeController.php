@@ -25,10 +25,11 @@ class HomeController extends Controller
         $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->where('od.user_id','=',$user_id)
-                                ->orderBy('od.order_code','DESC')
-                                ->groupBy("od.order_code")
-                                ->select('od.order_code','od.supplying_plant','od.delivery_date','mm.uom','od.qty','od.status','od.created_at')
-                                ->selectRaw('sum(od.qty) as total_qty')
+                                ->orderBy('od.status','ASC')
+                                ->groupBy("od.order_id")
+                                ->select('od.order_id','od.supplying_plant','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date')
+                                ->selectRaw('sum(od.qty_ordered) as total_qty')
+                                ->selectRaw('count(od.order_id) as total_item')
                                 ->get();
    
         return view('hos.home', array('all_order'=>$all_order));
@@ -141,26 +142,26 @@ class HomeController extends Controller
         
     }
 
-    public function orderDetail($order_code){
+    public function orderDetail($order_id){
         $order_detail = DB::table('order_details as od')
-                                        ->select('od.id','mm.nupco_generic_code','mm.nupco_trade_code','mm.customer_code','mm.nupco_desc','mm.uom','od.qty','od.delivery_date','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
-                                        ->join('material_master as mm', 'od.material_master_id', '=', 'mm.id')
-                                        ->where('od.order_code', $order_code)
+                                        ->select('od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                                        ->where('od.order_id', $order_id)
                                         ->get();
-        return view('hos.store_order_details',array('order_detail'=>$order_detail,'order_code'=>$order_code));
+        return view('hos.store_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id));
     }
 
     public function orderUpdate(Request $request){
         $order_id_arr = $request->input('order_id');
-        $qty_arr = $request->input('qty');
+        $qty_arr = $request->input('qty_ordered');
       
 
         foreach($order_id_arr as $key=>$val){
             DB::table('order_details')
                 ->where('id',$val)
                 ->update([
-                    'qty' => $qty_arr[$key],
-                    'updated_at'=>date("Y-m-d H:i:s"),
+                    'qty_ordered' => $qty_arr[$key],
+                    'last_updated_date'=>date("Y-m-d H:i:s"),
+                    'last_updated_user'=>Auth::user()->name,
                     'status'=>0
             ]);
         }
