@@ -99,7 +99,7 @@ form.user .btn-user {
                     <hr>
                   </form>
                   <div class="text-center">
-                    <img class="" src="{{ asset('public/hos/img/HOS-logo.png') }}" style="width:auto;height: 30px">
+                    <img class="" src="{{ asset('public/hos/img/HOS-logo.png') }}" style="width:auto;height: 60px">
                   </div>
                 </div>
               </div>
