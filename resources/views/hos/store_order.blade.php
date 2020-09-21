@@ -55,6 +55,11 @@
                     </th>
                     @if(count($delivery_wh) > 0)
                     <th>{{$delivery_wh[0]->delivery_wh_name}}</th>
+                    <input type="hidden" name="supplying_plant" value="{{$delivery_wh[0]->delivery_wh_name}}">
+                    <input type="hidden" name="hss_master_no" value="{{$delivery_wh[0]->hss_master_no}}">
+                    @else
+                    <input type="hidden" name="supplying_plant" value="">
+                    <input type="hidden" name="hss_master_no" value="">
                     @endif
                     <th width="6%" class="p-0">&ensp;</th>
                    <th width="10%" class="p-0">
@@ -72,6 +77,7 @@
                             <th width="3%" class="text-nowrap px-3">Item #</th>
                             <th width="15%" class="text-nowrap px-3">NUPCO Material</th>
                             <th width="5%" class="text-nowrap px-3">Customer Code</th>
+                            <th width="5%" class="text-nowrap px-3">Category</th>
                             <th width="23%" class="text-nowrap px-3">Description</th>
                             <th width="3%" class="text-nowrap px-3">UOM</th>
                             <th width="5%" class="text-nowrap px-3">Qty</th>
@@ -118,9 +124,10 @@ $(function() {
     $('#addRow').on('click', function (e) { 
       e.preventDefault();
       table.row.add( [
-            '<td class="p-0"><input type="hidden" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="material_master_id" id="material_master_id_'+counter+'" name="material_master_id[]">'+counter+'</td>',
+            '<td class="p-0"><input type="hidden" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_trade_code" id="nupco_trade_code_'+counter+'" name="nupco_trade_code[]">'+counter+'</td>',
             '<td class="p-0"><input type="text" class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_generic_code" id="nupco_generic_code_'+counter+'" name="nupco_generic_code[]" maxlength="20" autocomplete="off"><div id="nupco_generic_code_list_'+counter+'"></div></td>',
             '<td class="p-0"><input type="text"  class="material_data form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code" id="customer_code_'+counter+'" name="customer_code[]" maxlength="20" autocomplete="off"><div id="customer_code_list_'+counter+'"></div></td>',
+            '<td class="p-0"><input type="text"  class="form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code_cat" id="customer_code_cat_'+counter+'" name="customer_code_cat[]" readonly><div id="customer_code_cat_list_'+counter+'"></div></td>',
             '<td class="p-0"><input type="text"  class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'"></div></td>',
             '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="uom[]" readonly></td>',
             '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off"></td>',
@@ -220,9 +227,10 @@ function setMaterialData(element,input_name,row_id){
           success: function(response)
           {
               if(response.data.length > 0){
-                  $('#material_master_id_'+row_id).val(response.data[0].id);
+                  $('#nupco_trade_code_'+row_id).val(response.data[0].nupco_trade_code);
                   $('#nupco_generic_code_'+row_id).val(response.data[0].nupco_generic_code);
                   $('#customer_code_'+row_id).val(response.data[0].customer_code);
+                  $('#customer_code_cat_'+row_id).val(response.data[0].customer_code_cat);
                   $('#nupco_desc_'+row_id).val(response.data[0].nupco_desc);
                   $('#uom_'+row_id).val(response.data[0].uom);
                   $('#available_'+row_id).val('available');
