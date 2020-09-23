@@ -23,7 +23,7 @@ class HomeController extends Controller
                                 ->orderBy('od.status','ASC')
                                 ->groupBy("od.order_id")
                                 ->whereIn('od.status',[0,1,2])
-                                ->select('od.order_id','od.supplying_plant','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date')
+                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date')
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
                                 ->selectRaw('count(od.order_id) as total_item')
                                 ->get();

@@ -26,6 +26,7 @@ class HomeController extends Controller
         $all_order = DB::table('order_details as od')
                                 ->where('od.user_id','=',$user_id)
                                 ->orderBy('od.status','ASC')
+                                ->orderBy('od.order_id','DESC')
                                 ->groupBy("od.order_id")
                                 ->select('od.order_id','od.supplying_plant','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date')
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
@@ -58,7 +59,12 @@ class HomeController extends Controller
         $input_data = $request->input_data;
         $input_name = $request->input_name;
         //$search_data = MaterialMaster::select('id',$input_name)->where($input_name,'LIKE',"%{$input_data}%")->get();
-        $search_data = DB::table('material_master')->where($input_name,'LIKE',"{$input_data}%")->select('id',$input_name)->take(5)->get();
+        if($input_name == 'nupco_desc'){
+            $search_data = DB::table('material_master')->where($input_name,'LIKE',"%{$input_data}%")->select('id',$input_name)->take(5)->get();
+        }else{
+            $search_data = DB::table('material_master')->where($input_name,'LIKE',"{$input_data}%")->select('id',$input_name)->take(5)->get();
+        }
+        
 
         if(count($search_data) > 0){
             $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
@@ -83,6 +89,7 @@ class HomeController extends Controller
         $uom_arr = $request->input('uom');
         $supplying_plant = $request->input('supplying_plant');
         $hss_master_no = $request->input('hss_master_no');
+        $hospital_name = $request->input('hospital_name');
         if(count($qty_arr) > 0){
             $order_data = array();
             $ord_no = '000-000-001';
@@ -120,6 +127,7 @@ class HomeController extends Controller
                                 'delivery_date'=>$delivery_date,
                                 'supplying_plant'=>$supplying_plant,
                                 'hss_master_no'=>$hss_master_no,
+                                'hospital_name'=>$hospital_name,
                                 'status'=>0 );
                     $order_item = $order_item + 10;
                 }

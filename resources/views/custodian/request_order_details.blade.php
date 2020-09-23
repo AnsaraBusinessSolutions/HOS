@@ -37,11 +37,7 @@
                       <td>{{$val->category}}</td>
                       <td>{{$val->material_desc}}</td>
                       <td>{{$val->uom}}</td>
-                      @if($order_detail[0]->status == 2)
-                      <td><input type="hidden" name="order_id[]" value="{{$val->id}}"><input type="text" name="qty_ordered[]" value="{{$val->qty_ordered}}"></td>
-                      @else
                       <td>{{$val->qty_ordered}}</td>
-                      @endif
                       <td>{{$val->delivery_date}}</td>
                   </tr>
                  @endforeach
@@ -53,8 +49,6 @@
           @if($order_detail[0]->status == 0)
           <button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal2">Approve</button>
           <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#myModal">Reject</button>
-          @elseif($order_detail[0]->status == 2)
-            <button class="btn btn-success">Update and Resubmit</button>
           @endif
           </div>
           </form>
