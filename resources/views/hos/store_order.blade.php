@@ -57,9 +57,11 @@
                     <th>{{$delivery_wh[0]->delivery_wh_name}}</th>
                     <input type="hidden" name="supplying_plant" value="{{$delivery_wh[0]->delivery_wh_name}}">
                     <input type="hidden" name="hss_master_no" value="{{$delivery_wh[0]->hss_master_no}}">
+                    <input type="hidden" name="hospital_name" value="{{$delivery_wh[0]->name1}}">
                     @else
                     <input type="hidden" name="supplying_plant" value="">
                     <input type="hidden" name="hss_master_no" value="">
+                    <input type="hidden" name="hospital_name" value="">
                     @endif
                     <th width="6%" class="p-0">&ensp;</th>
                    <th width="10%" class="p-0">
@@ -74,6 +76,7 @@
                   <table id="store_order" class="table table-striped table-bordered text-center">
                     <thead>
                         <tr class="bg_color">
+                            <!-- <th width="3%" class="px-3">All <input type="checkbox" id="check_all"></th> -->
                             <th width="3%" class="text-nowrap px-3">Item #</th>
                             <th width="15%" class="text-nowrap px-3">NUPCO Material</th>
                             <th width="5%" class="text-nowrap px-3">Customer Code</th>
@@ -114,16 +117,19 @@
 @push('scripts')
 <script>
     var t;
+    var counter = 1;
 $(function() {
     table = $('#store_order').DataTable({
       "searching": false,
       "paging": false,
-      "scrollY": "54vh"
+      "scrollY": "54vh",
+      "ordering": false
     });
-    var counter = 1;
+   
     $('#addRow').on('click', function (e) { 
-      e.preventDefault();
+      //e.preventDefault();
       table.row.add( [
+            // '<td width="3%" class="text-nowrap px-3"><input type="checkbox" data-row_id ="'+counter+'"></td>',
             '<td class="p-0"><input type="hidden" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_trade_code" id="nupco_trade_code_'+counter+'" name="nupco_trade_code[]">'+counter+'</td>',
             '<td class="p-0"><input type="text" class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_generic_code" id="nupco_generic_code_'+counter+'" name="nupco_generic_code[]" maxlength="20" autocomplete="off"><div id="nupco_generic_code_list_'+counter+'"></div></td>',
             '<td class="p-0"><input type="text"  class="material_data form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code" id="customer_code_'+counter+'" name="customer_code[]" maxlength="20" autocomplete="off"><div id="customer_code_list_'+counter+'"></div></td>',
@@ -173,7 +179,19 @@ $(function() {
                     
                  }
             })
-    });  
+    }); 
+
+    // $('#delete_row').click(function(e){
+    //   e.preventDefault();
+    //     $("#store_order input[type=checkbox]:checked").each(function(){
+    //         $(this).closest("tr").remove();
+    //         //return false;  
+    //     });
+    // }); 
+
+    // $("#check_all").click(function () {
+    //   $('input:checkbox').not(this).prop('checked', this.checked);
+    // });
 });
 function onlyNumberKey(evt) { 
   var ASCIICode = (evt.which) ? evt.which : evt.keyCode 

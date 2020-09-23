@@ -34,6 +34,7 @@
        </div>
      </div>
    </div>
+   
     <div class="col-6 text-center px-0">
       <h4 class="text-danger ff_mon">
       <img class="" src="{{ asset('public/hos/img/HOS-logo.png') }}" style="width:auto;height: 60px"><br>
@@ -111,7 +112,7 @@ echo $currentTime; ?></span> |
               <i class="fas fa-copy fs_18"></i><br> 
               Copy</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="delete_row">
               <a class="nav-link" href="#">
               <i class="fas fa-trash fs_18"></i><br> 
               Delete</a>
