@@ -9,6 +9,61 @@
             <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b> </h5>
           </div>
           </div>
+          <div class="row mx-0 border">
+            <div class="col-md-5 col-sm-6 col-12">
+              <div class="form-row">
+                <label class="col-md-4 col-sm-4 col-4"><b>Order ID</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-7 col-sm-7 col-7" id="RGR_ID"
+                  >000-000-004
+                </label>
+              </div>
+              <div class="form-row py-1">
+                <label class="col-md-4 col-sm-4 col-4"><b>Supply WH</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-7 col-sm-7 col-7" id="Po_No"
+                  >4500014260
+                </label>
+              </div>
+              <div class="form-row">
+                <label class="col-md-4 col-sm-4 col-4"><b>Request</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-7 col-sm-7 col-7" id="Ship_To">AJZN </label>
+              </div>
+            </div>
+            <div class="col-md-2 col-sm-6 col-12">
+             
+            </div>
+            <div class="col-md-5 col-sm-6 col-12 order-3 order-sm-3">
+              <div class="form-row">
+                <label class="col-md-6 col-sm-4 col-4"
+                  ><b>Delivery Date</b></label
+                >
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-5 col-sm-7 col-7" id="Delivery Date"
+                  >2020-02-05
+                </label>
+              </div>
+              <div class="form-row">
+                <label class="col-md-6 col-sm-4 col-4"
+                  ><b>Order Date</b></label
+                >
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-5 col-sm-7 col-7" id="Delivery Date"
+                  >2020-02-05
+                </label>
+              </div>
+              <div class="form-row">
+                <label class="col-md-6 col-sm-4 col-4"
+                  ><b>3PL Deliver Note No</b></label
+                >
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-5 col-sm-7 col-7" id="Delivery Date"
+                  >202345
+                </label>
+              </div>
+            </div>
+          </div>
           <form action="{{route('hos.order.update')}}" method="POST">
           @csrf
           <div class="col-12 text-center">

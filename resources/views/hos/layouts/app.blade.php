@@ -21,10 +21,18 @@
 </head>
 <body class="bg-light">
   <nav class="navbar fixed-top navbar-light bg-white topnav px-2 py-0" style="height: 108px;">
-   <div class="col-3">
-       <a class="navbar-brand py-3" href="store_order.html">
-         <img src="{{ asset('public/hos/img/king.jpg') }}" height="70px" width="auto">
-       </a>
+   <div class="col-3" style="height:70px">
+    <div class="row mx-0">
+       <div class="col-3 p-0">
+         <img src="{{ asset('public/hos/img/king.jpg') }}" class="img-fluid" height="70px" width="auto">
+      </div>
+       <div class="col-9 p-0 d-flex align-items-center">
+        <span>
+         <b  class="text-nowrap" style="color: #108f68;font-size: 12px">King Fad Military Medical Complex</b>
+         <b class="d-block text-center" style="color: #108f68;font-size: 12px">King of Saudi Arabia</b>
+        </span>
+       </div>
+     </div>
    </div>
     <div class="col-6 text-center px-0">
       <h4 class="text-danger ff_mon">
