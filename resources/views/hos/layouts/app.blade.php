@@ -24,7 +24,7 @@
    <div class="col-3" style="height:70px">
     <div class="row mx-0">
        <div class="col-3 p-0">
-         <img src="{{ asset('public/hos/img/king.jpg') }}" class="img-fluid" height="70px" width="auto">
+         <img src="{{ asset('public/hos/img/ministary_logo/MOH.png') }}" class="img-fluid" height="70px" width="auto">
       </div>
        <div class="col-9 p-0 d-flex align-items-center">
         <span>
