@@ -27,7 +27,7 @@
         @php
         $logo = DB::table('ministry_logo')->where('id', auth()->user()->ministry_logo_id)->take(1)->value('logo')
         @endphp
-         <img src="{{ asset('public/hos/img/ministry_logo').'/'.$logo }}" class="img-fluid" height="70px" width="auto">
+         <img src="{{ asset('public/hos/img/ministry_logo').'/'.$logo }}" class="" height="70px" width="auto">
       </div>
        <div class="col-9 p-0 d-flex align-items-center">
         <span>
