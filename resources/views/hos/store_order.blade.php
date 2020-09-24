@@ -56,7 +56,7 @@
                     <label for="supplying-plant">Supplying Plant: </label>
                     </th>
                     @if(count($delivery_wh) > 0)
-                    <th><input class="form-control h_sm" value="{{$delivery_wh[0]->delivery_wh_name}}" name="" readonly></th>
+                    <th><label class="border"><b>{{$delivery_wh[0]->delivery_wh_name}}</b></label></th>
                     <input type="hidden" name="supplying_plant" value="{{$delivery_wh[0]->delivery_wh_name}}">
                     <input type="hidden" name="hss_master_no" value="{{$delivery_wh[0]->hss_master_no}}">
                     <input type="hidden" name="hospital_name" value="{{$delivery_wh[0]->name1}}">
