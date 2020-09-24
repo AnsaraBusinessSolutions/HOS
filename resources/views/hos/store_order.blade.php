@@ -52,6 +52,32 @@
               <thead>
                  <tr>
                   <th width="6%" class="p-0">&ensp;</th>
+                   <th width="10%" class="p-0">
+                    <label for="supplying-plant">Supplying Plant:</label></th>
+                    @if(count($delivery_wh) > 0)
+                   <th width="20%" class="p-0">
+                    <label> <b>{{$delivery_wh[0]->delivery_wh_name}}</b></label>
+                    <input type="hidden" name="supplying_plant" value="{{$delivery_wh[0]->delivery_wh_name}}">
+                    <input type="hidden" name="hss_master_no" value="{{$delivery_wh[0]->hss_master_no}}">
+                    <input type="hidden" name="hospital_name" value="{{$delivery_wh[0]->name1}}">
+                    @else
+                    <input type="hidden" name="supplying_plant" value="">
+                    <input type="hidden" name="hss_master_no" value="">
+                    <input type="hidden" name="hospital_name" value="">
+                    @endif
+                    </th><th width="6%" class="p-0">&ensp;</th>
+                   <th width="10%" class="p-0">
+                    <label for="delivery-date">Delivery Date:</label></th>
+                   <th width="20%" class="p-0">
+                    <input type="" class="datepicker form-control h_sm" name="delivery_date" id="delivery_date" required></th>
+                     <th width="6%" class="p-0">&ensp;</th>
+                 </tr>
+              </thead>
+            </table>
+            <table class="table table-borderless head_table text-center mb-0">
+              <thead>
+                 <tr>
+                  <th width="6%" class="p-0">&ensp;</th>
                    <th width="14%" class="p-0">
                     <label for="supplying-plant">Supplying Plant: </label>
                     </th>
