@@ -36,7 +36,7 @@
 .h_sm{
   height: calc(1.8125rem + 2px)!important;
 }
-.search_data .dropdown-menu{
+.search_data tbody tr td .dropdown-menu{
   position: absolute!important;
 }
 </style>
@@ -75,7 +75,7 @@
               </thead>
             </table>
               <div class="col-12 text-center">
-                  <table id="store_order" class="table table-striped table-bordered text-center">
+                  <table id="store_order" class="table table-striped table-bordered text-center search_data">
                     <thead>
                         <tr class="bg_color ">
                             <!-- <th width="3%" class="px-3">All <input type="checkbox" id="check_all"></th> -->
@@ -89,7 +89,7 @@
                             <th width="8%" class="text-nowrap px-3">Available</th>
                         </tr>
                     </thead>
-                    <tbody class="search_data">
+                    <tbody>
                         
                     </tbody>
                   </table>
