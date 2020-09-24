@@ -37,7 +37,7 @@
                         @elseif($val->status == 2)
                         <span class="text-success"><b>APPROVED</b></span>
                         @elseif($val->status == 3)
-                        <span class="text-info"><b>DISPATCHED</b></span>
+                        <span class="text-primary"><b>DISPATCHED</b></span>
                         @elseif($val->status == 4)
                         <span class="text-danger"><b>DELIVERED</b></span>
                         @elseif($val->status == 5)
@@ -57,7 +57,8 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('.example').DataTable( {
-            "order": [[ 1, "desc" ]],
+            "ordering":false,
+            //"order": [[ 1, "desc" ]],
             "scrollY":        "55vh",
             "scrollCollapse": true,
             "paging":         false,

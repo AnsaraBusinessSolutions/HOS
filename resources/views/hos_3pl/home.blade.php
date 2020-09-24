@@ -10,7 +10,7 @@
               <thead>
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">Store Order #</th>
-                      <th class="text-nowrap px-3">Supplying Plant</th>
+                      <th class="text-nowrap px-3">Hospital</th>
                       <th class="text-nowrap px-3">Delivery date</th>
                       <th class="text-nowrap px-3">Order Item</th>
                       <th class="text-nowrap px-3">Qty Ordered</th>
@@ -24,7 +24,7 @@
                   @foreach($all_order as $key=>$val)
                   <tr onclick="window.location.href='{{url('hos3pl/order_detail/'.$val->order_id)}}'">
                       <td>{{$val->order_id}}</td>
-                      <td>{{$val->supplying_plant}}</td>
+                      <td>{{$val->hospital_name}}</td>
                       <td>{{$val->delivery_date}}</td>
                       <td>{{$val->total_item}}</td>
                       <td>{{$val->total_qty}}</td>
@@ -37,7 +37,7 @@
                         @elseif($val->status == 2)
                         <span class="text-success"><b>APPROVED</b></span>
                         @elseif($val->status == 3)
-                        <span class="text-info"><b>DISPATCHED</b></span>
+                        <span class="text-primary"><b>DISPATCHED</b></span>
                         @elseif($val->status == 4)
                         <span class="text-danger"><b>DELIVERED</b></span>
                         @elseif($val->status == 5)

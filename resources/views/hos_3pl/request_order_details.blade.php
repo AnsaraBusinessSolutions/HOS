@@ -8,9 +8,64 @@
           <div class="col-12 text-center">
             <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b> </h5>
           </div>
-           
           </div>
-          
+          <div class="row mx-0 border">
+            <div class="col-md-5 col-sm-6 col-12">
+              <div class="form-row">
+                <label class="col-md-4 col-sm-4 col-4"><b>Order ID</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-7 col-sm-7 col-7">{{$order_id}}
+                </label>
+              </div>
+              <div class="form-row py-1">
+                <label class="col-md-4 col-sm-4 col-4"><b>Supply WH</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-7 col-sm-7 col-7">{{$order_detail[0]->delivery_wh_name}}
+                </label>
+              </div>
+              <div class="form-row">
+                <label class="col-md-4 col-sm-4 col-4"><b>Supplying Address</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-7 col-sm-7 col-7">{{$order_detail[0]->address}} </label>
+              </div>
+            </div>
+            <div class="col-md-2 col-sm-6 col-12">
+             
+            </div>
+            <div class="col-md-5 col-sm-6 col-12 order-3 order-sm-3">
+              <div class="form-row">
+                <label class="col-md-6 col-sm-4 col-4"><b>Delivery Date</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-5 col-sm-7 col-7" >{{$order_detail[0]->delivery_date}}
+                </label>
+              </div>
+              <div class="form-row">
+                <label class="col-md-6 col-sm-4 col-4"><b>Order Date</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-5 col-sm-7 col-7">{{date('Y-m-d',strtotime($order_detail[0]->created_date))}}
+                </label>
+              </div>
+              <div class="form-row">
+                <label class="col-md-6 col-sm-4 col-4"><b>Status</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-5 col-sm-7 col-7">
+                        @if($order_detail[0]->status == 0)
+                          <span class="text-warning"><b>NEW</b></span>
+                        @elseif($order_detail[0]->status == 1)
+                          <span class="text-danger"><b>REJECTED</b></span>
+                        @elseif($order_detail[0]->status == 2)
+                          <span class="text-success"><b>APPROVED</b></span>
+                        @elseif($order_detail[0]->status == 3)
+                          <span class="text-primary"><b>DISPATCHED</b></span>
+                        @elseif($order_detail[0]->status == 4)
+                          <span class="text-info"><b>DELIVERED</b></span>
+                        @elseif($order_detail[0]->status == 5)
+                          <span class="text-danger"><b>CANCELLED</b></span>
+                        @endif
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="col-12 text-center">
             <table id="example" class="table table-striped table-bordered example">
               <thead>
@@ -22,9 +77,8 @@
                       <th class="text-nowrap px-3">Category</th>
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
-                      <th class="text-nowrap px-3">Qty</th>
-                      <th class="text-nowrap px-3">Delivery Date</th>
-                     
+                      <th class="text-nowrap px-3">Order Qty</th>
+                      <th class="text-nowrap px-3">Batch</th>
                   </tr>
               </thead>
               <tbody>
@@ -39,8 +93,7 @@
                       <td>{{$val->material_desc}}</td>
                       <td>{{$val->uom}}</td>
                       <td>{{$val->qty_ordered}}</td>
-                      <td>{{$val->delivery_date}}</td>
-                      
+                      <td><button class="btn btn-small btn-warning batch_btn" data-order_id="{{$val->id}}">Batch</button></td>
                   </tr>
                  @endforeach
               </tbody>
@@ -183,7 +236,7 @@ $(function() {
     });
 
     $('#batch_modal').on('hidden.bs.modal', function () {
-      $('#batch_modal').find('tr').remove();
+      $('#batch_modal').find('tbody tr').remove();
       counter = 1;
     });
 

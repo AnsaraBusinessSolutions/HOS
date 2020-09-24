@@ -14,21 +14,19 @@
               <div class="form-row">
                 <label class="col-md-4 col-sm-4 col-4"><b>Order ID</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-7 col-sm-7 col-7" id="RGR_ID"
-                  >000-000-004
+                <label class="col-md-7 col-sm-7 col-7">{{$order_id}}
                 </label>
               </div>
               <div class="form-row py-1">
                 <label class="col-md-4 col-sm-4 col-4"><b>Supply WH</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-7 col-sm-7 col-7" id="Po_No"
-                  >4500014260
+                <label class="col-md-7 col-sm-7 col-7">{{$order_detail[0]->delivery_wh_name}}
                 </label>
               </div>
               <div class="form-row">
-                <label class="col-md-4 col-sm-4 col-4"><b>Request</b></label>
+                <label class="col-md-4 col-sm-4 col-4"><b>Supplying Address</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-7 col-sm-7 col-7" id="Ship_To">AJZN </label>
+                <label class="col-md-7 col-sm-7 col-7">{{$order_detail[0]->address}} </label>
               </div>
             </div>
             <div class="col-md-2 col-sm-6 col-12">
@@ -36,30 +34,34 @@
             </div>
             <div class="col-md-5 col-sm-6 col-12 order-3 order-sm-3">
               <div class="form-row">
-                <label class="col-md-6 col-sm-4 col-4"
-                  ><b>Delivery Date</b></label
-                >
+                <label class="col-md-6 col-sm-4 col-4"><b>Delivery Date</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-5 col-sm-7 col-7" id="Delivery Date"
-                  >2020-02-05
+                <label class="col-md-5 col-sm-7 col-7" >{{$order_detail[0]->delivery_date}}
                 </label>
               </div>
               <div class="form-row">
-                <label class="col-md-6 col-sm-4 col-4"
-                  ><b>Order Date</b></label
-                >
+                <label class="col-md-6 col-sm-4 col-4"><b>Order Date</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-5 col-sm-7 col-7" id="Delivery Date"
-                  >2020-02-05
+                <label class="col-md-5 col-sm-7 col-7">{{date('Y-m-d',strtotime($order_detail[0]->created_date))}}
                 </label>
               </div>
               <div class="form-row">
-                <label class="col-md-6 col-sm-4 col-4"
-                  ><b>3PL Deliver Note No</b></label
-                >
+                <label class="col-md-6 col-sm-4 col-4"><b>Status</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-5 col-sm-7 col-7" id="Delivery Date"
-                  >202345
+                <label class="col-md-5 col-sm-7 col-7">
+                        @if($order_detail[0]->status == 0)
+                          <span class="text-warning"><b>NEW</b></span>
+                        @elseif($order_detail[0]->status == 1)
+                          <span class="text-danger"><b>REJECTED</b></span>
+                        @elseif($order_detail[0]->status == 2)
+                          <span class="text-success"><b>APPROVED</b></span>
+                        @elseif($order_detail[0]->status == 3)
+                          <span class="text-primary"><b>DISPATCHED</b></span>
+                        @elseif($order_detail[0]->status == 4)
+                          <span class="text-info"><b>DELIVERED</b></span>
+                        @elseif($order_detail[0]->status == 5)
+                          <span class="text-danger"><b>CANCELLED</b></span>
+                        @endif
                 </label>
               </div>
             </div>
@@ -77,9 +79,7 @@
                       <th class="text-nowrap px-3">Category</th>
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
-                      <th class="text-nowrap px-3">Qty</th>
-                      <th class="text-nowrap px-3">Delivery Date</th>
-                      
+                      <th class="text-nowrap px-3">Order Qty</th>
                   </tr>
               </thead>
               <tbody>
@@ -97,7 +97,7 @@
                       @else
                       <td>{{$val->qty_ordered}}</td>
                       @endif
-                      <td>{{$val->delivery_date}}</td>
+                      
                   </tr>
                  @endforeach
               </tbody>

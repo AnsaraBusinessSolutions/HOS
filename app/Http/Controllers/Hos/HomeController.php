@@ -152,7 +152,8 @@ class HomeController extends Controller
 
     public function orderDetail($order_id){
         $order_detail = DB::table('order_details as od')
-                                        ->select('od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                                        ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
+                                        ->select('hs.delivery_wh_name','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
                                         ->where('od.order_id', $order_id)
                                         ->get();
         return view('hos.store_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id));

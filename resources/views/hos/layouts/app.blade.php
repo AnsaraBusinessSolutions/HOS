@@ -24,11 +24,14 @@
    <div class="col-3" style="height:70px">
     <div class="row mx-0">
        <div class="col-3 p-0">
-         <img src="{{ asset('public/hos/img/ministary_logo/MOH.png') }}" class="img-fluid" height="70px" width="auto">
+        @php
+        $logo = DB::table('ministry_logo')->where('id', auth()->user()->ministry_logo_id)->take(1)->value('logo')
+        @endphp
+         <img src="{{ asset('public/hos/img/ministry_logo').'/'.$logo }}" class="img-fluid" height="70px" width="auto">
       </div>
        <div class="col-9 p-0 d-flex align-items-center">
         <span>
-         <b  class="text-nowrap" style="color: #108f68;font-size: 12px">King Fad Military Medical Complex</b>
+         <b  class="text-nowrap" style="color: #108f68;font-size: 12px">{{DB::table('hss_master')->where('hss_master_no', auth()->user()->hss_master_no)->take(1)->value('name1')}}</b>
          <b class="d-block text-center" style="color: #108f68;font-size: 12px">King of Saudi Arabia</b>
         </span>
        </div>

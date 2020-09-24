@@ -21,7 +21,13 @@ class HomeController extends Controller
        // $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->orderBy('od.status','ASC')
+                                ->orderBy('od.order_id','DESC')
                                 ->groupBy("od.order_id")
+                                ->whereIn('od.hss_master_no', function($query){
+                                    $query->select('hss_master_no')
+                                    ->from('custodian_hss_connection')
+                                    ->where('user_id', auth()->guard('custodian')->user()->id);
+                                })
                                 ->whereIn('od.status',[0,1,2])
                                 ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date')
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
@@ -33,7 +39,8 @@ class HomeController extends Controller
 
     public function requestOrderDetail($order_id){
         $order_detail = DB::table('order_details as od')
-                        ->select('od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                        ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
+                        ->select('hs.delivery_wh_name','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
                         ->where('od.order_id', $order_id)
                         ->get();
         return view('custodian.request_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id));
