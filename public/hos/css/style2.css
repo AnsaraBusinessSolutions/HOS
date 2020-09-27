@@ -242,6 +242,7 @@
     border-width: 1px 0px;
     border-color: lightgray;
     box-shadow: 0px 0px 2px 1px grey;
+    white-space: nowrap;
 }
 .search_data tbody tr td .dropdown-menu li:hover{
   font-size: 13px;
