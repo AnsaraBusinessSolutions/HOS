@@ -117,7 +117,7 @@
               </div>
         </div>
     </div>
-@stop
+
 <!-- Dispatch Modal -->
 <div class="modal" id="dipatch_modal">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -212,6 +212,7 @@
     </div>
   </div>
 </div>
+@stop
 @push('scripts')
 <script>
 $(function() {
