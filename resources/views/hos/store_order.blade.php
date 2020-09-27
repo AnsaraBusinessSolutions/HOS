@@ -80,7 +80,7 @@
                             <th class="text-nowrap px-3 w_12">NUPCO Material</th>
                             <th class="text-nowrap px-3 w_7">Customer Code</th>
                             <th class="text-nowrap px-3 w_10">Category</th>
-                            <th class="text-nowrap px-3 w_37">Description</th>
+                            <th class="text-nowrap px-3 w_36">Description</th>
                             <th class="text-nowrap px-3 w_7">UOM</th>
                             <th class="text-nowrap px-3 w_6">Qty</th>
                             <th class="text-nowrap px-3 w_8">Available</th>
