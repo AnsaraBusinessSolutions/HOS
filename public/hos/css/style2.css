@@ -234,4 +234,5 @@
   position: absolute!important;
   height: 250px;
   overflow-y: auto;
+  width: 35vw;
 }

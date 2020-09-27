@@ -38,6 +38,13 @@
 }
 .search_data tbody tr td .dropdown-menu{
   position: absolute!important;
+  height: 250px;
+  overflow-y: auto;
+  width: 35vw;
+}
+.search_data tbody tr td .dropdown-menu li{
+  font-size: 13px;
+  padding: 4px 2px;
 }
 </style>
 @section('content')
