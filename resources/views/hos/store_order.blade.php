@@ -43,8 +43,10 @@
   width: 35vw;
 }
 .search_data tbody tr td .dropdown-menu li{
-  font-size: 13px;
-  padding: 4px 2px;
+  padding: 4px 15px;
+    border-style: solid;
+    border-width: 1px 0px;
+    border-color: lightgray;
 }
 </style>
 @section('content')
