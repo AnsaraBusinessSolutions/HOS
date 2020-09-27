@@ -7,6 +7,7 @@
   <meta http-equiv='cache-control' content='no-cache'> 
   <meta http-equiv='expires' content='0'> 
   <meta http-equiv='pragma' content='no-cache'>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="icon" type="image/png" href="{{ asset('public/hos/img/favicon.png') }}" sizes="194x194">
   <link rel="stylesheet" href="{{ asset('public/hos/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -32,7 +33,7 @@
        <div class="col-9 p-0 d-flex align-items-center">
         <span>
          <b  class="text-nowrap" style="color: #108f68;font-size: 12px">{{DB::table('hss_master')->where('hss_master_no', auth()->user()->hss_master_no)->take(1)->value('name1')}}</b>
-         <b class="d-block text-center" style="color: #108f68;font-size: 12px">King of Saudi Arabia</b>
+         <b class="d-block text-center" style="color: #108f68;font-size: 12px">Kingdom of Saudi Arabia</b>
         </span>
        </div>
      </div>

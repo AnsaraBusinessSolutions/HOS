@@ -33,7 +33,7 @@ class HomeController extends Controller
     public function requestOrderDetail($order_id){
         $order_detail = DB::table('order_details as od')
                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
-                        ->select('hs.delivery_wh_name','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                        ->select('hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
                         ->where('od.order_id', $order_id)
                         ->get();
         
@@ -60,13 +60,18 @@ class HomeController extends Controller
     }
 
     public function orderBatchInsert(Request $request){
+        $result = 0;
         $batch_qty_array = $request->input('batch_qty');
         $batch_no_array = $request->input('batch_no');
         $manufacture_date_array = $request->input('manufacture_date');
         $expiry_date_array = $request->input('expiry_date');
-        $order_main_id = $request->input('order_id');
+        $order_main_id = $request->input('order_main_id');
+        $order_id = $request->input('order_id');
 
         $order_detail = DB::table('order_details')->where('id',$order_main_id)->take(1)->get();
+        DB::table('batch_list')->where('order_main_id', $order_main_id)->delete();
+        DB::statement('ALTER TABLE batch_list AUTO_INCREMENT = 0');
+
         if(count($order_detail)>0){
             $nupco_generic_code = $order_detail[0]->nupco_generic_code;
             $nupco_trade_code = $order_detail[0]->nupco_trade_code;
@@ -91,10 +96,12 @@ class HomeController extends Controller
         }else{
             $batch_code = $last_batch_details->batch_code;
         }
+        if($request->has('batch_qty')){
         foreach($batch_qty_array as $key=>$val) {
             if(!empty($val) && $order_main_id != ''){ 
                 $batch_code = $batch_code+1;
-                $batch_data[] = array('order_id' => $order_main_id,
+                $batch_data[] = array('order_id' => $order_id,
+                                    'order_main_id' => $order_main_id,
                                     'batch_code'=>$batch_code,
                                     'batch_qty' => $val,
                                     'batch_no' => $batch_no_array[$key],
@@ -111,9 +118,10 @@ class HomeController extends Controller
                                     'updated_at'=>date('Y-m-d H:i:s') );
             }
         }
-        $result = 0;
-        if(!empty($batch_data)){
-            $result = DB::table('batch_list')->insert($batch_data);
+           
+            if(!empty($batch_data)){
+                $result = DB::table('batch_list')->insert($batch_data);
+            }
         }
 
         if($result){
@@ -121,11 +129,87 @@ class HomeController extends Controller
             $request->session()->flash("message","<div class='col-12 text-center alert alert-success' role='alert'>Batch Added Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
         }else{
             $status = 0;
-            $request->session()->flash("message","<div class='col-12 text-center alert alert-danger' role='alert'>Something went wrong.Please try again or contact to admin<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
+            $request->session()->flash("message","<div class='col-12 text-center alert alert-danger' role='alert'>Something went wrong.Please try again.<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
         }
 
         return back();
 
+    }
+
+    public function batchData(Request $request){
+        $order_main_id = $request->input('order_main_id');
+        
+        $batch_data = array();
+        if($order_main_id != ''){
+            $batch_data = DB::table('batch_list')
+                                    ->select('batch_qty','batch_no','manufacture_date','expiry_date')
+                                    ->where('order_main_id',$order_main_id)->get();
+        }
+        return $batch_data;
+    }
+
+    public function orderDispatch(Request $request){
+        $order_id = $request->input('order_id');
+       
+        if($order_id != ''){
+           $batch_data =  DB::table('batch_list')->where('order_id',$order_id)->get();
+           if(count($batch_data) > 0){
+            
+            $pgi_no = '500-000-001';
+            $last_pgi_id= $last3 = DB::table('pgi_details')->select('pgi_id')->orderBy('id', 'DESC')->first();
+            if(empty($last_pgi_id)){
+                $lasts_pgi_id = '500-000-000';
+            }else{
+                $lasts_pgi_id=$last_pgi_id->pgi_id;
+            }
+            
+            if($lasts_pgi_id!==''){
+                $pgi_no=str_replace('-', '',$lasts_pgi_id);
+                $pgi_no=$pgi_no+1;
+                $pgi_no=str_pad($pgi_no,9,'0',STR_PAD_LEFT);
+                $pgi_no = implode('-',str_split($pgi_no,3));
+            }
+
+            foreach($batch_data as $key=>$val){
+            $pgi_details[] = array(
+                            'pgi_id'=>$pgi_no,
+                            'batch_qty' => $val->batch_qty,
+                            'batch_no' => $val->batch_no,
+                            'manufacture_date'=>$val->manufacture_date,
+                            'expiry_date' => $val->expiry_date,
+                            'order_id' => $order_id,
+                            'order_main_id' => $val->order_main_id,
+                            'nupco_generic_code' => $val->nupco_generic_code,
+                            'nupco_trade_code' => $val->nupco_trade_code,
+                            'customer_trade_code'=>$val->customer_trade_code,
+                            'material_desc'=>$val->material_desc,
+                            'qty_ordered'=>$val->qty_ordered,
+                            'uom'=>$val->uom,
+                            'delivery_date'=>$request->input('delivery_date'),
+                            'supplying_plant'=>$request->input('supplying_plant'),
+                            'hss_master_no'=>$request->input('hss_master_no'),
+                            'hospital_name'=>$request->input('hospital_name'),
+                            'vehicle_no'=>$request->input('vehical_number'),
+                            'created_at'=>date('Y-m-d H:i:s'));
+               }
+
+                if(!empty($pgi_details)){
+                    $result = DB::table('pgi_details')->insert($pgi_details);
+
+                    DB::table('order_details')
+                        ->where('order_id',$order_id)
+                        ->update([
+                            'status' => 3,
+                            'last_updated_date'=>date("Y-m-d H:i:s"),
+                            'last_updated_user'=>auth()->guard('hos3pl')->user()->name
+                            ]);
+                    
+                    DB::table('batch_list')->where('order_id', $order_id)->delete();
+                    DB::statement('ALTER TABLE batch_list AUTO_INCREMENT = 0');
+                }
+           }
+        }
+        return redirect()->route('hos3pl.home');
     }
     
 

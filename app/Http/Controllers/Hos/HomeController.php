@@ -60,9 +60,9 @@ class HomeController extends Controller
         $input_name = $request->input_name;
         //$search_data = MaterialMaster::select('id',$input_name)->where($input_name,'LIKE',"%{$input_data}%")->get();
         if($input_name == 'nupco_desc'){
-            $search_data = DB::table('material_master')->where($input_name,'LIKE',"%{$input_data}%")->select('id',$input_name)->take(5)->get();
+            $search_data = DB::table('material_master')->where($input_name,'LIKE',"%{$input_data}%")->select('id',$input_name)->take(50)->get();
         }else{
-            $search_data = DB::table('material_master')->where($input_name,'LIKE',"{$input_data}%")->select('id',$input_name)->take(5)->get();
+            $search_data = DB::table('material_master')->where($input_name,'LIKE',"{$input_data}%")->select('id',$input_name)->take(50)->get();
         }
         
 
@@ -153,27 +153,106 @@ class HomeController extends Controller
     public function orderDetail($order_id){
         $order_detail = DB::table('order_details as od')
                                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
-                                        ->select('hs.delivery_wh_name','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                                        ->select('od.hss_master_no','od.hospital_name','hs.delivery_wh_name','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
                                         ->where('od.order_id', $order_id)
                                         ->get();
         return view('hos.store_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id));
     }
 
     public function orderUpdate(Request $request){
-        $order_id_arr = $request->input('order_id');
-        $qty_arr = $request->input('qty_ordered');
-      
 
-        foreach($order_id_arr as $key=>$val){
+        if($request->has('delete_row')){
+            $delete_row_id_arr = $request->input('delete_row');
+            foreach($delete_row_id_arr as $key=>$val) {
+                DB::table('order_details')
+                ->where('id',$val)
+                ->update([
+                    'is_deleted'=>1,
+                ]);
+            }
+        }
+        
+        $supplying_plant = $request->input('supplying_plant');
+        $hss_master_no = $request->input('hss_master_no');
+        $hospital_name = $request->input('hospital_name');
+        $delivery_date = date('Y-m-d',strtotime($request->input('delivery_date')));
+
+        $order_primary_id_arr = $request->input('order_primary_id');
+        $qty_arr = $request->input('qty');
+        $nupco_generic_code_arr = $request->input('nupco_generic_code');
+        $nupco_trade_code_arr = $request->input('nupco_trade_code');
+        $customer_trade_code_arr = $request->input('customer_code');
+        $category_arr = $request->input('customer_code_cat');
+        $material_desc_arr = $request->input('nupco_desc');
+        $uom_arr = $request->input('uom');
+
+       
+        foreach($order_primary_id_arr as $key=>$val){
             DB::table('order_details')
                 ->where('id',$val)
                 ->update([
                     'qty_ordered' => $qty_arr[$key],
+                    'category'=> $category_arr[$key],
+                    'nupco_generic_code'=> $nupco_generic_code_arr[$key],
+                    'nupco_trade_code'=>$nupco_trade_code_arr[$key],
+                    'customer_trade_code'=>$customer_trade_code_arr[$key],
+                    'material_desc'=>$material_desc_arr[$key],
+                    'uom'=>$uom_arr[$key],
+                    'delivery_date'=>$delivery_date,
                     'last_updated_date'=>date("Y-m-d H:i:s"),
                     'last_updated_user'=>Auth::user()->name,
                     'status'=>0
             ]);
         }
+
+        
+
+        if($request->has('new_qty')){
+        $new_qty_arr = $request->input('new_qty');
+        if(count($new_qty_arr) > 0){
+            $order_id = $request->input('order_id');
+            $new_order_primary_id_arr = $request->input('new_order_primary_id');
+            $new_nupco_generic_code_arr = $request->input('new_nupco_generic_code');
+            $new_nupco_trade_code_arr = $request->input('new_nupco_trade_code');
+            $new_customer_trade_code_arr = $request->input('new_customer_code');
+            $new_category_arr = $request->input('new_customer_code_cat');
+            $new_material_desc_arr = $request->input('new_nupco_desc');
+            $new_uom_arr = $request->input('new_uom');
+           // dd($request);
+
+            $order_item = DB::table('order_details')->select('order_item')->orderBy('order_item','DESC')->where('order_id',$order_id)->first();
+            $order_item_val = $order_item->order_item;
+            foreach($new_qty_arr as $key=>$val) {
+                if(!empty($val)){ 
+                    $order_item_val = $order_item_val + 10;
+                    $order_data_add[] = array('order_id' => $order_id,
+                    'order_item'=>$order_item_val,
+                    'created_date'=>date('Y-m-d H:i:s'),
+                    'last_updated_date'=>date('Y-m-d H:i:s'),
+                    'user_id'=>Auth::user()->id,
+                    'user'=>Auth::user()->name,
+                    'category'=>$new_category_arr[$key],
+                    'nupco_generic_code'=>$new_nupco_generic_code_arr[$key],
+                    'nupco_trade_code'=>$new_nupco_trade_code_arr[$key],
+                    'customer_trade_code'=>$new_customer_trade_code_arr[$key],
+                    'material_desc'=>$new_material_desc_arr[$key],
+                    'qty_ordered'=>$val,
+                    'uom'=>$new_uom_arr[$key],
+                    'delivery_date'=>$delivery_date,
+                    'supplying_plant'=>$supplying_plant,
+                    'hss_master_no'=>$hss_master_no,
+                    'hospital_name'=>$hospital_name,
+                    'status'=>0 );
+                }
+            }
+
+        }
+        
+            if(!empty($order_data_add)){
+                $result = OrderDetail::insert($order_data_add);
+            }
+        }
+
         
         return back()->with("message","<div class='col-12 text-center alert alert-success' role='alert'>Request Updated Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
         

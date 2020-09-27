@@ -160,9 +160,12 @@ $(function() {
   $('#save_order').click(function (e) { 
     //         event.preventDefault();
             var formData = new FormData(document.getElementById("store_order_form"));
-            formData.append( '_token',"{{ csrf_token() }}");
+            //formData.append( '_token',"{{ csrf_token() }}");
             $.ajax({
                  url:"{{ route('hos.add.order') }}",
+                 headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                  method:"POST",
                  data:formData,
                  dataType:'JSON',
@@ -211,8 +214,11 @@ function autoSearchMaterial(){
         var token = "{{ csrf_token() }}";
         $.ajax({
           url:"{{ route('hos.search.data') }}",
+          headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
           method:"POST",
-          data:{input_data:input_data,input_name:input_name,_token:token},
+          data:{input_data:input_data,input_name:input_name},
           success:function(data){
             $('#'+input_name+'_list_'+row_id).html('');
             if(data != ''){
@@ -225,20 +231,21 @@ function autoSearchMaterial(){
               });
             }
           }
-        }),1000;
+        });
       }
     });
 }
 
 function setMaterialData(element,input_name,row_id){
     var input_data = $(element).text();
-   // alert('dddd');
     $.ajax({
           url: '{!! route('hos.material.data') !!}',
+          headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
           method: 'post',
           dataType: "json",
           data: {
-              "_token": "{{ csrf_token() }}",
               input_data:input_data,
               input_name:input_name
           }, 

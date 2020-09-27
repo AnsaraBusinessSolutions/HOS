@@ -103,7 +103,7 @@ class LoginController extends Controller
        Auth::guard('custodian')->logout();
         $request->session()->flush();
         $request->session()->regenerate();
-        return redirect()->guest(route( 'custodian.login' ));
+        return redirect()->guest(route( 'main_page' ));
     }
 
     
@@ -130,7 +130,7 @@ class LoginController extends Controller
         Auth::guard('hos3pl')->logout();
         $request->session()->flush();
         $request->session()->regenerate();
-        return redirect()->guest(route( 'hos3pl.login' ));
+        return redirect()->guest(route('main_page'));
     }
 
     protected function authenticated(Request $request, $user) {

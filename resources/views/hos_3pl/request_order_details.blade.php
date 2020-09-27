@@ -1,3 +1,8 @@
+<style>
+ .dis_row_input td button{
+    pointer-events:none;
+ }
+</style>
 @extends('hos_3pl.layouts.app')
 @section('content')
 <div class="container-fluid main_content bg-white p-2">
@@ -84,7 +89,11 @@
               <tbody>
               
               @foreach($order_detail as $key=>$val)
+                 @if($val->is_deleted == 1)
+                  <tr class="dis_row_input">
+                  @else
                   <tr>
+                  @endif
                       <td>{{$key+1}}</td>
                       <td>{{$val->nupco_generic_code}}</td>
                       <td>{{$val->nupco_trade_code}}</td>
@@ -93,7 +102,7 @@
                       <td>{{$val->material_desc}}</td>
                       <td>{{$val->uom}}</td>
                       <td>{{$val->qty_ordered}}</td>
-                      <td><button class="btn btn-small btn-warning batch_btn" data-order_id="{{$val->id}}">Batch</button></td>
+                      <td>@if($val->is_deleted == 0)<button class="btn btn-small btn-warning batch_btn" data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->id}}">Batch</button>@endif</td>
                   </tr>
                  @endforeach
               </tbody>
@@ -118,9 +127,13 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <!-- Modal body -->
-      <form id="approve_form" method="POST" action="{{route('hos3pl.order.status.update')}}">
+      <form id="approve_form" method="POST" action="{{route('hos3pl.order.dispatch')}}">
       @csrf
       <input type="hidden" value="{{$order_id}}" name="order_id">
+      <input type="hidden" name="supplying_plant" value="{{$order_detail[0]->delivery_wh_name}}">
+      <input type="hidden" name="hss_master_no" value="{{$order_detail[0]->hss_master_no}}">
+      <input type="hidden" name="hospital_name" value="{{$order_detail[0]->hospital_name}}">
+      <input type="hidden" name="delivery_date" value="{{$order_detail[0]->delivery_date}}">
       <div class="modal-body">
        <div class="table-responsive">
         <table id="dispatch_table" class="table table-bordered table-sm text-center">
@@ -134,7 +147,7 @@
           </thead>
           <tbody>
               <tr>
-                  <td><input class="form-control" type="text" name="vehical_number" id="vehical_number" required maxlength="10"></td>
+                  <td><input class="form-control" type="text" name="vehical_number" id="vehical_number" required maxlength="10" autocomplete="off"></td>
                   <td>{{count($order_detail)}}</td>
                   <td>{{$total_qty}}</td>
                   <td>{{$order_detail[0]->delivery_date}}</td>
@@ -166,6 +179,7 @@
       <form id="approve_form" method="POST" action="{{route('hos3pl.order.batch.insert')}}">
       @csrf
       <input type="hidden" name="order_id" id="order_id">
+      <input type="hidden" name="order_main_id" id="order_main_id">
       <div class="modal-body">
        <div class="table-responsive">
         <table id="batch_table" class="table table-bordered table-sm text-center">
@@ -197,6 +211,7 @@
 @push('scripts')
 <script>
 $(function() {
+  var counter = 1;
     $('.example').DataTable( {
         "order": [[ 1, "desc" ]],
         "scrollY":        "55vh",
@@ -207,12 +222,12 @@ $(function() {
         "iDisplayLength": 1000,
     });
 
-    var counter = 1;
+    
     $('#add_batch').click(function () {
-        var tr = $('<tr><td><input class="form-control" type="text" name="batch_qty[]" id="batch_qty_'+counter+'" required maxlength="10"></td>'
-                  +'<td><input class="form-control" type="text" name="batch_no[]" id="batch_no_'+counter+'" required maxlength="10"></td>'
-                  +'<td><input class="manufacture_date form-control datepicker" type="" name="manufacture_date[]" id="manufacture_date_'+counter+'" required></td>'
-                  +'<td><input class="expiry_date form-control datepicker" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required></td><td><i onclick="deleteRow(this)" class="fas fas fa-times"></i></i></td></tr>');
+        var tr = $('<tr><td><input class="form-control" type="text" name="batch_qty[]" id="batch_qty_'+counter+'" required maxlength="10" autocomplete="off"></td>'
+                  +'<td><input class="form-control" type="text" name="batch_no[]" id="batch_no_'+counter+'" required maxlength="10" autocomplete="off"></td>'
+                  +'<td><input class="manufacture_date form-control datepicker" type="" name="manufacture_date[]" id="manufacture_date_'+counter+'" required autocomplete="off"></td>'
+                  +'<td><input class="expiry_date form-control datepicker" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required autocomplete="off"></td><td><i onclick="deleteRow(this)" class="fas fas fa-times"></i></i></td></tr>');
 
         $('#batch_table tbody').append(tr);
         $(tr).find('.expiry_date').datepicker({
@@ -228,10 +243,35 @@ $(function() {
 
     $('.batch_btn').click(function(){
         var order_id = $(this).data('order_id');
+        var order_main_id = $(this).data('order_main_id');
         $('#order_id').val(order_id);
+        $('#order_main_id').val(order_main_id);
+
         if(order_id != ''){
-          $('#batch_modal').modal('show');
-          $('#add_batch').click();
+          $.ajax({
+            url: "{{route('hos3pl.batch.data')}}",
+            headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+            type: 'POST',
+            data: {"order_id":order_id,"order_main_id":order_main_id},
+            success : function(response) {
+              var batch_tr = '';
+              $.each(response, function(i, item) {
+                batch_tr += '<tr><td><input class="form-control" type="text" name="batch_qty[]" id="batch_qty_'+counter+'" required maxlength="10" value="'+item.batch_qty+'" autocomplete="off"></td>'
+                  +'<td><input class="form-control" type="text" name="batch_no[]" id="batch_no_'+counter+'" required maxlength="10" value="'+item.batch_no+'" autocomplete="off"></td>'
+                  +'<td><input class="manufacture_date form-control datepicker" type="" name="manufacture_date[]" id="manufacture_date_'+counter+'" required value="'+item.manufacture_date+'" autocomplete="off"></td>'
+                  +'<td><input class="expiry_date form-control datepicker" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required value="'+item.expiry_date+'" autocomplete="off"></td><td><i onclick="deleteRow(this)" class="fas fas fa-times"></i></i></td></tr>';
+
+                //batch_tr += '<tr><td>'+item.batch_qty_ordered+'<td>'+item.batch_no+'<td>'+item.manufacture_date+'<td>'+item.expiry_date+'</tr>';
+              });
+              $('#batch_table tbody').html(batch_tr);
+              $('#batch_modal').modal('show');
+              counter = $('#batch_table tbody tr').length + 1;
+            }
+          });
+         
+        
         }
     });
 
