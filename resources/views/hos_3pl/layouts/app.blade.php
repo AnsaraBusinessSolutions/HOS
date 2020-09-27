@@ -148,7 +148,7 @@ echo $currentTime; ?></span> |
   <script>
         $('.datepicker').datepicker({
             uiLibrary: 'bootstrap4',
-            format:'yyyy/mm/dd'
+            format: 'yyyy-dd-mm'
         });
     </script>
 </body>
