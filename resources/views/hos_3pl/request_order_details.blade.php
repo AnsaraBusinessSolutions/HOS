@@ -268,6 +268,9 @@ $(function() {
               $('#batch_table tbody').html(batch_tr);
               $('#batch_modal').modal('show');
               counter = $('#batch_table tbody tr').length + 1;
+              if(counter == 1){
+                $('#add_batch').click();
+              }
             }
           });
          
