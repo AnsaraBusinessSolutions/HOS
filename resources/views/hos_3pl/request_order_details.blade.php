@@ -271,6 +271,14 @@ $(function() {
                 //batch_tr += '<tr><td>'+item.batch_qty_ordered+'<td>'+item.batch_no+'<td>'+item.manufacture_date+'<td>'+item.expiry_date+'</tr>';
               });
               $('#batch_table tbody').html(batch_tr);
+              $(batch_tr).find('.expiry_date').datepicker({
+                autoclose: true,
+                uiLibrary: 'bootstrap4'
+        });
+        $(batch_tr).find('.manufacture_date').datepicker({
+                autoclose: true,
+                uiLibrary: 'bootstrap4'
+        });
               $('#batch_modal').modal('show');
               counter = $('#batch_table tbody tr').length + 1;
               if(counter == 1){
