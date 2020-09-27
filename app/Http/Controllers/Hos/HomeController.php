@@ -156,7 +156,10 @@ class HomeController extends Controller
                                         ->select('od.hss_master_no','od.hospital_name','hs.delivery_wh_name','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
                                         ->where('od.order_id', $order_id)
                                         ->get();
-        return view('hos.store_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id));
+
+        $pgi_details = DB::table('pgi_details as pd')->select('pd.pgi_id')->where('pd.order_id',$order_id)->first();
+
+        return view('hos.store_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'pgi_details'=>$pgi_details));
     }
 
     public function orderUpdate(Request $request){

@@ -15,7 +15,7 @@
 
           <div class="col-12 text-center">
             <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b></h5>
-            
+            <h6>@if(!empty($pgi_details))PGI No. {{$pgi_details->pgi_id}}@endif</h6>
           </div>
           </div>
           <form action="{{route('hos.order.update')}}" method="POST">
@@ -119,9 +119,9 @@
                       <td>{{$key+1}}</td>
                       <td><input type="text" class="material_data form-control h_1rem" data-row_id="{{$key}}" data-name="nupco_generic_code"  id="nupco_generic_code_{{$key}}" name="nupco_generic_code[]" value="{{$val->nupco_generic_code}}" autocomplete="off"><div id="nupco_generic_code_list_{{$key}}"></div></td>
                       <td><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="nupco_trade_code_" id="nupco_trade_code_{{$key}}" name="nupco_trade_code[]" value="{{$val->nupco_trade_code}}" readonly></td>
-                      <td><input type="text" class="material_data form-control h_1rem" data-row_id="{{$key}}" data-name="customer_code" id="customer_code_{{$key}}" name="customer_code[]" value="{{$val->customer_trade_code}}" autocomplete="off"></td>
+                      <td><input type="text" class="material_data form-control h_1rem" data-row_id="{{$key}}" data-name="customer_code" id="customer_code_{{$key}}" name="customer_code[]" value="{{$val->customer_trade_code}}" autocomplete="off"><div id="customer_code_list_{{$key}}"></div></td>
                       <td><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="customer_code_cat" id="customer_code_cat_{{$key}}" name="customer_code_cat[]" value="{{$val->category}}" readonly></td>
-                      <td><input type="text" class="material_data form-control h_1rem" data-row_id="{{$key}}" data-name="nupco_desc" id="nupco_desc_{{$key}}" name="nupco_desc[]" value="{{$val->material_desc}}" autocomplete="off"><div id="nupco_generic_code_list_{{$key}}"></div></td>
+                      <td><input type="text" class="material_data form-control h_1rem" data-row_id="{{$key}}" data-name="nupco_desc" id="nupco_desc_{{$key}}" name="nupco_desc[]" value="{{$val->material_desc}}" autocomplete="off"><div id="nupco_desc_list_{{$key}}"></div></td>
                       <td><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="uom" id="uom_{{$key}}" name="uom[]" value="{{$val->uom}}" readonly></td>
                       <td><input type="hidden" name="order_primary_id[]" value="{{$val->id}}"><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="qty" id="qty_{{$key}}" name="qty[]" value="{{$val->qty_ordered}}"></td>
                       <td><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="available" id="available_{{$key}}" value="available" name="available[]" readonly></td>
