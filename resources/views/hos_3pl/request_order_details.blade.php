@@ -32,7 +32,7 @@
               <div class="form-row">
                 <label class="col-md-4 col-sm-4 col-4"><b>Delivery Address</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-7 col-sm-7 col-7">{{$order_detail[0]->address}} </label>
+                <label class="col-md-7 col-sm-7 col-7 text-truncate">{{$order_detail[0]->address}} </label>
               </div>
             </div>
             <div class="col-md-2 col-sm-6 col-12">
@@ -271,6 +271,7 @@ $(function() {
                 //batch_tr += '<tr><td>'+item.batch_qty_ordered+'<td>'+item.batch_no+'<td>'+item.manufacture_date+'<td>'+item.expiry_date+'</tr>';
               });
               $('#batch_table tbody').html(batch_tr);
+
               $('.expiry_date').datepicker({
                       autoclose: true,
                       uiLibrary: 'bootstrap4'
@@ -279,6 +280,7 @@ $(function() {
                       autoclose: true,
                       uiLibrary: 'bootstrap4'
               });
+
               $('#batch_modal').modal('show');
               counter = $('#batch_table tbody tr').length + 1;
               if(counter == 1){
