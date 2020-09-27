@@ -24,7 +24,7 @@
                 </label>
               </div>
               <div class="form-row">
-                <label class="col-md-4 col-sm-4 col-4"><b>Supplying Address</b></label>
+                <label class="col-md-4 col-sm-4 col-4"><b>Delivery Address</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-7 col-sm-7 col-7">{{$order_detail[0]->address}} </label>
               </div>
