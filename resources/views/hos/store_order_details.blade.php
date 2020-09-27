@@ -149,7 +149,7 @@
           @endif
           </form>
         </div>
-        @stop
+       
         <!-- Batch Modal -->
 <div class="modal" id="batch_modal">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -184,6 +184,7 @@
     </div>
   </div>
 </div>
+@stop
 @push('scripts')
 <script>
 var table;
