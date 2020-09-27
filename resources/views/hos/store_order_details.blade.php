@@ -94,17 +94,17 @@
               <thead>
                   <tr class="bg_color">
                       @if($order_detail[0]->status == 0 || $order_detail[0]->status == 1)
-                      <th>Delete</th>
+                      <th class="w_3">Delete</th>
                       @endif
-                      <th class="text-nowrap px-3">Item #</th>
-                      <th class="text-nowrap px-3">NUPCO Material</th>
-                      <th class="text-nowrap px-3">NUPCO Trade Code</th>
-                      <th class="text-nowrap px-3">Customer Code</th>
-                      <th class="text-nowrap px-3">Category</th>
-                      <th class="text-nowrap px-3">Description</th>
-                      <th class="text-nowrap px-3">UOM</th>
-                      <th class="text-nowrap px-3">Order Qty</th>
-                      <th class="text-nowrap px-3">Availability</th>
+                      <th class="text-nowrap px-3 w_3">Item #</th>
+                      <th class="text-nowrap px-3 w_12">NUPCO Material</th>
+                      <th class="text-nowrap px-3 w_12">NUPCO Trade Code</th>
+                      <th class="text-nowrap px-3 w_10">Customer Code</th>
+                      <th class="text-nowrap px-3 w_9">Category</th>
+                      <th class="text-nowrap px-3 w_36">Description</th>
+                      <th class="text-nowrap px-3 w_4">UOM</th>
+                      <th class="text-nowrap px-3 w-4">Order Qty</th>
+                      <th class="text-nowrap px-3 w_8">Availability</th>
                   </tr>
               </thead>
               <tbody>
