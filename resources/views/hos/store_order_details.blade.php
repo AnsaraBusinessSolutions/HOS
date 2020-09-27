@@ -15,7 +15,7 @@
 
           <div class="col-12 text-center">
             <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b></h5>
-            <h6>@if(!empty($pgi_details))PGI No. {{$pgi_details->pgi_id}}@endif</h6>
+            
           </div>
           </div>
           <form action="{{route('hos.order.update')}}" method="POST">
@@ -117,14 +117,14 @@
                       @if($val->status == 0 || $val->status == 1)
                       <td><input type="checkbox" class="delete_row" name="delete_row[]" data-delete_id = "{{$val->id}}" /></td>
                       <td>{{$key+1}}</td>
-                      <td><input type="text" class="material_data form-control h_1rem" data-row_id="{{$key}}" data-name="nupco_generic_code"  id="nupco_generic_code_{{$key}}" name="nupco_generic_code[]" value="{{$val->nupco_generic_code}}" autocomplete="off"><div id="nupco_generic_code_list_{{$key}}" class="position-relative"></div></td>
-                      <td><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="nupco_trade_code_" id="nupco_trade_code_{{$key}}" name="nupco_trade_code[]" value="{{$val->nupco_trade_code}}" readonly></td>
-                      <td><input type="text" class="material_data form-control h_1rem" data-row_id="{{$key}}" data-name="customer_code" id="customer_code_{{$key}}" name="customer_code[]" value="{{$val->customer_trade_code}}" autocomplete="off"><div id="customer_code_list_{{$key}}"></div></td>
-                      <td><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="customer_code_cat" id="customer_code_cat_{{$key}}" name="customer_code_cat[]" value="{{$val->category}}" readonly></td>
-                      <td><input type="text" class="material_data form-control h_1rem" data-row_id="{{$key}}" data-name="nupco_desc" id="nupco_desc_{{$key}}" name="nupco_desc[]" value="{{$val->material_desc}}" autocomplete="off"><div id="nupco_desc_list_{{$key}}" class="position-relative"></div></td>
-                      <td><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="uom" id="uom_{{$key}}" name="uom[]" value="{{$val->uom}}" readonly></td>
-                      <td><input type="hidden" name="order_primary_id[]" value="{{$val->id}}"><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="qty" id="qty_{{$key}}" name="qty[]" value="{{$val->qty_ordered}}"></td>
-                      <td><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="available" id="available_{{$key}}" value="available" name="available[]" readonly></td>
+                      <td><input type="text" class="material_data form-control form-control-sm h_1rem" data-row_id="{{$key}}" data-name="nupco_generic_code"  id="nupco_generic_code_{{$key}}" name="nupco_generic_code[]" value="{{$val->nupco_generic_code}}" autocomplete="off"><div id="nupco_generic_code_list_{{$key}}" class="position-relative"></div></td>
+                      <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="nupco_trade_code_" id="nupco_trade_code_{{$key}}" name="nupco_trade_code[]" value="{{$val->nupco_trade_code}}" readonly></td>
+                      <td><input type="text" class="material_data form-control form-control-sm" data-row_id="{{$key}}" data-name="customer_code" id="customer_code_{{$key}}" name="customer_code[]" value="{{$val->customer_trade_code}}" autocomplete="off"></td>
+                      <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="customer_code_cat" id="customer_code_cat_{{$key}}" name="customer_code_cat[]" value="{{$val->category}}" readonly></td>
+                      <td><input type="text" class="material_data form-control form-control-sm" data-row_id="{{$key}}" data-name="nupco_desc" id="nupco_desc_{{$key}}" name="nupco_desc[]" value="{{$val->material_desc}}" autocomplete="off"><div id="nupco_generic_code_list_{{$key}}" class="position-relative"></div></td>
+                      <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="uom" id="uom_{{$key}}" name="uom[]" value="{{$val->uom}}" readonly></td>
+                      <td><input type="hidden" name="order_primary_id[]" value="{{$val->id}}"><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="qty" id="qty_{{$key}}" name="qty[]" value="{{$val->qty_ordered}}"></td>
+                      <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="available" id="available_{{$key}}" value="available" name="available[]" readonly></td>
                       @else
                       <td>{{$key+1}}</td>
                       <td>{{$val->nupco_generic_code}}</td>
@@ -211,14 +211,14 @@ var table;
             // '<td width="3%" class="text-nowrap px-3"><input type="checkbox" data-row_id ="'+counter+'"></td>',
             '<td><input type="checkbox" class="delete_row"/></td>',
             '<td class="p-0">'+(counter+1)+'</td>',
-            '<td class="p-0"><input type="text" class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_generic_code" id="nupco_generic_code_'+counter+'" name="new_nupco_generic_code[]" maxlength="20" autocomplete="off"><div id="nupco_generic_code_list_'+counter+'" class="position-relative"></div></td>',
-            '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_trade_code" id="nupco_trade_code_'+counter+'" name="new_nupco_trade_code[]" maxlength="20" autocomplete="off" readonly></td>',
-            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code" id="customer_code_'+counter+'" name="new_customer_code[]" maxlength="20" autocomplete="off"><div id="customer_code_list_'+counter+'" class="position-relative"></div></td>',
-            '<td class="p-0"><input type="text"  class="form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code_cat" id="customer_code_cat_'+counter+'" name="new_customer_code_cat[]" readonly><div id="customer_code_cat_list_'+counter+'"></div></td>',
-            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="new_nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'" class="position-relative"></div></td>',
-            '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="new_uom[]" readonly></td>',
-            '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="new_qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off"></td>',
-            '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="new_available[]" readonly></td>',
+            '<td class="p-0"><input type="text" class="material_data form-control form-control-sm" data-row_id ="'+counter+'" data-name="nupco_generic_code" id="nupco_generic_code_'+counter+'" name="new_nupco_generic_code[]" maxlength="20" autocomplete="off"><div id="nupco_generic_code_list_'+counter+'" class="position-relative"></div></td>',
+            '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="nupco_trade_code" id="nupco_trade_code_'+counter+'" name="new_nupco_trade_code[]" maxlength="20" autocomplete="off" readonly></td>',
+            '<td class="p-0"><input type="text"  class="material_data form-control form-control-sm"  data-row_id ="'+counter+'" data-name="customer_code" id="customer_code_'+counter+'" name="new_customer_code[]" maxlength="20" autocomplete="off"><div id="customer_code_list_'+counter+'" class="position-relative"></div></td>',
+            '<td class="p-0"><input type="text"  class="form-control form-control-sm"  data-row_id ="'+counter+'" data-name="customer_code_cat" id="customer_code_cat_'+counter+'" name="new_customer_code_cat[]" readonly><div id="customer_code_cat_list_'+counter+'"></div></td>',
+            '<td class="p-0"><input type="text"  class="material_data form-control form-control-sm" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="new_nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'" class="position-relative"></div></td>',
+            '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="new_uom[]" readonly></td>',
+            '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="new_qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off"></td>',
+            '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="new_available[]" readonly></td>',
            ]).draw( false );
         counter++;
         autoSearchMaterial();
