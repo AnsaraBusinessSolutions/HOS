@@ -36,18 +36,6 @@
 .h_sm{
   height: calc(1.8125rem + 2px)!important;
 }
-.search_data tbody tr td .dropdown-menu{
-  position: absolute!important;
-  height: 250px;
-  overflow-y: auto;
-  width: 35vw;
-}
-.search_data tbody tr td .dropdown-menu li{
-  padding: 4px 15px;
-    border-style: solid;
-    border-width: 1px 0px;
-    border-color: lightgray;
-}
 </style>
 @section('content')
 <div class="container-fluid main_content bg-white p-2">

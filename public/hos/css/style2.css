@@ -230,9 +230,24 @@
 .h_sm{
   height: calc(1.8125rem + 2px)!important;
 }
-.search_data .dropdown-menu{
+.search_data tbody tr td .dropdown-menu{
   position: absolute!important;
   height: 250px;
   overflow-y: auto;
   width: 35vw;
+}
+.search_data tbody tr td .dropdown-menu li{
+  padding: 4px 15px;
+    border-style: solid;
+    border-width: 1px 0px;
+    border-color: lightgray;
+    box-shadow: 0px 0px 2px 1px grey;
+}
+.search_data tbody tr td .dropdown-menu li:hover{
+  padding: 4px 15px;
+    border-style: solid;
+    border-width: 1px 0px;
+    border-color: lightgray;
+    box-shadow: 0px 0px 2px 1px grey;
+    background-color: lightgray;
 }
