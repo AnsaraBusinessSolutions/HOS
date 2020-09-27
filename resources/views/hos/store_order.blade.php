@@ -77,13 +77,13 @@
                         <tr class="bg_color ">
                             <!-- <th width="3%" class="px-3">All <input type="checkbox" id="check_all"></th> -->
                             <th class="text-nowrap px-3" style="width:4%">Item #</th>
-                            <th class="text-nowrap px-3" style="width:4%">NUPCO Material</th>
-                            <th class="text-nowrap px-3" style="width:4%">Customer Code</th>
-                            <th class="text-nowrap px-3" style="width:4%">Category</th>
-                            <th class="text-nowrap px-3" style="width:4%">Description</th>
-                            <th class="text-nowrap px-3" style="width:4%">UOM</th>
-                            <th class="text-nowrap px-3" style="width:4%">Qty</th>
-                            <th class="text-nowrap px-3" style="width:4%">Available</th>
+                            <th class="text-nowrap px-3" style="width:7%">NUPCO Material</th>
+                            <th class="text-nowrap px-3" style="width:7%">Customer Code</th>
+                            <th class="text-nowrap px-3" style="width:10%">Category</th>
+                            <th class="text-nowrap px-3" style="width:45%">Description</th>
+                            <th class="text-nowrap px-3" style="width:5%">UOM</th>
+                            <th class="text-nowrap px-3" style="width:5%">Qty</th>
+                            <th class="text-nowrap px-3" style="width:7%">Available</th>
                         </tr>
                     </thead>
                     <tbody>
