@@ -244,6 +244,7 @@
     box-shadow: 0px 0px 2px 1px grey;
 }
 .search_data tbody tr td .dropdown-menu li:hover{
+  font-size: 13px;
   padding: 4px 15px;
     border-style: solid;
     border-width: 1px 0px;
