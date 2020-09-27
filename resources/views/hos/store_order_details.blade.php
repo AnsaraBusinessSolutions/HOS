@@ -117,9 +117,9 @@
                       @if($val->status == 0 || $val->status == 1)
                       <td><input type="checkbox" class="delete_row" name="delete_row[]" data-delete_id = "{{$val->id}}" /></td>
                       <td>{{$key+1}}</td>
-                      <td><input type="text" class="material_data form-control h_1rem" data-row_id="{{$key}}" data-name="nupco_generic_code"  id="nupco_generic_code_{{$key}}" name="nupco_generic_code[]" value="{{$val->nupco_generic_code}}" autocomplete="off"><div id="nupco_generic_code_list_{{$key}}"></div></td>
+                      <td><input type="text" class="material_data form-control h_1rem position-relative" data-row_id="{{$key}}" data-name="nupco_generic_code"  id="nupco_generic_code_{{$key}}" name="nupco_generic_code[]" value="{{$val->nupco_generic_code}}" autocomplete="off"><div id="nupco_generic_code_list_{{$key}}"></div></td>
                       <td><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="nupco_trade_code_" id="nupco_trade_code_{{$key}}" name="nupco_trade_code[]" value="{{$val->nupco_trade_code}}" readonly></td>
-                      <td><input type="text" class="material_data form-control h_1rem" data-row_id="{{$key}}" data-name="customer_code" id="customer_code_{{$key}}" name="customer_code[]" value="{{$val->customer_trade_code}}" autocomplete="off"></td>
+                      <td><input type="text" class="material_data form-control h_1rem position-relative" data-row_id="{{$key}}" data-name="customer_code" id="customer_code_{{$key}}" name="customer_code[]" value="{{$val->customer_trade_code}}" autocomplete="off"></td>
                       <td><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="customer_code_cat" id="customer_code_cat_{{$key}}" name="customer_code_cat[]" value="{{$val->category}}" readonly></td>
                       <td><input type="text" class="material_data form-control h_1rem" data-row_id="{{$key}}" data-name="nupco_desc" id="nupco_desc_{{$key}}" name="nupco_desc[]" value="{{$val->material_desc}}" autocomplete="off"><div id="nupco_generic_code_list_{{$key}}"></div></td>
                       <td><input type="text" class="form-control h_1rem" data-row_id="{{$key}}" data-name="uom" id="uom_{{$key}}" name="uom[]" value="{{$val->uom}}" readonly></td>
