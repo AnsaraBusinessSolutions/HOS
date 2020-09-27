@@ -12,7 +12,7 @@
                       <th class="text-nowrap px-3">Store Order #</th>
                       <th class="text-nowrap px-3">Hospital</th>
                       <th class="text-nowrap px-3">Delivery date</th>
-                      <th class="text-nowrap px-3">Order Item</th>
+                      <th class="text-nowrap px-3">Order Items</th>
                       <th class="text-nowrap px-3">Qty Ordered</th>
                       <th class="text-nowrap px-3">Ordered Date</th>
                       <th class="text-nowrap px-3">Status</th>
