@@ -12,6 +12,7 @@
         <div class="row mx-0">
           <div class="col-12 text-center">
             <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b> </h5>
+            <h6>@if(!empty($pgi_details))PGI No. {{$pgi_details->pgi_id}}@endif</h6>
           </div>
           </div>
           <div class="row mx-0 border">
@@ -83,6 +84,7 @@
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3">Order Qty</th>
+                      <th class="text-nowrap px-3">Dispatch Qty</th>
                       <th class="text-nowrap px-3">Batch</th>
                   </tr>
               </thead>
@@ -102,6 +104,7 @@
                       <td>{{$val->material_desc}}</td>
                       <td>{{$val->uom}}</td>
                       <td>{{$val->qty_ordered}}</td>
+                      <td>{{$val->dispatch_batch_count}}</td>
                       <td>@if($val->is_deleted == 0)<button class="btn btn-small btn-warning batch_btn" data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->id}}">Batch</button>@endif</td>
                   </tr>
                  @endforeach
@@ -109,10 +112,8 @@
             </table>
           </div>
               <div class="col-12 text-center">
-              @if($order_detail[0]->status == 2)
                 <input type="hidden" value="3" name="order_status">
                 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#dipatch_modal">Dispatch</button>
-              @endif
               </div>
         </div>
     </div>
@@ -134,6 +135,9 @@
       <input type="hidden" name="hss_master_no" value="{{$order_detail[0]->hss_master_no}}">
       <input type="hidden" name="hospital_name" value="{{$order_detail[0]->hospital_name}}">
       <input type="hidden" name="delivery_date" value="{{$order_detail[0]->delivery_date}}">
+      @if(!empty($pgi_details))
+      <input type="hidden" name="pgi_id" value="{{$pgi_details->pgi_id}}">
+      @endif
       <div class="modal-body">
        <div class="table-responsive">
         <table id="dispatch_table" class="table table-bordered table-sm text-center">
@@ -270,7 +274,7 @@ $(function() {
               counter = $('#batch_table tbody tr').length + 1;
               if(counter == 1){
                 $('#add_batch').click();
-              }
+              } 
             }
           });
          

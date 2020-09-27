@@ -33,15 +33,17 @@ class HomeController extends Controller
     public function requestOrderDetail($order_id){
         $order_detail = DB::table('order_details as od')
                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
-                        ->select('hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                        ->select('hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT sum(pd.batch_qty) FROM pgi_details as pd WHERE pd.order_main_id = od.id) as dispatch_batch_count"))
                         ->where('od.order_id', $order_id)
                         ->get();
+
+        $pgi_details = DB::table('pgi_details as pd')->select('pd.pgi_id')->where('pd.order_id',$order_id)->first();
         
         $total_qty = 0;
         foreach ($order_detail as $key=>$value) {
             $total_qty += $value->qty_ordered;
         }
-        return view('hos_3pl.request_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty));
+        return view('hos_3pl.request_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'pgi_details'=>$pgi_details));
     }
 
     public function orderStatusUpdate(Request $request){
@@ -155,21 +157,24 @@ class HomeController extends Controller
            $batch_data =  DB::table('batch_list')->where('order_id',$order_id)->get();
            if(count($batch_data) > 0){
             
-            $pgi_no = '500-000-001';
-            $last_pgi_id= $last3 = DB::table('pgi_details')->select('pgi_id')->orderBy('id', 'DESC')->first();
-            if(empty($last_pgi_id)){
-                $lasts_pgi_id = '500-000-000';
+            if($request->has('pgi_id')){
+                $pgi_no=$request->input('pgi_id');
             }else{
-                $lasts_pgi_id=$last_pgi_id->pgi_id;
+                $pgi_no = '500-000-001';
+                $last_pgi_id = DB::table('pgi_details')->select('pgi_id')->orderBy('id', 'DESC')->first();
+                if(empty($last_pgi_id)){
+                    $lasts_pgi_id = '500-000-000';
+                }else{
+                    $lasts_pgi_id=$last_pgi_id->pgi_id;
+                }
+                
+                if($lasts_pgi_id!==''){
+                    $pgi_no=str_replace('-', '',$lasts_pgi_id);
+                    $pgi_no=$pgi_no+1;
+                    $pgi_no=str_pad($pgi_no,9,'0',STR_PAD_LEFT);
+                    $pgi_no = implode('-',str_split($pgi_no,3));
+                }
             }
-            
-            if($lasts_pgi_id!==''){
-                $pgi_no=str_replace('-', '',$lasts_pgi_id);
-                $pgi_no=$pgi_no+1;
-                $pgi_no=str_pad($pgi_no,9,'0',STR_PAD_LEFT);
-                $pgi_no = implode('-',str_split($pgi_no,3));
-            }
-
             foreach($batch_data as $key=>$val){
             $pgi_details[] = array(
                             'pgi_id'=>$pgi_no,
