@@ -232,4 +232,6 @@
 }
 .search_data .dropdown-menu{
   position: absolute!important;
+  height: 250px;
+  overflow-y: auto;
 }
