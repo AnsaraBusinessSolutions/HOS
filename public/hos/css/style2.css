@@ -230,3 +230,6 @@
 .h_sm{
   height: calc(1.8125rem + 2px)!important;
 }
+.search_data .dropdown-menu{
+  position: absolute!important;
+}

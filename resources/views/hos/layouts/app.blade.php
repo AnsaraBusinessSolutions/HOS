@@ -28,9 +28,9 @@
         @php
         $logo = DB::table('ministry_logo')->where('id', auth()->user()->ministry_logo_id)->take(1)->value('logo')
         @endphp
-         <img src="{{ asset('public/hos/img/ministry_logo').'/'.$logo }}" class="img-fluid" height="70px" width="auto">
+         <img src="{{ asset('public/hos/img/ministry_logo').'/'.$logo }}" class="" height="70px" width="auto">
       </div>
-       <div class="col-9 p-0 d-flex align-items-center">
+       <div class="col-9 pl-2 p-0 d-flex align-items-center">
         <span>
          <b  class="text-nowrap" style="color: #108f68;font-size: 12px">{{DB::table('hss_master')->where('hss_master_no', auth()->user()->hss_master_no)->take(1)->value('name1')}}</b>
          <b class="d-block text-center" style="color: #108f68;font-size: 12px">Kingdom of Saudi Arabia</b>

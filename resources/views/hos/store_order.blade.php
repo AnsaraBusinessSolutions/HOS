@@ -36,7 +36,9 @@
 .h_sm{
   height: calc(1.8125rem + 2px)!important;
 }
-
+.search_data tbody tr td .dropdown-menu{
+  position: absolute!important;
+}
 </style>
 @section('content')
 <div class="container-fluid main_content bg-white p-2">
@@ -50,11 +52,11 @@
               <thead>
                  <tr>
                   <th width="6%" class="p-0">&ensp;</th>
-                   <th width="14%" class="p-0">
-                    <label for="supplying-plant">Supplying Plant: </label>
-                    </th>
+                   <th width="10%" class="p-0">
+                    <label for="supplying-plant">Supplying Plant:</label></th>
                     @if(count($delivery_wh) > 0)
-                    <th>{{$delivery_wh[0]->delivery_wh_name}}</th>
+                   <th width="20%" class="p-0 border">
+                    <label class="mb-0 py-2" ><b>{{$delivery_wh[0]->delivery_wh_name}}</b></label>
                     <input type="hidden" name="supplying_plant" value="{{$delivery_wh[0]->delivery_wh_name}}">
                     <input type="hidden" name="hss_master_no" value="{{$delivery_wh[0]->hss_master_no}}">
                     <input type="hidden" name="hospital_name" value="{{$delivery_wh[0]->name1}}">
@@ -63,25 +65,25 @@
                     <input type="hidden" name="hss_master_no" value="">
                     <input type="hidden" name="hospital_name" value="">
                     @endif
-                    <th width="6%" class="p-0">&ensp;</th>
+                    </th><th width="6%" class="p-0">&ensp;</th>
                    <th width="10%" class="p-0">
                     <label for="delivery-date">Delivery Date:</label></th>
                    <th width="20%" class="p-0">
-                    <input type="" class="datepicker form-control h_sm" name="delivery_date" id="delivery_date" require></th>
+                    <input type="" class="datepicker form-control h_sm" name="delivery_date" id="delivery_date" required></th>
                      <th width="6%" class="p-0">&ensp;</th>
                  </tr>
               </thead>
             </table>
               <div class="col-12 text-center">
-                  <table id="store_order" class="table table-striped table-bordered text-center">
+                  <table id="store_order" class="table table-striped table-bordered text-center search_data">
                     <thead>
-                        <tr class="bg_color">
+                        <tr class="bg_color ">
                             <!-- <th width="3%" class="px-3">All <input type="checkbox" id="check_all"></th> -->
                             <th width="3%" class="text-nowrap px-3">Item #</th>
                             <th width="15%" class="text-nowrap px-3">NUPCO Material</th>
                             <th width="5%" class="text-nowrap px-3">Customer Code</th>
                             <th width="5%" class="text-nowrap px-3">Category</th>
-                            <th width="23%" class="text-nowrap px-3">Description</th>
+                            <th width="50%" class="text-nowrap px-3">Description</th>
                             <th width="3%" class="text-nowrap px-3">UOM</th>
                             <th width="5%" class="text-nowrap px-3">Qty</th>
                             <th width="8%" class="text-nowrap px-3">Available</th>
@@ -131,10 +133,10 @@ $(function() {
       table.row.add( [
             // '<td width="3%" class="text-nowrap px-3"><input type="checkbox" data-row_id ="'+counter+'"></td>',
             '<td class="p-0"><input type="hidden" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_trade_code" id="nupco_trade_code_'+counter+'" name="nupco_trade_code[]">'+counter+'</td>',
-            '<td class="p-0"><input type="text" class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_generic_code" id="nupco_generic_code_'+counter+'" name="nupco_generic_code[]" maxlength="20" autocomplete="off"><div id="nupco_generic_code_list_'+counter+'"></div></td>',
-            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code" id="customer_code_'+counter+'" name="customer_code[]" maxlength="20" autocomplete="off"><div id="customer_code_list_'+counter+'"></div></td>',
+            '<td class="p-0"><input type="text" class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_generic_code" id="nupco_generic_code_'+counter+'" name="nupco_generic_code[]" maxlength="20" autocomplete="off"><div id="nupco_generic_code_list_'+counter+'" class="position-relative"></div></td>',
+            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code" id="customer_code_'+counter+'" name="customer_code[]" maxlength="20" autocomplete="off"><div id="customer_code_list_'+counter+'" class="position-relative"></div></td>',
             '<td class="p-0"><input type="text"  class="form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code_cat" id="customer_code_cat_'+counter+'" name="customer_code_cat[]" readonly><div id="customer_code_cat_list_'+counter+'"></div></td>',
-            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'"></div></td>',
+            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'" class="position-relative"></div></td>',
             '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="uom[]" readonly></td>',
             '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off"></td>',
             '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="available[]" readonly></td>',
