@@ -55,17 +55,19 @@
                 <label class="col-md-6 col-sm-4 col-4"><b>Status</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-5 col-sm-7 col-7">
-                        @if($order_detail[0]->status == 0)
+                        @if($status_data->status == '2,3' || $status_data->status == '3,2')
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
+                        @elseif($status_data->status == 0)
                           <span class="text-warning"><b>NEW</b></span>
-                        @elseif($order_detail[0]->status == 1)
+                        @elseif($status_data->status == 1)
                           <span class="text-danger"><b>REJECTED</b></span>
-                        @elseif($order_detail[0]->status == 2)
+                        @elseif($status_data->status == 2)
                           <span class="text-success"><b>APPROVED</b></span>
-                        @elseif($order_detail[0]->status == 3)
+                        @elseif($status_data->status == 3)
                           <span class="text-primary"><b>DISPATCHED</b></span>
-                        @elseif($order_detail[0]->status == 4)
+                        @elseif($status_data->status == 4)
                           <span class="text-info"><b>DELIVERED</b></span>
-                        @elseif($order_detail[0]->status == 5)
+                        @elseif($status_data->status == 5)
                           <span class="text-danger"><b>CANCELLED</b></span>
                         @endif
                 </label>
@@ -105,15 +107,17 @@
                       <td>{{$val->uom}}</td>
                       <td>{{$val->qty_ordered}}</td>
                       <td>{{$val->dispatch_batch_count}}</td>
-                      <td>@if($val->is_deleted == 0)<button class="btn btn-small btn-warning batch_btn" data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->id}}">Batch</button>@endif</td>
+                      <td>@if($val->is_deleted == 0)<button class="btn btn-small btn-warning batch_btn" data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->id}}" data-status="{{$val->status}}">Batch</button>@endif</td>
                   </tr>
                  @endforeach
               </tbody>
             </table>
           </div>
               <div class="col-12 text-center">
+              @if($status_data->status != 3)
                 <input type="hidden" value="3" name="order_status">
                 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#dipatch_modal">Dispatch</button>
+              @endif
               </div>
         </div>
     </div>
@@ -193,11 +197,11 @@
                   <th>Batch No</th>
                   <th>Manufacture Date</th>
                   <th>Expiry Date</th>
-                  <th>Action</th>
+                  <th class="hide_btn">Action</th>
               </tr>
           </thead>
           <tbody>
-          <button name="submit" type="button"  class="btn btn-success float-right" id="add_batch">Add Batch</button>
+          <button name="submit" type="button"  class="btn btn-success float-right hide_btn" id="add_batch">Add Batch</button>
               
         </tbody>
         </table>
@@ -205,7 +209,7 @@
       </div>
       <!-- Modal footer -->
       <div class="modal-footer py-2 my-3 border-0 justify-content-center">
-        <button name="submit" type="submit" value="submit" class="btn btn-success">Submit</button>
+        <button name="submit" type="submit" value="submit" class="btn btn-success hide_btn">Submit</button>
         <button type="button" data-dismiss="modal" class="btn btn-danger">Close</button>
       </div>
       </form>
@@ -249,6 +253,7 @@ $(function() {
     $('.batch_btn').click(function(){
         var order_id = $(this).data('order_id');
         var order_main_id = $(this).data('order_main_id');
+        var status = $(this).data('status');
         $('#order_id').val(order_id);
         $('#order_main_id').val(order_main_id);
 
@@ -259,14 +264,14 @@ $(function() {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
             type: 'POST',
-            data: {"order_id":order_id,"order_main_id":order_main_id},
+            data: {"order_id":order_id,"order_main_id":order_main_id,"status":status},
             success : function(response) {
               var batch_tr = '';
               $.each(response, function(i, item) {
                 batch_tr += '<tr><td><input class="form-control" type="text" name="batch_qty[]" id="batch_qty_'+counter+'" required maxlength="10" value="'+item.batch_qty+'" autocomplete="off"></td>'
                   +'<td><input class="form-control" type="text" name="batch_no[]" id="batch_no_'+counter+'" required maxlength="10" value="'+item.batch_no+'" autocomplete="off"></td>'
                   +'<td><input class="manufacture_date form-control datepicker" type="" name="manufacture_date[]" id="manufacture_date_'+counter+'" required value="'+item.manufacture_date+'" autocomplete="off"></td>'
-                  +'<td><input class="expiry_date form-control datepicker" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required value="'+item.expiry_date+'" autocomplete="off"></td><td><i onclick="deleteRow(this)" class="fas fas fa-times"></i></i></td></tr>';
+                  +'<td><input class="expiry_date form-control datepicker" type="" name="expiry_date[]" id="expiry_date_'+counter+'" required value="'+item.expiry_date+'" autocomplete="off"></td><td class="hide_btn"><i onclick="deleteRow(this)" class="fas fas fa-times"></i></i></td></tr>';
 
                 //batch_tr += '<tr><td>'+item.batch_qty_ordered+'<td>'+item.batch_no+'<td>'+item.manufacture_date+'<td>'+item.expiry_date+'</tr>';
               });
@@ -280,7 +285,12 @@ $(function() {
                       autoclose: true,
                       uiLibrary: 'bootstrap4'
               });
-
+              if(status == 3){
+                $('.hide_btn').hide();
+                $('#batch_modal input').prop('disabled',true);
+              }else{
+                $('.hide_btn').show();
+              }
               $('#batch_modal').modal('show');
               counter = $('#batch_table tbody tr').length + 1;
               if(counter == 1){

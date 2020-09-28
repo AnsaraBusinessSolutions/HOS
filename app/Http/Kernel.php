@@ -62,6 +62,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.custodian' => \App\Http\Middleware\CustodianMiddleware::class,
         'auth.hos3pl' => \App\Http\Middleware\Hos3plMiddleware::class,
+        'auth.inventory' => \App\Http\Middleware\InventoryMiddleware::class,
         'auth.admin' => \App\Http\Middleware\AdminMiddleware::class,
     ];
 

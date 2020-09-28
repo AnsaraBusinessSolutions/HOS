@@ -40,6 +40,7 @@ class LoginController extends Controller
         $this->middleware('guest:admin')->except('adminLogout');
         $this->middleware('guest:custodian')->except('custodianLogout');
         $this->middleware('guest:hos3pl')->except('hos3plLogout');
+        $this->middleware('guest:inventory')->except('inventoryLogout');
     }
 
     
@@ -133,6 +134,32 @@ class LoginController extends Controller
         return redirect()->guest(route('main_page'));
     }
 
+    public function showInventoryLoginForm()
+    {
+        return view('inventory.inventory_login', ['url' => 'admin']);
+    }
+
+    public function inventoryLogin(Request $request)
+    {
+        $this->validate($request, [
+            'email'   => 'required|email',
+            'password' => 'required|min:6'
+        ]);
+
+        if (Auth::guard('inventory')->attempt(['email' => $request->email, 'password' => $request->password,'user_type'=>4], $request->get('remember'))) {
+            return redirect()->intended('/inventory/home');
+            //return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
+        }
+        return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
+    }
+
+    public function inventoryLogout(Request $request){
+        Auth::guard('inventory')->logout();
+        $request->session()->flush();
+        $request->session()->regenerate();
+        return redirect()->guest(route('main_page'));
+    }
+
     protected function authenticated(Request $request, $user) {
         $request->session()->put('user_type', $user->user_type);
         if ($user->user_type == 1) {
@@ -141,6 +168,8 @@ class LoginController extends Controller
             return redirect('/custodian/home');
         }else if ($user->user_type == 3) {
             return redirect('/hos3pl/home');
+        }else if ($user->user_type == 4) {
+            return redirect('/inventory/home');
         } else {
             return redirect('/');
         }

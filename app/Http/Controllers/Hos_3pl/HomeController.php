@@ -22,7 +22,7 @@ class HomeController extends Controller
                                 ->orderBy('od.status','ASC')
                                 ->groupBy("od.order_id")
                                 ->whereIn('od.status',[2,3])
-                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date')
+                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date',DB::raw('group_concat(distinct od.status) as status'))
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
                                 ->selectRaw('count(od.order_id) as total_item')
                                 ->get();
@@ -37,13 +37,15 @@ class HomeController extends Controller
                         ->where('od.order_id', $order_id)
                         ->get();
 
+        $status = DB::table('order_details as od')->select(DB::raw('group_concat(distinct od.status) as status'))->where('od.order_id', $order_id)->first();
+        
         $pgi_details = DB::table('pgi_details as pd')->select('pd.pgi_id')->where('pd.order_id',$order_id)->first();
         
         $total_qty = 0;
         foreach ($order_detail as $key=>$value) {
             $total_qty += $value->qty_ordered;
         }
-        return view('hos_3pl.request_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'pgi_details'=>$pgi_details));
+        return view('hos_3pl.request_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'pgi_details'=>$pgi_details,'status_data'=>$status));
     }
 
     public function orderStatusUpdate(Request $request){
@@ -140,12 +142,18 @@ class HomeController extends Controller
 
     public function batchData(Request $request){
         $order_main_id = $request->input('order_main_id');
-        
+        $status = $request->input('status');
         $batch_data = array();
         if($order_main_id != ''){
+            if($status == 3){
+            $batch_data = DB::table('pgi_details')
+                                    ->select('batch_qty','batch_no','manufacture_date','expiry_date')
+                                    ->where('order_main_id',$order_main_id)->get();
+            }else{
             $batch_data = DB::table('batch_list')
                                     ->select('batch_qty','batch_no','manufacture_date','expiry_date')
                                     ->where('order_main_id',$order_main_id)->get();
+            }
         }
         return $batch_data;
     }
@@ -196,19 +204,22 @@ class HomeController extends Controller
                             'hospital_name'=>$request->input('hospital_name'),
                             'vehicle_no'=>$request->input('vehical_number'),
                             'created_at'=>date('Y-m-d H:i:s'));
+                
+                $order_main_id_arr[] = $val->order_main_id;
                }
-
+               
                 if(!empty($pgi_details)){
                     $result = DB::table('pgi_details')->insert($pgi_details);
 
-                    DB::table('order_details')
-                        ->where('order_id',$order_id)
-                        ->update([
-                            'status' => 3,
-                            'last_updated_date'=>date("Y-m-d H:i:s"),
-                            'last_updated_user'=>auth()->guard('hos3pl')->user()->name
-                            ]);
-                    
+                    if(!empty($order_main_id_arr)){
+                        DB::table('order_details')
+                            ->whereIn('id',$order_main_id_arr)
+                            ->update([
+                                'status' => 3,
+                                'last_updated_date'=>date("Y-m-d H:i:s"),
+                                'last_updated_user'=>auth()->guard('hos3pl')->user()->name
+                                ]);
+                    }
                     DB::table('batch_list')->where('order_id', $order_id)->delete();
                     DB::statement('ALTER TABLE batch_list AUTO_INCREMENT = 0');
                 }

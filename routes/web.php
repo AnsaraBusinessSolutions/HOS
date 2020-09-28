@@ -62,11 +62,12 @@ Route::prefix('hos3pl')->group(function () {
     Route::post('/batch_data', 'Hos_3pl\HomeController@batchData')->name('hos3pl.batch.data');
 });
 
-// Route::group(['middleware' => ['auth', 'approve']],function() {
-//     Route::prefix('3pl')->group(function () {
-//         Route::get('/home', 'Approve\HomeController@index')->name('approve.home');
-//     });
-// });
+Route::prefix('inventory')->group(function () {
+    Route::get('/login', 'Auth\LoginController@showInventoryLoginForm')->name('inventory.login');
+    Route::post('/login', 'Auth\LoginController@inventoryLogin')->name('inventory.login');
+    Route::post('/logout', 'Auth\LoginController@inventoryLogout')->name('inventory.logout');
+    Route::get('/home', 'Inventory\HomeController@index')->name('inventory.home');
+});
 
 Auth::routes();
 

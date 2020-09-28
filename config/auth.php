@@ -61,6 +61,11 @@ return [
             'driver' => 'session',
             'provider' => 'hos3pls',
         ],
+
+        'inventory' => [
+            'driver' => 'session',
+            'provider' => 'inventorys',
+        ],
     ],
 
     /*
@@ -95,11 +100,15 @@ return [
             'driver' => 'eloquent',
             'model' => App\Custodian::class,
         ],
-
         
         'hos3pls' => [
             'driver' => 'eloquent',
             'model' => App\Hos3pl::class,
+        ],
+
+        'inventorys' => [
+            'driver' => 'eloquent',
+            'model' => App\Inventory::class,
         ],
 
         

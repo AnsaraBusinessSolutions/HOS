@@ -74,6 +74,7 @@
                         <a href="{{ route('hos.login') }}">HOS</a>
                         <a href="{{ route('custodian.login') }}">Custodian</a>
                         <a href="{{ route('hos3pl.login') }}">3PL</a>
+                        <a href="{{ route('inventory.login') }}">Inventory</a>
                         <!-- <a href="{{ url('approve/login') }}">Aproove</a> -->
                         <!-- @if (Route::has('register'))
                             <a href="{{ route('register') }}">Register</a>
