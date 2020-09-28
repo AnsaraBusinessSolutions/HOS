@@ -147,11 +147,11 @@ class HomeController extends Controller
         if($order_main_id != ''){
             if($status == 3){
             $batch_data = DB::table('pgi_details')
-                                    ->select('batch_qty','batch_no','manufacture_date','expiry_date')
+                                    ->select('batch_qty','batch_no',DB::raw('DATE_FORMAT(manufacture_date, "%m/%d/%Y") as manufacture_date'),DB::raw('DATE_FORMAT(expiry_date, "%m/%d/%Y") as expiry_date'))
                                     ->where('order_main_id',$order_main_id)->get();
             }else{
             $batch_data = DB::table('batch_list')
-                                    ->select('batch_qty','batch_no','manufacture_date','expiry_date')
+                                    ->select('batch_qty','batch_no',DB::raw('DATE_FORMAT(manufacture_date, "%m/%d/%Y") as manufacture_date'),DB::raw('DATE_FORMAT(expiry_date, "%m/%d/%Y") as expiry_date'))
                                     ->where('order_main_id',$order_main_id)->get();
             }
         }

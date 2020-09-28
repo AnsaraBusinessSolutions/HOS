@@ -1,8 +1,3 @@
-<style>
- .dis_row_input td button{
-    pointer-events:none;
- }
-</style>
 @extends('hos_3pl.layouts.app')
 @section('content')
 <div class="container-fluid main_content bg-white p-2">
@@ -121,7 +116,7 @@
               </div>
         </div>
     </div>
-
+@push('modal_content')
 <!-- Dispatch Modal -->
 <div class="modal" id="dipatch_modal">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -216,6 +211,7 @@
     </div>
   </div>
 </div>
+@endpush
 @stop
 @push('scripts')
 <script>
@@ -279,7 +275,8 @@ $(function() {
 
               $('.expiry_date').datepicker({
                       autoclose: true,
-                      uiLibrary: 'bootstrap4'
+                      uiLibrary: 'bootstrap4',
+                      dateFormat: 'dd/mm/y'
               });
               $('.manufacture_date').datepicker({
                       autoclose: true,

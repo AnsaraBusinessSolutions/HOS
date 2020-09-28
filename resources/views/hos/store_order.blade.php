@@ -66,7 +66,7 @@
                    <th width="10%" class="p-0">
                     <label for="delivery-date">Delivery Date:</label></th>
                    <th width="20%" class="p-0">
-                    <input type="" class="datepicker form-control h_sm" name="delivery_date" id="delivery_date" required></th>
+                    <input type="" class="datepicker form-control h_sm" name="delivery_date" id="delivery_date" required autocomplete="off"></th>
                      <th width="6%" class="p-0">&ensp;</th>
                  </tr>
               </thead>
@@ -98,7 +98,7 @@
           </form>
         </div>
       </div>
-      @stop
+  @push('modal_content')
   <div class="modal" id="conformation_modal">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -112,7 +112,8 @@
       </div>
     </div>
   </div>
-  
+  @endpush
+  @stop
 @push('scripts')
 <script>
     var t;

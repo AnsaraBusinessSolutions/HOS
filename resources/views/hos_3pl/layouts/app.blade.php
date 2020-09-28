@@ -106,10 +106,9 @@ echo $currentTime; ?></span> |
       @yield('content')
       <br>
     </div>
+    @stack('modal_content')
   </div>
-  
   </div>
-</div>
 
 
 <!-- script files -->

@@ -7,6 +7,7 @@
   <meta http-equiv='cache-control' content='no-cache'> 
   <meta http-equiv='expires' content='0'> 
   <meta http-equiv='pragma' content='no-cache'>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="icon" type="image/png" href="{{ asset('public/hos/img/favicon.png') }}" sizes="194x194">
   <link rel="stylesheet" href="{{ asset('public/hos/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -75,37 +76,37 @@ echo $currentTime; ?></span> |
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent" style="height: 57px">
-        <ul class="navbar-nav mr-auto">
+          <ul class="navbar-nav mr-auto">
+            </ul>
+            <ul class="navbar-nav ml-auto">
+            <li class="nav-item px-2">
+              <a>
+                <form name="lang_switch" id="lang_switch">
+                <select name="lang" id="lang" class="form-control" style="box-shadow: none!important; border: 2px solid #45CBD3;">
+                  <option value="english">English</option>
+                  <option value="arabic">Arabic</option>
+                </select>
+              </form>
+              </a>
+            </li>
+            <li class="nav-item px-2 py-1">
+              <a href="{{ route('custodian.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="badge badge-dark p-2" title="logout"><i class="fas fa-power-off"></i></span>
+              </a>
+              <form id="logout-form" action="{{ route('custodian.logout') }}" method="POST" style="display: none;">@csrf</form>
+            </li>
+            <li class="nav-item px-2 py-1">
+              <a>
+              </a>
+            </li>
           </ul>
-          <ul class="navbar-nav ml-auto">
-          <li class="nav-item px-2">
-            <a>
-              <form name="lang_switch" id="lang_switch">
-              <select name="lang" id="lang" class="form-control" style="box-shadow: none!important; border: 2px solid #45CBD3;">
-                <option value="english">English</option>
-                <option value="arabic">Arabic</option>
-              </select>
-            </form>
-            </a>
-          </li>
-          <li class="nav-item px-2 py-1">
-            <a href="{{ route('custodian.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="badge badge-dark p-2" title="logout"><i class="fas fa-power-off"></i></span>
-            </a>
-            <form id="logout-form" action="{{ route('custodian.logout') }}" method="POST" style="display: none;">@csrf</form>
-          </li>
-          <li class="nav-item px-2 py-1">
-            <a>
-            </a>
-          </li>
-        </ul>
         </div>
       </nav>
       @yield('content')
       <br>
     </div>
+    @stack('modal_content')
   </div>
-  
-  </div>
+ 
 </div>
 
 
