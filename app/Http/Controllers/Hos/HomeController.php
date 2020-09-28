@@ -93,7 +93,7 @@ class HomeController extends Controller
         if(count($qty_arr) > 0){
             $order_data = array();
             $ord_no = '000-000-001';
-            $last_ord_id= $last3 = DB::table('order_details')->select('order_id')->orderBy('id', 'DESC')->first();
+            $last_ord_id= $last3 = DB::table('order_details')->select('order_id')->orderBy('order_id', 'DESC')->first();
             if(empty($last_ord_id)){
                 $lasts_ord_id = '000-000-000';
             }else{
