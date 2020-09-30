@@ -52,6 +52,8 @@
                 <label class="col-md-5 col-sm-7 col-7">
                         @if($status_data->status == '2,3' || $status_data->status == '3,2')
                           <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
+                        @elseif($status_data->status == '2,3,4' || $status_data->status == '3,4')
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DELIVERED</b></span>
                         @elseif($status_data->status == 0)
                           <span class="text-warning"><b>NEW</b></span>
                         @elseif($status_data->status == 1)
@@ -75,6 +77,7 @@
             <table id="example" class="table table-striped table-bordered example">
               <thead>
                   <tr class="bg_color">
+                      <th class="text-nowrap px-3">#</th>
                       <th class="text-nowrap px-3">Item #</th>
                       <th class="text-nowrap px-3">NUPCO Material</th>
                       <th class="text-nowrap px-3">NUPCO Trade Code</th>
@@ -91,6 +94,7 @@
               <tbody>
               @foreach($order_detail as $key=>$val)
                   <tr>
+                      <td><input type="checkbox" class="select_item" data-row_id="{{$key}}"></td>
                       <td>{{$key+1}}</td>
                       <td>{{$val->nupco_generic_code}}</td>
                       <td>{{$val->nupco_trade_code}}</td>
@@ -104,7 +108,7 @@
                       @if($status_data->status == 4)
                       <td>{{$val->received_qty}}</td>
                       @else
-                      <td><input type="hidden" name="pgi_main_id[]" value="{{$val->id}}"><input class="form-control" type="text" name="received_qty[]" required autocomplete="off"></td>
+                      <td><input type="hidden" name="pgi_main_id[]" id="pgi_main_id_{{$key}}" value="{{$val->id}}" disabled><input class="form-control" id="rec_qty_{{$key}}" type="text" name="received_qty[]" required autocomplete="off" disabled></td>
                       @endif  
                   </tr>
                  @endforeach
@@ -131,6 +135,17 @@
         "searching": false,
         "lengthMenu": [ [15, 30, 50, 100, 250, 500, 1000, 1500], [15, 20, 50, 100, 250, 500, 1000, 1500] ],
         "iDisplayLength": 1000,
+    });
+
+    $(".select_item").click(function () {
+      var row_id = $(this).data('row_id');
+      if ($(this).is(":checked")) {
+        $("#rec_qty_"+row_id).removeAttr("disabled");
+        $("#pgi_main_id_"+row_id).removeAttr("disabled");
+      }else{
+        $("#rec_qty_"+row_id).attr("disabled", "disabled");
+        $("#pgi_main_id_"+row_id).attr("disabled", "disabled");
+      }
     });
 
   });

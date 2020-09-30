@@ -227,7 +227,7 @@ var table;
             '<td class="p-0"><input type="text"  class="form-control form-control-sm"  data-row_id ="'+counter+'" data-name="customer_code_cat" id="customer_code_cat_'+counter+'" name="new_customer_code_cat[]" readonly><div id="customer_code_cat_list_'+counter+'"></div></td>',
             '<td class="p-0"><input type="text"  class="material_data form-control form-control-sm" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="new_nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'" class="position-relative"></div></td>',
             '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="new_uom[]" readonly></td>',
-            '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="new_qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off"></td>',
+            '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="new_qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off" readonly></td>',
             '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="new_available[]" readonly></td>',
            ]).draw( false );
         counter++;
@@ -319,6 +319,7 @@ function setMaterialData(element,input_name,row_id){
                   $('#uom_'+row_id).val(response.data[0].uom);
                   $('#available_'+row_id).val('available');
                   $('#qty_'+row_id).val('');
+                  $('#qty_'+row_id).attr("readonly", false); 
               }else{
                   $('#'+input_name+'_'+row_id).val('');
               }

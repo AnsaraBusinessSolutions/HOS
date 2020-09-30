@@ -36,6 +36,20 @@
 .h_sm{
   height: calc(1.8125rem + 2px)!important;
 }
+.search_data thead tr:nth-child(1) th{
+  position: sticky;
+  top: 0px;
+  z-index: 999;
+  padding: 4px 4px;
+  /* outline: 1px solid #4682b5; */
+  font-size: 13px;
+  box-shadow: 0px 0px 1px 1px #ffffff, 0px 0px 1px 1px #ffffff; 
+  background: #4682b5;
+}
+.fixed_height{
+  height: 55vh;
+  overflow-y: auto;
+}
 </style>
 @section('content')
 <div class="container-fluid main_content bg-white p-2">
@@ -44,8 +58,8 @@
             {!! Session::get('message') !!}
           @endif
 
-          <form id="store_order_form" class="mb-0" method="POST">
-            <table class="table table-borderless head_table text-center mb-0">
+          <form id="store_order_form" class="mb-0 w-100" method="POST">
+            <table class="table table-borderless head_table text-center mb-0 mb-1">
               <thead>
                  <tr>
                   <th width="6%" class="p-0">&ensp;</th>
@@ -71,11 +85,11 @@
                  </tr>
               </thead>
             </table>
-              <div class="col-12 text-center">
+              <div class="col-12 text-center fixed_height">
                   <table id="store_order" class="table table-striped table-bordered text-center search_data">
                     <thead>
                         <tr class="bg_color ">
-                            <!-- <th width="3%" class="px-3">All <input type="checkbox" id="check_all"></th> -->
+                            <th width="3%" class="text-nowrap px-3"><input type="checkbox" id="check_all"></th>
                             <th class="text-nowrap px-3 w_4">Item #</th>
                             <th class="text-nowrap px-3 w_12">NUPCO Material</th>
                             <th class="text-nowrap px-3 w_7">Customer Code</th>
@@ -120,14 +134,10 @@
 
     var t;
     var counter = 1;
+    
 $(function() {
-    table = $('#store_order').DataTable({
-      "searching": false,
-      "paging": false,
-      "scrollY": "54vh",
-      "ordering": false
-    });
-
+   
+    $('#store_order tbody').empty();
     $(document).mouseup(function(e) {
         var container = $(".search_data ul");
         if (!container.is(e.target) && container.has(e.target).length === 0) 
@@ -138,20 +148,38 @@ $(function() {
    
     $('#addRow').on('click', function (e) { 
       //e.preventDefault();
-      table.row.add( [
-            // '<td width="3%" class="text-nowrap px-3"><input type="checkbox" data-row_id ="'+counter+'"></td>',
-            '<td class="p-0"><input type="hidden" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_trade_code" id="nupco_trade_code_'+counter+'" name="nupco_trade_code[]">'+counter+'</td>',
-            '<td class="p-0"><input type="text" class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_generic_code" id="nupco_generic_code_'+counter+'" name="nupco_generic_code[]" maxlength="20" autocomplete="off"><div id="nupco_generic_code_list_'+counter+'" class="position-relative"></div></td>',
-            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code" id="customer_code_'+counter+'" name="customer_code[]" maxlength="20" autocomplete="off"><div id="customer_code_list_'+counter+'" class="position-relative"></div></td>',
-            '<td class="p-0"><input type="text"  class="form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code_cat" id="customer_code_cat_'+counter+'" name="customer_code_cat[]" readonly><div id="customer_code_cat_list_'+counter+'"></div></td>',
-            '<td class="p-0"><input type="text"  class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'" class="position-relative"></div></td>',
-            '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="uom[]" readonly></td>',
-            '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off"></td>',
-            '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="available[]" readonly></td>',
-           ]).draw( false );
+      var tr = $(
+            '<tr><td width="3%" class="p-0"><input type="checkbox" data-row_id ="'+counter+'"></td>'
+            +'<td class="p-0"><input type="hidden" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_trade_code" id="nupco_trade_code_'+counter+'" name="nupco_trade_code[]">'+counter+'</td>'
+            +'<td class="p-0"><input type="text" class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_generic_code" id="nupco_generic_code_'+counter+'" name="nupco_generic_code[]" maxlength="20" autocomplete="off"><div id="nupco_generic_code_list_'+counter+'" class="position-relative"></div></td>'
+            +'<td class="p-0"><input type="text"  class="material_data form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code" id="customer_code_'+counter+'" name="customer_code[]" maxlength="20" autocomplete="off"><div id="customer_code_list_'+counter+'" class="position-relative"></div></td>'
+            +'<td class="p-0"><input type="text"  class="form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code_cat" id="customer_code_cat_'+counter+'" name="customer_code_cat[]" readonly><div id="customer_code_cat_list_'+counter+'"></div></td>'
+            +'<td class="p-0"><input type="text"  class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'" class="position-relative"></div></td>'
+            +'<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="uom[]" readonly></td>'
+            +'<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off" readonly></td>'
+            +'<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="available[]" readonly></td></tr>');
+        
+        $('#store_order tbody').append(tr);
         counter++;
         autoSearchMaterial();
     } );
+
+    // $('#addRow').on('click', function (e) { 
+    //   //e.preventDefault();
+    //   table.row.add( [
+    //         // '<td width="3%" class="text-nowrap px-3"><input type="checkbox" data-row_id ="'+counter+'"></td>',
+    //         '<td class="p-0"><input type="hidden" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_trade_code" id="nupco_trade_code_'+counter+'" name="nupco_trade_code[]">'+counter+'</td>',
+    //         '<td class="p-0"><input type="text" class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_generic_code" id="nupco_generic_code_'+counter+'" name="nupco_generic_code[]" maxlength="20" autocomplete="off"><div id="nupco_generic_code_list_'+counter+'" class="position-relative"></div></td>',
+    //         '<td class="p-0"><input type="text"  class="material_data form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code" id="customer_code_'+counter+'" name="customer_code[]" maxlength="20" autocomplete="off"><div id="customer_code_list_'+counter+'" class="position-relative"></div></td>',
+    //         '<td class="p-0"><input type="text"  class="form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code_cat" id="customer_code_cat_'+counter+'" name="customer_code_cat[]" readonly><div id="customer_code_cat_list_'+counter+'"></div></td>',
+    //         '<td class="p-0"><input type="text"  class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'" class="position-relative"></div></td>',
+    //         '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="uom[]" readonly></td>',
+    //         '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off"></td>',
+    //         '<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="available[]" readonly></td>',
+    //        ]).draw( false );
+    //     counter++;
+    //     autoSearchMaterial();
+    // } );
     // Automatically add a first row of data
     for (var add_i = 0; add_i < 10; add_i++) {
        $('#addRow').click(); 
@@ -159,7 +187,9 @@ $(function() {
 
   $('#store_order_submit').click(function(e){
     e.preventDefault();
-    if($('#delivery_date').val() == ''){
+    if ($('#store_order tbody').children().length == 0) {
+      alert('Please add atleast one order');
+    }else if($('#delivery_date').val() == ''){
       alert('Please select Delivery Date');
     }else{
       $('#conformation_modal').modal('show');
@@ -194,18 +224,20 @@ $(function() {
             })
     }); 
 
-    // $('#delete_row').click(function(e){
-    //   e.preventDefault();
-    //     $("#store_order input[type=checkbox]:checked").each(function(){
-    //         $(this).closest("tr").remove();
-    //         //return false;  
-    //     });
-    // }); 
+    $('#delete_row').click(function(e){
+      e.preventDefault();
+        $("#store_order input[type=checkbox]:checked").each(function(){
+            $(this).closest("tbody tr").remove();
+            //return false;  
+        });
+    }); 
 
-    // $("#check_all").click(function () {
-    //   $('input:checkbox').not(this).prop('checked', this.checked);
-    // });
+    $("#check_all").click(function () {
+      $('input:checkbox').not(this).prop('checked', this.checked);
+    });
 });
+
+
 function onlyNumberKey(evt) { 
   var ASCIICode = (evt.which) ? evt.which : evt.keyCode 
   if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)){ 
@@ -269,6 +301,7 @@ function setMaterialData(element,input_name,row_id){
                   $('#nupco_desc_'+row_id).val(response.data[0].nupco_desc);
                   $('#uom_'+row_id).val(response.data[0].uom);
                   $('#available_'+row_id).val('available');
+                  $('#qty_'+row_id).attr("readonly", false); 
               }else{
                   $('#'+input_name+'_'+row_id).val('');
               }

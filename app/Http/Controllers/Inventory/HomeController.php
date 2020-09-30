@@ -25,12 +25,13 @@ class HomeController extends Controller
                         ->selectRaw('count(od.order_id) as total_item')
                         ->selectRaw(DB::raw('group_concat(distinct od.status) as status'))
                         ->having('status','2,3')
-                        ->orHaving('status','3,2')
+                        ->orHaving('status','2,3,4')
                         ->orHaving('status',3)
                         ->orHaving('status',4)
                         ->orderBy('status','ASC')
                         ->orderBy('od.order_id','DESC')
                         ->get();
+                       
         return view('inventory.home', array('all_order'=>$all_order));
     }
 
@@ -40,7 +41,13 @@ class HomeController extends Controller
                                         ->leftjoin('grn_details as gd','pd.order_main_id','=','gd.order_main_id')
                                         ->select('gd.received_qty','pd.hss_master_no','pd.hospital_name','hs.delivery_wh_name','hs.address','pd.id','pd.pgi_id','pd.order_id','pd.category','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no')
                                         ->where('pd.order_id', $order_id)
+                                        ->where(function ($query) {
+                                            $query->whereNull('gd.received_qty');
+                                                //->orWhereColumn('pd.batch_qty','>','gd.received_qty');
+                                        })
                                         ->get();
+
+         //dd($order_detail);exit;
 
         $status = DB::table('order_details as od')->select(DB::raw('group_concat(distinct od.status) as status'))->where('od.order_id', $order_id)->first();
 
@@ -50,6 +57,7 @@ class HomeController extends Controller
     public function createGrn(Request $request){
         $pgi_main_id_arr = $request->input('pgi_main_id');
         $received_qty_arr = $request->input('received_qty');
+        
         if(count($received_qty_arr) > 0 && count($pgi_main_id_arr) > 0){
             $grn_no = '600-000-001';
             $last_grn_id = DB::table('grn_details')->select('grn_id')->orderBy('grn_id', 'DESC')->first();

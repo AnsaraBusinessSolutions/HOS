@@ -77,73 +77,77 @@ class HomeController extends Controller
     }
 
     public function addOrder(Request $request){
-        $qty_arr = $request->input('qty');
-        $nupco_generic_code_arr = $request->input('nupco_generic_code');
-        $nupco_trade_code_arr = $request->input('nupco_trade_code');
-        $customer_trade_code_arr = $request->input('customer_code');
-        $category_arr = $request->input('customer_code_cat');
-        $material_desc_arr = $request->input('nupco_desc');
-        $uom_arr = $request->input('uom');
-        $supplying_plant = $request->input('supplying_plant');
-        $hss_master_no = $request->input('hss_master_no');
-        $hospital_name = $request->input('hospital_name');
-        if(count($qty_arr) > 0){
-            $order_data = array();
-            $ord_no = '000-000-001';
-            $last_ord_id= $last3 = DB::table('order_details')->select('order_id')->orderBy('order_id', 'DESC')->first();
-            if(empty($last_ord_id)){
-                $lasts_ord_id = '000-000-000';
-            }else{
-                $lasts_ord_id=$last_ord_id->order_id;
-            }
-            
-            if($lasts_ord_id!==''){
-                $ord_no=str_replace('-', '',$lasts_ord_id);
-                $ord_no=$ord_no+1;
-                $ord_no=str_pad($ord_no,9,'0',STR_PAD_LEFT);
-                $ord_no = implode('-',str_split($ord_no,3));
-            }
-            $delivery_date = date("Y-m-d", strtotime($request->input('delivery_date')));
-            $order_item = 10;
-            foreach($qty_arr as $key=>$val) {
-                if(!empty($val)){ 
-                           
-                $order_data[] = array('order_id' => $ord_no,
-                                'order_item'=>$order_item,
-                                'created_date'=>date('Y-m-d H:i:s'),
-                                'last_updated_date'=>date('Y-m-d H:i:s'),
-                                'user_id'=>Auth::user()->id,
-                                'user'=>Auth::user()->name,
-                                'category'=>$category_arr[$key],
-                                'nupco_generic_code'=>$nupco_generic_code_arr[$key],
-                                'nupco_trade_code'=>$nupco_trade_code_arr[$key],
-                                'customer_trade_code'=>$customer_trade_code_arr[$key],
-                                'material_desc'=>$material_desc_arr[$key],
-                                'qty_ordered'=>$val,
-                                'uom'=>$uom_arr[$key],
-                                'delivery_date'=>$delivery_date,
-                                'supplying_plant'=>$supplying_plant,
-                                'hss_master_no'=>$hss_master_no,
-                                'hospital_name'=>$hospital_name,
-                                'status'=>0 );
-                    $order_item = $order_item + 10;
+        $result = 0;
+        if($request->has('qty')){
+            $qty_arr = $request->input('qty');
+            $nupco_generic_code_arr = $request->input('nupco_generic_code');
+            $nupco_trade_code_arr = $request->input('nupco_trade_code');
+            $customer_trade_code_arr = $request->input('customer_code');
+            $category_arr = $request->input('customer_code_cat');
+            $material_desc_arr = $request->input('nupco_desc');
+            $uom_arr = $request->input('uom');
+            $supplying_plant = $request->input('supplying_plant');
+            $hss_master_no = $request->input('hss_master_no');
+            $hospital_name = $request->input('hospital_name');
+            if(count($qty_arr) > 0){
+                $order_data = array();
+                $ord_no = '000-000-001';
+                $last_ord_id= $last3 = DB::table('order_details')->select('order_id')->orderBy('order_id', 'DESC')->first();
+                if(empty($last_ord_id)){
+                    $lasts_ord_id = '000-000-000';
+                }else{
+                    $lasts_ord_id=$last_ord_id->order_id;
                 }
                 
+                if($lasts_ord_id!==''){
+                    $ord_no=str_replace('-', '',$lasts_ord_id);
+                    $ord_no=$ord_no+1;
+                    $ord_no=str_pad($ord_no,9,'0',STR_PAD_LEFT);
+                    $ord_no = implode('-',str_split($ord_no,3));
+                }
+                $delivery_date = date("Y-m-d", strtotime($request->input('delivery_date')));
+                $order_item = 10;
+                foreach($qty_arr as $key=>$val) {
+                    if(!empty($val) && !empty($nupco_generic_code_arr[$key])){ 
+                            
+                    $order_data[] = array('order_id' => $ord_no,
+                                    'order_item'=>$order_item,
+                                    'created_date'=>date('Y-m-d H:i:s'),
+                                    'last_updated_date'=>date('Y-m-d H:i:s'),
+                                    'user_id'=>Auth::user()->id,
+                                    'user'=>Auth::user()->name,
+                                    'category'=>$category_arr[$key],
+                                    'nupco_generic_code'=>$nupco_generic_code_arr[$key],
+                                    'nupco_trade_code'=>$nupco_trade_code_arr[$key],
+                                    'customer_trade_code'=>$customer_trade_code_arr[$key],
+                                    'material_desc'=>$material_desc_arr[$key],
+                                    'qty_ordered'=>$val,
+                                    'uom'=>$uom_arr[$key],
+                                    'delivery_date'=>$delivery_date,
+                                    'supplying_plant'=>$supplying_plant,
+                                    'hss_master_no'=>$hss_master_no,
+                                    'hospital_name'=>$hospital_name,
+                                    'status'=>0 );
+                        $order_item = $order_item + 10;
+                    }
+                    
+                }
+                
+                if(!empty($order_data)){
+                    $result = DB::table('order_details')->insert($order_data);
+                }
             }
-            $result = 0;
-            if(!empty($order_data)){
-                $result = DB::table('order_details')->insert($order_data);
-            }
-            
-            if($result){
-                $status = 1;
-                $request->session()->flash("message","<div class='col-12 text-center alert alert-success' role='alert'>Request Added Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
-            }else{
-                $status = 0;
-                $request->session()->flash("message","<div class='col-12 text-center alert alert-danger' role='alert'>Something went wrong.Please try again or contact to admin<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
-            }
-            return $status;
         }
+            
+        if($result){
+            $status = 1;
+            $request->session()->flash("message","<div class='col-12 text-center alert alert-success' role='alert'>Request Added Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
+        }else{
+            $status = 0;
+            $request->session()->flash("message","<div class='col-12 text-center alert alert-danger' role='alert'>Something went wrong.Please try again or contact to admin<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
+        }
+        
+        return $status;
         
     }
 
@@ -223,7 +227,7 @@ class HomeController extends Controller
             $order_item = DB::table('order_details')->select('order_item')->orderBy('order_item','DESC')->where('order_id',$order_id)->first();
             $order_item_val = $order_item->order_item;
             foreach($new_qty_arr as $key=>$val) {
-                if(!empty($val)){ 
+                if(!empty($val) && !empty($new_nupco_generic_code_arr[$key])){ 
                     $order_item_val = $order_item_val + 10;
                     $order_data_add[] = array('order_id' => $order_id,
                     'order_item'=>$order_item_val,

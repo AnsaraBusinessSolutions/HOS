@@ -55,6 +55,8 @@
                       <td>
                         @if($val->status == '2,3' || $val->status == '3,2')
                           <span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>
+                        @elseif($val->status == '2,3,4' || $val->status == '3,4')
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DELIVERED</b></span>
                         @elseif($val->status == 0)
                           <span class="text-warning"><b>NEW</b></span>
                         @elseif($val->status == 1)
