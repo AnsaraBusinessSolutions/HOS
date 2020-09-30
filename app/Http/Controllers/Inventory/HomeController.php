@@ -41,13 +41,13 @@ class HomeController extends Controller
                                         ->leftjoin('grn_details as gd','pd.order_main_id','=','gd.order_main_id')
                                         ->select('gd.received_qty','pd.hss_master_no','pd.hospital_name','hs.delivery_wh_name','hs.address','pd.id','pd.pgi_id','pd.order_id','pd.category','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no')
                                         ->where('pd.order_id', $order_id)
-                                        ->where(function ($query) {
-                                            $query->whereNull('gd.received_qty');
-                                                //->orWhereColumn('pd.batch_qty','>','gd.received_qty');
-                                        })
+                                        // ->where(function ($query) {
+                                        //     $query->whereNull('gd.received_qty');
+                                        //         //->orWhereColumn('pd.batch_qty','>','gd.received_qty');
+                                        // })
                                         ->get();
 
-         //dd($order_detail);exit;
+        // dd($order_detail);exit;
 
         $status = DB::table('order_details as od')->select(DB::raw('group_concat(distinct od.status) as status'))->where('od.order_id', $order_id)->first();
 
