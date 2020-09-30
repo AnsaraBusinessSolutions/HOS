@@ -19,12 +19,13 @@ class HomeController extends Controller
         $user_id = auth()->guard('hos3pl')->user()->id;
        // $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
-                                ->orderBy('od.status','ASC')
                                 ->groupBy("od.order_id")
                                 ->whereIn('od.status',[2,3])
                                 ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date',DB::raw('group_concat(distinct od.status) as status'))
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
                                 ->selectRaw('count(od.order_id) as total_item')
+                                ->orderBy('status','ASC')
+                                ->orderBy('od.order_id','DESC')
                                 ->get();
    
         return view('hos_3pl.home', array('all_order'=>$all_order));
@@ -192,6 +193,7 @@ class HomeController extends Controller
                             'expiry_date' => $val->expiry_date,
                             'order_id' => $order_id,
                             'order_main_id' => $val->order_main_id,
+                            'category' => $val->category,
                             'nupco_generic_code' => $val->nupco_generic_code,
                             'nupco_trade_code' => $val->nupco_trade_code,
                             'customer_trade_code'=>$val->customer_trade_code,

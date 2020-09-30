@@ -116,6 +116,8 @@
   @stop
 @push('scripts')
 <script>
+
+
     var t;
     var counter = 1;
 $(function() {
@@ -124,6 +126,14 @@ $(function() {
       "paging": false,
       "scrollY": "54vh",
       "ordering": false
+    });
+
+    $(document).mouseup(function(e) {
+        var container = $(".search_data ul");
+        if (!container.is(e.target) && container.has(e.target).length === 0) 
+        {
+            container.hide();
+        }
     });
    
     $('#addRow').on('click', function (e) { 

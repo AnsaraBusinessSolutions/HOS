@@ -45,7 +45,7 @@
               </thead>
               <tbody>
               @foreach($all_order as $key=>$val)
-                  <tr onclick="window.location.href='{{url('store/order_detail/'.$val->order_id)}}'">
+                  <tr onclick="window.location.href='{{url('inventory/order_detail/'.$val->order_id)}}'">
                       <td>{{$val->order_id}}</td>
                       <td>{{$val->supplying_plant}}</td>
                       <td>{{$val->delivery_date}}</td>
@@ -53,7 +53,7 @@
                       <td>{{$val->total_qty}}</td>
                       <td>{{date('Y-m-d', strtotime($val->created_date))}}</td>
                       <td>
-                      @if($val->status == 0)
+                        @if($val->status == 0)
                           <span class="text-warning"><b>NEW</b></span>
                         @elseif($val->status == 1)
                           <span class="text-danger"><b>REJECTED</b></span>

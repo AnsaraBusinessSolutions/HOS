@@ -67,6 +67,9 @@ Route::prefix('inventory')->group(function () {
     Route::post('/login', 'Auth\LoginController@inventoryLogin')->name('inventory.login');
     Route::post('/logout', 'Auth\LoginController@inventoryLogout')->name('inventory.logout');
     Route::get('/home', 'Inventory\HomeController@index')->name('inventory.home');
+    Route::get('/order_detail/{order_id}', 'Inventory\HomeController@orderDetail')->name('inventory.order.detail');
+    Route::post('/create_grn', 'Inventory\HomeController@createGrn')->name('inventory.create.grn');
+    
 });
 
 Auth::routes();

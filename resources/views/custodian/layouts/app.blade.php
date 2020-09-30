@@ -23,7 +23,14 @@
 <body class="bg-light">
   <nav class="navbar fixed-top navbar-light bg-white topnav px-2 py-0" style="height: 108px;">
    <div class="col-3">
-      
+    <div class="row mx-0">
+        <div class="col-3 p-0">
+          @php
+          $logo = DB::table('ministry_logo')->where('id', auth()->guard('custodian')->user()->ministry_logo_id)->take(1)->value('logo')
+          @endphp
+          <img src="{{ asset('public/hos/img/ministry_logo').'/'.$logo }}" class="" height="70px" width="auto">
+        </div>
+    </div>
    </div>
     <div class="col-6 text-center px-0">
       <h4 class="text-danger ff_mon">
@@ -32,9 +39,10 @@
     </div>
     <div class="col-3 text-right px-0" style="font-size: 11px;font-weight: 600;"> 
       <div class="row">
-         <div class="col-12 text-center">
-           <img class="" src="{{ asset('public/hos/img/logo2.png') }}" height="50px" width="auto" style="margin:16px 10px">
-         </div>
+          <div class="col-5 text-center"></div>
+          <div class="col-7 text-center">
+            <img class="" src="{{ asset('public/hos/img/logo2.png') }}" height="50px" width="auto" style="margin:16px 10px">
+          </div>
       </div>
         <!-- <span class="dropdown">
           <span class="dropdown-toggle" data-toggle="dropdown" style="color:#197c89">White Pharmacy</span> |

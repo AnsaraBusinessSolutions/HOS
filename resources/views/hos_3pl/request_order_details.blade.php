@@ -101,7 +101,11 @@
                       <td>{{$val->material_desc}}</td>
                       <td>{{$val->uom}}</td>
                       <td>{{$val->qty_ordered}}</td>
+                      @if(!empty($val->dispatch_batch_count))
                       <td>{{$val->dispatch_batch_count}}</td>
+                      @else
+                      <td>0</td>
+                      @endif
                       <td>@if($val->is_deleted == 0)<button class="btn btn-small btn-warning batch_btn" data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->id}}" data-status="{{$val->status}}">Batch</button>@endif</td>
                   </tr>
                  @endforeach
@@ -218,7 +222,7 @@
 $(function() {
   var counter = 1;
     $('.example').DataTable( {
-        "order": [[ 1, "desc" ]],
+        "ordering": false,
         "scrollY":        "55vh",
         "scrollCollapse": true,
         "paging":         false,

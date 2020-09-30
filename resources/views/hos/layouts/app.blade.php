@@ -46,9 +46,10 @@
     </div>
     <div class="col-3 text-right px-0" style="font-size: 11px;font-weight: 600;"> 
       <div class="row">
-         <div class="col-12 text-center">
-           <img class="" src="{{ asset('public/hos/img/logo2.png') }}" height="50px" width="auto" style="margin:16px 10px">
-         </div>
+          <div class="col-5 text-center"></div>
+          <div class="col-7 text-center">
+            <img class="" src="{{ asset('public/hos/img/logo2.png') }}" height="50px" width="auto" style="margin:16px 10px">
+          </div>
       </div>
         <!-- <span class="dropdown">
           <span class="dropdown-toggle" data-toggle="dropdown" style="color:#197c89">White Pharmacy</span> |

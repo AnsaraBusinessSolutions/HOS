@@ -83,7 +83,7 @@
     $(document).ready(function() {
         $('.example').DataTable( {
             "ordering": false,
-            "scrollY":        "55vh",
+            "scrollY":        "53vh",
             "scrollCollapse": true,
             "paging":         false,
             "searching": false,

@@ -203,6 +203,14 @@ var table;
       "bInfo": false,
     });
 
+    $(document).mouseup(function(e) {
+        var container = $(".search_data ul");
+        if (!container.is(e.target) && container.has(e.target).length === 0) 
+        {
+            container.hide();
+        }
+    });
+
     autoSearchMaterial();
     deleteRow();
 
@@ -247,6 +255,10 @@ var table;
               }
            });
       });
+
+      
+
+
   });
 
   
