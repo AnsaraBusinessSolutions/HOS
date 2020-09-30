@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Hos;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Model\Hos\MaterialMaster;
-use App\Model\Hos\OrderDetail;
 use Auth;
 use DB;
-use Session;
 ini_set('memory_limit', '-1');
 
 class HomeController extends Controller
@@ -51,7 +48,7 @@ class HomeController extends Controller
     public function materialData(Request $request){
         $input_data = $request->input_data;
         $input_name = $request->input_name;
-        $material_data = MaterialMaster::select('id','nupco_generic_code','nupco_trade_code','customer_code','customer_code_cat','nupco_desc','uom')->where($input_name, $input_data)->get();
+        $material_data = DB::table('material_master')->select('id','nupco_generic_code','nupco_trade_code','customer_code','customer_code_cat','nupco_desc','uom')->where($input_name, $input_data)->get();
         return response()->json(array('data'=>$material_data));
     }
 
@@ -135,7 +132,7 @@ class HomeController extends Controller
             }
             $result = 0;
             if(!empty($order_data)){
-                $result = OrderDetail::insert($order_data);
+                $result = DB::table('order_details')->insert($order_data);
             }
             
             if($result){
@@ -252,7 +249,7 @@ class HomeController extends Controller
         }
         
             if(!empty($order_data_add)){
-                $result = OrderDetail::insert($order_data_add);
+                $result = DB::table('order_details')->insert($order_data_add);
             }
         }
 

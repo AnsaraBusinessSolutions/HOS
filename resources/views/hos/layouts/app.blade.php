@@ -61,7 +61,7 @@
         <span style="color:#8a8c8d;"><?php date_default_timezone_set('Asia/Kolkata');
 $currentTime = date( 'h:i:s A', time () );
 echo $currentTime; ?></span> |
-        <span style="color:#8a8c8d;">Help</span>
+        <span style="color:#8a8c8d;">{{__('lang.help')}}</span>
     </div>
   </nav><br><br><br><br>
 <div class="container-fluid px-0">
@@ -78,7 +78,7 @@ echo $currentTime; ?></span> |
         <li class="nav-item my-1 ">
         @endif
           <a class="nav-link" href="{{ route('hos.home') }}">
-          <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Dashboard</a>
+          <i class="fas fa-tachometer-alt fs_18"></i>&ensp; {{__('lang.dashboard')}}</a>
         </li>
         @if(Request::path() == 'store/order')
         <li class="nav-item my-1 active">
@@ -86,19 +86,19 @@ echo $currentTime; ?></span> |
         <li class="nav-item my-1 ">
         @endif
           <a class="nav-link" href="{{ route('hos.store.order') }}">
-          <i class="fas fa-store fs_18"></i>&ensp; Store Order</a>
+          <i class="fas fa-store fs_18"></i>&ensp; {{__('lang.store_order')}}</a>
         </li>
         <li class="nav-item mb-1">
         <a class="nav-link" href=#>
-            <i class="fas fa-pills fs_18"></i> &ensp;Medical List</a>
+            <i class="fas fa-pills fs_18"></i> &ensp;{{__('lang.medical_list')}}</a>
         </li>
         <li class="nav-item mb-1">
         <a class="nav-link" href="#">
-            <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Inventory</a>
+            <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;{{__('lang.inventory')}}</a>
         </li>
         <li class="nav-item mb-1">
         <a class="nav-link" href="#">
-            <i class="fas fa-balance-scale fs_18"></i> &ensp;Sales</a>
+            <i class="fas fa-balance-scale fs_18"></i> &ensp;{{__('lang.sales')}}</a>
         </li>
       </ul>
     </div>
@@ -167,10 +167,10 @@ echo $currentTime; ?></span> |
           <ul class="navbar-nav ml-auto">
           <li class="nav-item px-2">
             <a>
-              <form name="lang_switch" id="lang_switch">
-              <select name="lang" id="lang" class="form-control" style="box-shadow: none!important; border: 2px solid #45CBD3;">
-                <option value="english">English</option>
-                <option value="arabic">Arabic</option>
+              <form name="lang_switch" id="lang_switch" >
+              <select onchange="javascript:location.href = this.value;" name="lang" id="lang_switch_select" class="form-control" style="box-shadow: none!important; border: 2px solid #45CBD3;">
+                <option  value='{{ url("locale/en") }}' {{(session()->get('locale') == 'en') ? 'selected' : '' }}>English</option>
+                <option value='{{ url("locale/ar") }}' {{(session()->get('locale') == 'ar') ? 'selected' : '' }}>Arabic</option>
               </select>
             </form>
             </a>
@@ -211,6 +211,16 @@ echo $currentTime; ?></span> |
   <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
   
   @stack('scripts')
+  <script>
+      // $('#lang_switch_select').on('change', function (e) {
+      //     alert($(this).val());
+      //     var lang = $(this).val();
+      //     $.ajax({
+      //           type: "GET",
+      //           url: "{{ url('locale') }}/"+lang,
+      //   });
+      // });
+  </script>
   <script>
     $( '.topsecnav .navbar-nav .nav-link' ).on( 'click', function () {
       $( '.topsecnav .navbar-nav' ).find( '.nav-item.active' ).removeClass( 'active' );

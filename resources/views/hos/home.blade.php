@@ -28,19 +28,19 @@
    <div class="container-fluid main_content bg-white p-2">
         <div class="row mx-0">
           <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>Exist Order list</b> </h5>
+            <h5 style="color: steelblue"> <b>{{__('lang.exist_order_list')}}</b> </h5>
           </div>
           <div class="col-12 text-center">
             <table id="example" class="table table-striped table-bordered example">
               <thead>
                   <tr class="bg_color">
-                      <th class="text-nowrap px-3">Store Order #</th>
-                      <th class="text-nowrap px-3">Supplying Plant</th>
-                      <th class="text-nowrap px-3">Delivery date</th>
-                      <th class="text-nowrap px-3">Order Items</th>
-                      <th class="text-nowrap px-3">Qty Ordered</th>
-                      <th class="text-nowrap px-3">Ordered Date</th>
-                      <th class="text-nowrap px-3">Status</th>
+                      <th class="text-nowrap px-3">{{__('lang.store_order')}} #</th>
+                      <th class="text-nowrap px-3">{{__('lang.supplying_plant')}}</th>
+                      <th class="text-nowrap px-3">{{__('lang.delivery_date')}}</th>
+                      <th class="text-nowrap px-3">{{__('lang.order_items')}}</th>
+                      <th class="text-nowrap px-3">{{__('lang.qty_ordered')}}</th>
+                      <th class="text-nowrap px-3">{{__('lang.ordered_date')}}</th>
+                      <th class="text-nowrap px-3">{{__('lang.status')}}</th>
                   </tr>
               </thead>
               <tbody>
@@ -89,6 +89,9 @@
             "searching": false,
             "lengthMenu": [ [15, 30, 50, 100, 250, 500, 1000, 1500], [15, 20, 50, 100, 250, 500, 1000, 1500] ],
             "iDisplayLength": 1000,
+            "language": {
+                   "info": "{{__('lang.showing_entries')}}",
+             }
         } );
     } );
   </script>

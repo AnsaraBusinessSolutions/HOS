@@ -51,7 +51,7 @@
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-5 col-sm-7 col-7">
                         @if($status_data->status == '2,3' || $status_data->status == '3,2')
-                          <span class="text-primary"><b>DISPATCHED</b></span>
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
                         @elseif($status_data->status == 0)
                           <span class="text-warning"><b>NEW</b></span>
                         @elseif($status_data->status == 1)

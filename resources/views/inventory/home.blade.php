@@ -53,7 +53,9 @@
                       <td>{{$val->total_qty}}</td>
                       <td>{{date('Y-m-d', strtotime($val->created_date))}}</td>
                       <td>
-                        @if($val->status == 0)
+                        @if($val->status == '2,3' || $val->status == '3,2')
+                          <span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>
+                        @elseif($val->status == 0)
                           <span class="text-warning"><b>NEW</b></span>
                         @elseif($val->status == 1)
                           <span class="text-danger"><b>REJECTED</b></span>

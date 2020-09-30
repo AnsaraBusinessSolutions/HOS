@@ -20,14 +20,17 @@ class HomeController extends Controller
         $user_id = auth()->guard('inventory')->user()->id;
         $all_order = DB::table('order_details as od')
                         ->groupBy("od.order_id")
-                        ->whereIn('od.status',[3,4])
-                        ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date','od.status')
+                        ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date')
                         ->selectRaw('sum(od.qty_ordered) as total_qty')
                         ->selectRaw('count(od.order_id) as total_item')
+                        ->selectRaw(DB::raw('group_concat(distinct od.status) as status'))
+                        ->having('status','2,3')
+                        ->orHaving('status','3,2')
+                        ->orHaving('status',3)
+                        ->orHaving('status',4)
                         ->orderBy('status','ASC')
                         ->orderBy('od.order_id','DESC')
                         ->get();
-   
         return view('inventory.home', array('all_order'=>$all_order));
     }
 
