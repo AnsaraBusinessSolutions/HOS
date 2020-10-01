@@ -26,6 +26,7 @@ class HomeController extends Controller
                         ->selectRaw(DB::raw('group_concat(distinct od.status) as status'))
                         ->having('status','2,3')
                         ->orHaving('status','2,3,4')
+                        ->orHaving('status','3,4')
                         ->orHaving('status',3)
                         ->orHaving('status',4)
                         ->orderBy('status','ASC')
@@ -101,6 +102,8 @@ class HomeController extends Controller
                     'created_at'=>date('Y-m-d H:i:s'));
 
                     $order_main_id_arr[] = $pgi_data->order_main_id;
+
+
                 }
             }
           

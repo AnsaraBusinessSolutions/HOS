@@ -50,7 +50,7 @@
                 <label class="col-md-6 col-sm-4 col-4"><b>Status</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-5 col-sm-7 col-7">
-                        @if($status_data->status == '2,3,5' ||  $status_data->status == '2,3' || $status_data->status == '3,5' || $status_data->status == '2,5')
+                        @if($status_data->status == '2,3,5' || $status_data->status == '2,3' || $status_data->status == '3,5' || $status_data->status == '2,5')
                           <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
                         @elseif($status_data->status == 0)
                           <span class="text-warning"><b>NEW</b></span>
@@ -118,10 +118,8 @@
             </table>
           </div>
               <div class="col-12 text-center">
-              @if($status_data->status != 3)
                 <input type="hidden" value="3" name="order_status">
                 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#dipatch_modal">Dispatch</button>
-              @endif
               </div>
         </div>
     </div>

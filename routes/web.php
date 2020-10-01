@@ -64,6 +64,10 @@ Route::prefix('hos3pl')->group(function () {
     Route::post('/order_status', 'Hos_3pl\HomeController@orderDispatch')->name('hos3pl.order.dispatch');
     Route::post('/order_batch_insert', 'Hos_3pl\HomeController@orderBatchInsert')->name('hos3pl.order.batch.insert');
     Route::post('/batch_data', 'Hos_3pl\HomeController@batchData')->name('hos3pl.batch.data');
+    Route::get('/open_order', 'Hos_3pl\HomeController@openOrder')->name('hos3pl.open.order');
+    Route::get('/open_order_detail/{order_id}', 'Hos_3pl\HomeController@openOrderDetail')->name('hos3pl.open.order.detail');
+    Route::get('/display_order', 'Hos_3pl\HomeController@displayOrder')->name('hos3pl.display.order');
+    Route::get('/display_order_detail/{order_id}', 'Hos_3pl\HomeController@displayOrderDetail')->name('hos3pl.display.order.detail');
 });
 
 Route::prefix('inventory')->group(function () {

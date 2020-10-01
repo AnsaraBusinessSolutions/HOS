@@ -67,6 +67,22 @@ echo $currentTime; ?></span> |
           <a class="nav-link" href="{{ route('hos3pl.home') }}">
           <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Dashboard</a>
         </li>
+        @if(Request::path() == 'hos3pl/open_order' || Request::is('hos3pl/open_order_detail/*'))
+        <li class="nav-item my-1 active">
+        @else
+        <li class="nav-item my-1 ">
+        @endif
+          <a class="nav-link" href="{{ route('hos3pl.open.order') }}">
+          <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Open Orders</a>
+        </li>
+        @if(Request::path() == 'hos3pl/display_order' || Request::is('hos3pl/display_order_detail/*'))
+        <li class="nav-item my-1 active">
+        @else
+        <li class="nav-item my-1 ">
+        @endif
+          <a class="nav-link" href="{{ route('hos3pl.display.order') }}">
+          <i class="fas fa-tachometer-alt fs_18"></i>&ensp;<b>Display Documents</b> </a>
+        </li>
       
       </ul>
     </div>

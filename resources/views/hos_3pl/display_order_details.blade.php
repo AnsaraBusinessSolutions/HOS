@@ -6,8 +6,7 @@
         @endif
         <div class="row mx-0">
           <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b> </h5>
-            <h6>@if(!empty($pgi_details))PGI No. {{$pgi_details->pgi_id}}@endif</h6>
+            <h5 style="color: steelblue">@if(!empty($order_detail[0]))PGI {{$order_detail[0]->pgi_id}} Details @endif</h5>
           </div>
           </div>
           <div class="row mx-0 border">
@@ -50,7 +49,7 @@
                 <label class="col-md-6 col-sm-4 col-4"><b>Status</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-5 col-sm-7 col-7">
-                        @if($status_data->status == '2,3,5' ||  $status_data->status == '2,3' || $status_data->status == '3,5' || $status_data->status == '2,5')
+                        @if($status_data->status == '2,3,5' || $status_data->status == '2,3' || $status_data->status == '3,5' || $status_data->status == '2,5')
                           <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
                         @elseif($status_data->status == 0)
                           <span class="text-warning"><b>NEW</b></span>
@@ -82,18 +81,15 @@
                       <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3">Order Qty</th>
                       <th class="text-nowrap px-3">Dispatch Qty</th>
-                      <th class="text-nowrap px-3">Open Qty</th>
+                      <th class="text-nowrap px-3">Dispatch Date</th>
                       <th class="text-nowrap px-3">Batch</th>
+                      
                   </tr>
               </thead>
               <tbody>
               
               @foreach($order_detail as $key=>$val)
-                 @if($val->is_deleted == 1)
-                  <tr class="dis_row_input">
-                  @else
                   <tr>
-                  @endif
                       <td>{{$key+1}}</td>
                       <td>{{$val->nupco_generic_code}}</td>
                       <td>{{$val->nupco_trade_code}}</td>
@@ -102,27 +98,15 @@
                       <td>{{$val->material_desc}}</td>
                       <td>{{$val->uom}}</td>
                       <td>{{$val->qty_ordered}}</td>
-                      @if(!empty($val->dispatch_batch_count))
-                      <td>{{$val->dispatch_batch_count}}</td>
-                      <td>{{$val->qty_ordered - $val->dispatch_batch_count}}</td>
-                      <td>@if($val->is_deleted == 0)<button class="btn btn-small btn-warning batch_btn" data-open_qty="{{$val->qty_ordered - $val->dispatch_batch_count}}" data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->id}}" data-status="{{$val->status}}">Batch</button>@endif</td>
-                      @else
-                      <td>0</td>
-                      <td>{{$val->qty_ordered - 0}}</td>
-                      <td>@if($val->is_deleted == 0)<button class="btn btn-small btn-warning batch_btn" data-open_qty="{{$val->qty_ordered - 0}}" data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->id}}" data-status="{{$val->status}}">Batch</button>@endif</td>
-                      @endif
-                      
+                      <td>{{$val->batch_qty}}</td>
+                      <td>{{date('Y-m-d',strtotime($val->created_at))}}</td>
+                      <td><button class="btn btn-small btn-warning batch_btn"  data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->order_main_id}}" data-status="3">Batch</button></td>
                   </tr>
                  @endforeach
               </tbody>
             </table>
           </div>
-              <div class="col-12 text-center">
-              @if($status_data->status != 3)
-                <input type="hidden" value="3" name="order_status">
-                <button class="btn btn-success" type="button" data-toggle="modal" data-target="#dipatch_modal">Dispatch</button>
-              @endif
-              </div>
+              
         </div>
     </div>
 @push('modal_content')
@@ -143,8 +127,8 @@
       <input type="hidden" name="hss_master_no" value="{{$order_detail[0]->hss_master_no}}">
       <input type="hidden" name="hospital_name" value="{{$order_detail[0]->hospital_name}}">
       <input type="hidden" name="delivery_date" value="{{$order_detail[0]->delivery_date}}">
-      @if(!empty($pgi_details))
-      <input type="hidden" name="pgi_id" value="{{$pgi_details->pgi_id}}">
+      @if(!empty($order_detail[0]))
+      <input type="hidden" name="pgi_id" value="{{$order_detail[0]->pgi_id}}">
       @endif
       <div class="modal-body">
        <div class="table-responsive">

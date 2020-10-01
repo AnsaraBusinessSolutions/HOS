@@ -3,7 +3,7 @@
       <div class="container-fluid main_content bg-white p-2">
         <div class="row mx-0">
           <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>Requested Order list</b> </h5>
+            <h5 style="color: steelblue"> <b>Open Order list</b> </h5>
           </div>
           <div class="col-12 text-center">
             <table id="example" class="table table-striped table-bordered example">
@@ -22,7 +22,7 @@
                  
 
                   @foreach($all_order as $key=>$val)
-                  <tr onclick="window.location.href='{{url('hos3pl/order_detail/'.$val->order_id)}}'">
+                  <tr onclick="window.location.href='{{url('hos3pl/open_order_detail/'.$val->order_id)}}'">
                       <td>{{$val->order_id}}</td>
                       <td>{{$val->hospital_name}}</td>
                       <td>{{$val->delivery_date}}</td>
@@ -30,7 +30,7 @@
                       <td>{{$val->total_qty}}</td>
                       <td>{{date('Y-m-d', strtotime($val->created_date))}}</td>
                       <td>
-                        @if($val->status == '2,3,5' ||  $val->status == '2,3' || $val->status == '3,5' || $val->status == '2,5')
+                        @if($val->status == '2,3,5' || $val->status == '2,3' || $val->status == '3,5' || $val->status == '2,5')
                         <span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>
                         @elseif($val->status == 0)
                             <span class="text-warning"><b>NEW</b></span>
