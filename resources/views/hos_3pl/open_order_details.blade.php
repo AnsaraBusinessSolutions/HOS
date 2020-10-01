@@ -62,8 +62,6 @@
                           <span class="text-primary"><b>DISPATCHED</b></span>
                         @elseif($status_data->status == 4)
                           <span class="text-info"><b>DELIVERED</b></span>
-                        @elseif($status_data->status == 5)
-                          <span class="text-danger"><b>CANCELLED</b></span>
                         @endif
                 </label>
               </div>

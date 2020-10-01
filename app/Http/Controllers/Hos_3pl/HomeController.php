@@ -294,7 +294,6 @@ class HomeController extends Controller
         return view('hos_3pl.open_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'pgi_details'=>$pgi_details,'status_data'=>$status));
     }
 
-
     public function displayOrder()
     {
         $user_id = auth()->guard('hos3pl')->user()->id;
