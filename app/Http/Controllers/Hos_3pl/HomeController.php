@@ -322,7 +322,6 @@ class HomeController extends Controller
 
         $status = DB::table('order_details as od')->select(DB::raw('group_concat(distinct od.status) as status'))->where('od.order_id', $order_id)->first();
 
-
         $total_qty = 0;
         foreach ($order_detail as $key=>$value) {
         $total_qty += $value->qty_ordered;
