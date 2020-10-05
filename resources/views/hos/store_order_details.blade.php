@@ -18,7 +18,7 @@
             
           </div>
           </div>
-          <form action="{{route('hos.order.update')}}" method="POST">
+          <form action="{{route('hos.order.update')}}" method="POST" onsubmit="return checkQtyValidation();">
           @csrf
           <div class="row mx-0 border">
             <div class="col-md-5 col-sm-6 col-12">
@@ -123,8 +123,8 @@
                       <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="customer_code_cat" id="customer_code_cat_{{$key}}" name="customer_code_cat[]" value="{{$val->category}}" readonly></td>
                       <td><input type="text" class="material_data form-control form-control-sm" data-row_id="{{$key}}" data-name="nupco_desc" id="nupco_desc_{{$key}}" name="nupco_desc[]" value="{{$val->material_desc}}" autocomplete="off"><div id="nupco_desc_list_{{$key}}" class="position-relative"></div></td>
                       <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="uom" id="uom_{{$key}}" name="uom[]" value="{{$val->uom}}" readonly></td>
-                      <td><input type="hidden" name="order_primary_id[]" value="{{$val->id}}"><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="qty" id="qty_{{$key}}" name="qty[]" value="{{$val->qty_ordered}}"></td>
-                      <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="available" id="available_{{$key}}" value="available" name="available[]" readonly></td>
+                      <td><input type="hidden" name="order_primary_id[]" value="{{$val->id}}"><input type="hidden" name="old_qty[]" value="{{$val->qty_ordered}}"><input type="text" class="form-control form-control-sm qty_input" data-row_id="{{$key}}" data-name="qty" id="qty_{{$key}}" name="qty[]" value="{{$val->qty_ordered}}"></td>
+                      <td><input type="text" class="form-control form-control-sm text-success" data-row_id="{{$key}}" data-name="available" id="available_{{$key}}" value="{{$val->available}}" name="available[]" readonly></td>
                       @else
                       <td>{{$key+1}}</td>
                       <td>{{$val->nupco_generic_code}}</td>
@@ -211,6 +211,19 @@ var table;
         }
     });
 
+    $(document).on('keyup',".qty_input",function(){
+        var qty_val = $(this).val();
+        var row_no = $(this).data('row_id');
+        var available_val = $('#available_'+row_no).val();
+        if(parseInt(qty_val) > parseInt(available_val)){
+          $('#available_'+row_no).removeClass('text-success');
+          $('#available_'+row_no).addClass('text-danger');
+        }else{
+          $('#available_'+row_no).removeClass('text-danger');
+          $('#available_'+row_no).addClass('text-success');
+        }
+    });
+
     autoSearchMaterial();
     deleteRow();
 
@@ -227,7 +240,7 @@ var table;
             '<td class="p-0"><input type="text"  class="form-control form-control-sm"  data-row_id ="'+counter+'" data-name="customer_code_cat" id="customer_code_cat_'+counter+'" name="new_customer_code_cat[]" readonly><div id="customer_code_cat_list_'+counter+'"></div></td>',
             '<td class="p-0"><input type="text"  class="material_data form-control form-control-sm" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="new_nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'" class="position-relative"></div></td>',
             '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="new_uom[]" readonly></td>',
-            '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="new_qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off" readonly></td>',
+            '<td class="p-0"><input type="text" class="form-control form-control-sm qty_input" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="new_qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off" readonly></td>',
             '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="new_available[]" readonly></td>',
            ]).draw( false );
         counter++;
@@ -255,9 +268,6 @@ var table;
               }
            });
       });
-
-      
-
 
   });
 
@@ -317,7 +327,7 @@ function setMaterialData(element,input_name,row_id){
                   $('#customer_code_cat_'+row_id).val(response.data[0].customer_code_cat);
                   $('#nupco_desc_'+row_id).val(response.data[0].nupco_desc);
                   $('#uom_'+row_id).val(response.data[0].uom);
-                  $('#available_'+row_id).val('available');
+                  $('#available_'+row_id).val(response.availability);
                   $('#qty_'+row_id).val('');
                   $('#qty_'+row_id).attr("readonly", false); 
               }else{
@@ -337,6 +347,28 @@ function setMaterialData(element,input_name,row_id){
            $(this).val('');
         }
     });
+ }
+
+ function checkQtyValidation(){
+  var check_qty = 1;
+      $("#order_detail .qty_input").each(function() {
+          var qty_val_submit = $(this).val();
+          var row_no_submit = $(this).data('row_id');
+          var available_val_submit = $('#available_'+row_no_submit).val();
+          if(parseInt(qty_val_submit) > parseInt(available_val_submit)){
+            check_qty = 0;
+          }
+      });
+      if(check_qty == 0){
+        alert('Please enter valid qty');
+        return false;
+      }
+      else if($('#order_detail tbody').children().length == 0) {
+        alert('Please add atleast one order');
+        return false;
+      }else{
+        return true;
+      }
  }
 </script>
 @endpush

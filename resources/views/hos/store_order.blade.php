@@ -62,8 +62,8 @@
             <table class="table table-borderless head_table text-center mb-0 mb-1">
               <thead>
                  <tr>
-                  <th width="6%" class="p-0">&ensp;</th>
-                   <th width="10%" class="p-0">
+                  <th width="1%" class="p-0">&ensp;</th>
+                   <th width="13%" class="p-0">
                     <label for="supplying-plant">Supplying Plant:</label></th>
                     @if(count($delivery_wh) > 0)
                    <th width="20%" class="p-0 border">
@@ -76,12 +76,22 @@
                     <input type="hidden" name="hss_master_no" value="">
                     <input type="hidden" name="hospital_name" value="">
                     @endif
-                    </th><th width="6%" class="p-0">&ensp;</th>
+                    </th>
+                    <th width="1%" class="p-0">&ensp;</th>
+                    <th width="10%" class="p-0">
+                    <label for="delivery-date">Order Type:</label></th>
+                   <th width="20%" class="p-0">
+                    <select class="form-control" name="order_type" id="order_type">
+                      <option value="normal">Normal</option>
+                      <option value="emergancy">Emergancy</option>
+                    </select>
+                     <th width="2%" class="p-0">&ensp;</th>
                    <th width="10%" class="p-0">
                     <label for="delivery-date">Delivery Date:</label></th>
-                   <th width="20%" class="p-0">
+                   <th width="16%" class="p-0">
                     <input type="" class="datepicker form-control h_sm" name="delivery_date" id="delivery_date" required autocomplete="off"></th>
-                     <th width="6%" class="p-0">&ensp;</th>
+                     <!-- <th width="6%" class="p-0">&ensp;</th> -->
+                   
                  </tr>
               </thead>
             </table>
@@ -145,6 +155,20 @@ $(function() {
             container.hide();
         }
     });
+
+    $(document).on('keyup',".qty_input",function(){
+        var qty_val = $(this).val();
+        var row_no = $(this).data('row_id');
+        var available_val = $('#available_'+row_no).val();
+        
+        if(parseInt(qty_val) > parseInt(available_val)){
+          $('#available_'+row_no).removeClass('text-success');
+          $('#available_'+row_no).addClass('text-danger');
+        }else{
+          $('#available_'+row_no).removeClass('text-danger');
+          $('#available_'+row_no).addClass('text-success');
+        }
+    });
    
     $('#addRow').on('click', function (e) { 
       //e.preventDefault();
@@ -156,12 +180,13 @@ $(function() {
             +'<td class="p-0"><input type="text"  class="form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code_cat" id="customer_code_cat_'+counter+'" name="customer_code_cat[]" readonly><div id="customer_code_cat_list_'+counter+'"></div></td>'
             +'<td class="p-0"><input type="text"  class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'" class="position-relative"></div></td>'
             +'<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="uom[]" readonly></td>'
-            +'<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off" readonly></td>'
-            +'<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="available[]" readonly></td></tr>');
+            +'<td class="p-0"><input type="text" class="form-control h_1rem qty_input" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off" readonly></td>'
+            +'<td class="p-0"><input type="text" class="form-control h_1rem text-success" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="available[]" readonly></td></tr>');
         
         $('#store_order tbody').append(tr);
         counter++;
         autoSearchMaterial();
+      
     } );
 
     // $('#addRow').on('click', function (e) { 
@@ -187,7 +212,19 @@ $(function() {
 
   $('#store_order_submit').click(function(e){
     e.preventDefault();
-    if ($('#store_order tbody').children().length == 0) {
+    var check_qty = 1;
+    $("#store_order .qty_input").each(function() {
+        var qty_val_submit = $(this).val();
+        var row_no_submit = $(this).data('row_id');
+        var available_val_submit = $('#available_'+row_no_submit).val();
+        if(parseInt(qty_val_submit) > parseInt(available_val_submit)){
+          check_qty = 0;
+        }
+    });
+    if(check_qty == 0){
+      alert('Please enter valid qty');
+    }
+    else if($('#store_order tbody').children().length == 0) {
       alert('Please add atleast one order');
     }else if($('#delivery_date').val() == ''){
       alert('Please select Delivery Date');
@@ -197,10 +234,11 @@ $(function() {
     
   });
 
+ 
+
   $('#save_order').click(function (e) { 
     //         event.preventDefault();
             var formData = new FormData(document.getElementById("store_order_form"));
-            //formData.append( '_token',"{{ csrf_token() }}");
             $.ajax({
                  url:"{{ route('hos.add.order') }}",
                  headers: {
@@ -235,6 +273,7 @@ $(function() {
     $("#check_all").click(function () {
       $('input:checkbox').not(this).prop('checked', this.checked);
     });
+    
 });
 
 
@@ -245,6 +284,10 @@ function onlyNumberKey(evt) {
   }
   return true; 
 } 
+
+
+ 
+
 
 function autoSearchMaterial(){
   $('input.material_data').keyup(function(){ 
@@ -300,7 +343,7 @@ function setMaterialData(element,input_name,row_id){
                   $('#customer_code_cat_'+row_id).val(response.data[0].customer_code_cat);
                   $('#nupco_desc_'+row_id).val(response.data[0].nupco_desc);
                   $('#uom_'+row_id).val(response.data[0].uom);
-                  $('#available_'+row_id).val('available');
+                  $('#available_'+row_id).val(response.availability);
                   $('#qty_'+row_id).attr("readonly", false); 
               }else{
                   $('#'+input_name+'_'+row_id).val('');

@@ -49,7 +49,26 @@ class HomeController extends Controller
         $input_data = $request->input_data;
         $input_name = $request->input_name;
         $material_data = DB::table('material_master')->select('id','nupco_generic_code','nupco_trade_code','customer_code','customer_code_cat','nupco_desc','uom')->where($input_name, $input_data)->get();
-        return response()->json(array('data'=>$material_data));
+       
+        $availability = 0;
+        
+            $plant = Auth::user()->plant_name;
+            $storage_location = Auth::user()->storage_location;
+
+            $stock_data = DB::table('stock')->where('plant',$plant)
+                                            ->where('storage_location',$storage_location)
+                                            ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
+                                            ->groupBy('nupco_generic_code')
+                                            ->select('open_qty')
+                                            ->selectRaw('sum(unrestricted_stock_qty) as total_qty')
+                                            ->first();
+            if(!empty($stock_data)){
+                if($stock_data->total_qty > $stock_data->open_qty){
+                    $availability = $stock_data->total_qty - $stock_data->open_qty;
+                }
+            }
+           
+        return response()->json(array('data'=>$material_data,'availability'=>$availability));
     }
 
     public function searchData(Request $request){
@@ -89,6 +108,7 @@ class HomeController extends Controller
             $supplying_plant = $request->input('supplying_plant');
             $hss_master_no = $request->input('hss_master_no');
             $hospital_name = $request->input('hospital_name');
+            $order_type = $request->input('order_type');
             if(count($qty_arr) > 0){
                 $order_data = array();
                 $ord_no = '000-000-001';
@@ -127,8 +147,13 @@ class HomeController extends Controller
                                     'supplying_plant'=>$supplying_plant,
                                     'hss_master_no'=>$hss_master_no,
                                     'hospital_name'=>$hospital_name,
+                                    'order_type'=>$order_type,
                                     'status'=>0 );
                         $order_item = $order_item + 10;
+
+                        DB::table('stock')
+                        ->where('nupco_generic_code',$nupco_generic_code_arr[$key])
+                        ->increment('open_qty',$val);
                     }
                     
                 }
@@ -152,9 +177,13 @@ class HomeController extends Controller
     }
 
     public function orderDetail($order_id){
+        $plant = Auth::user()->plant_name;
+        $storage_location = Auth::user()->storage_location;
+
         $order_detail = DB::table('order_details as od')
                                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
                                         ->select('od.hss_master_no','od.hospital_name','hs.delivery_wh_name','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                                        ->selectRaw(DB::raw("(SELECT (sum(sq.unrestricted_stock_qty)-sq.open_qty) FROM stock as sq WHERE sq.storage_location = '$storage_location' AND sq.plant='$plant' AND sq.nupco_generic_code=od.nupco_generic_code limit 1) as available"))
                                         ->where('od.order_id', $order_id)
                                         ->get();
 
@@ -189,7 +218,9 @@ class HomeController extends Controller
         $category_arr = $request->input('customer_code_cat');
         $material_desc_arr = $request->input('nupco_desc');
         $uom_arr = $request->input('uom');
-
+        $old_qty_arr = $request->input('old_qty');
+        
+        
        
         foreach($order_primary_id_arr as $key=>$val){
             DB::table('order_details')
@@ -207,6 +238,18 @@ class HomeController extends Controller
                     'last_updated_user'=>Auth::user()->name,
                     'status'=>0
             ]);
+
+            $old_qty_val = $old_qty_arr[$key];
+            $new_qty_val = $qty_arr[$key];
+          
+            DB::table('stock')
+            ->where('nupco_generic_code',$nupco_generic_code_arr[$key])
+            ->decrement('open_qty',$old_qty_val);
+
+            DB::table('stock')
+            ->where('nupco_generic_code',$nupco_generic_code_arr[$key])
+            ->increment('open_qty',$new_qty_val);
+                        
         }
 
         
@@ -247,6 +290,10 @@ class HomeController extends Controller
                     'hss_master_no'=>$hss_master_no,
                     'hospital_name'=>$hospital_name,
                     'status'=>0 );
+
+                    DB::table('stock')
+                        ->where('nupco_generic_code',$nupco_generic_code_arr[$key])
+                        ->increment('open_qty',$val);
                 }
             }
 

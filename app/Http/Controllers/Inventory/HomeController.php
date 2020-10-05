@@ -16,7 +16,23 @@ class HomeController extends Controller
 
     public function index()
     {   
-        
+        $user_id = auth()->guard('inventory')->user()->id;
+        $all_order = DB::table('pgi_details as pd')
+                        ->groupBy("pd.order_id")
+                        ->select('pd.order_id','pd.supplying_plant','pd.hospital_name','pd.delivery_date','pd.uom','pd.qty_ordered','pd.created_at')
+                        ->selectRaw('sum(pd.qty_ordered) as total_qty')
+                        ->selectRaw('sum(pd.batch_qty) as dispatch_qty')
+                        ->selectRaw('count(pd.order_id) as dispatch_item')
+                        ->selectRaw(DB::raw('group_concat(distinct pd.pgi_status) as status'))
+                        ->orderBy('status','ASC')
+                        ->orderBy('pd.order_id','DESC')
+                        ->get();
+                       
+        return view('inventory.home', array('all_order'=>$all_order));
+    }
+
+    public function index_old()
+    {   
         $user_id = auth()->guard('inventory')->user()->id;
         $all_order = DB::table('order_details as od')
                         ->groupBy("od.order_id")
@@ -42,10 +58,6 @@ class HomeController extends Controller
                                         ->leftjoin('grn_details as gd','pd.order_main_id','=','gd.order_main_id')
                                         ->select('gd.received_qty','pd.hss_master_no','pd.hospital_name','hs.delivery_wh_name','hs.address','pd.id','pd.pgi_id','pd.order_id','pd.category','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no')
                                         ->where('pd.order_id', $order_id)
-                                        // ->where(function ($query) {
-                                        //     $query->whereNull('gd.received_qty');
-                                        //         //->orWhereColumn('pd.batch_qty','>','gd.received_qty');
-                                        // })
                                         ->get();
 
         // dd($order_detail);exit;

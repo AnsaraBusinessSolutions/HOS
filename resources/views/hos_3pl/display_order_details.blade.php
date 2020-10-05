@@ -6,7 +6,7 @@
         @endif
         <div class="row mx-0">
           <div class="col-12 text-center">
-            <h5 style="color: steelblue">@if(!empty($order_detail[0]))PGI {{$order_detail[0]->pgi_id}} Details @endif</h5>
+            <h5 style="color: steelblue">@if(!empty($order_detail[0]))Order {{$order_detail[0]->order_id}} Details @endif</h5>
           </div>
           </div>
           <div class="row mx-0 border">
@@ -49,18 +49,18 @@
                 <label class="col-md-6 col-sm-4 col-4"><b>Status</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-5 col-sm-7 col-7">
-                        @if($status_data->status == '2,3,5' || $status_data->status == '2,3' || $status_data->status == '3,5' || $status_data->status == '2,5')
-                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
-                        @elseif($status_data->status == 0)
+                        @if($status_data->status == '0')
                           <span class="text-warning"><b>NEW</b></span>
-                        @elseif($status_data->status == 1)
+                        @elseif($status_data->status == '1')
                           <span class="text-danger"><b>REJECTED</b></span>
-                        @elseif($status_data->status == 2)
+                        @elseif($status_data->status == '2')
                           <span class="text-success"><b>APPROVED</b></span>
-                        @elseif($status_data->status == 3)
+                        @elseif($status_data->status == '3')
                           <span class="text-primary"><b>DISPATCHED</b></span>
-                        @elseif($status_data->status == 4)
+                        @elseif($status_data->status == '4')
                           <span class="text-info"><b>DELIVERED</b></span>
+                        @else
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
                         @endif
                 </label>
               </div>
@@ -71,6 +71,7 @@
               <thead>
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">Item #</th>
+                      <th class="text-nowrap px-3">PGI No</th>
                       <th class="text-nowrap px-3">NUPCO Material</th>
                       <th class="text-nowrap px-3">NUPCO Trade Code</th>
                       <th class="text-nowrap px-3">Customer Code</th>
@@ -89,6 +90,7 @@
               @foreach($order_detail as $key=>$val)
                   <tr>
                       <td>{{$key+1}}</td>
+                      <td>{{$val->pgi_id}}</td>
                       <td>{{$val->nupco_generic_code}}</td>
                       <td>{{$val->nupco_trade_code}}</td>
                       <td>{{$val->customer_trade_code}}</td>
@@ -98,7 +100,7 @@
                       <td>{{$val->qty_ordered}}</td>
                       <td>{{$val->batch_qty}}</td>
                       <td>{{date('Y-m-d',strtotime($val->created_at))}}</td>
-                      <td><button class="btn btn-small btn-warning batch_btn"  data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->order_main_id}}" data-status="3">Batch</button></td>
+                      <td><button class="btn btn-small btn-warning batch_btn"  data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->order_main_id}}" data-status="3" data-pgi_id="{{$val->pgi_id}}">Batch</button></td>
                   </tr>
                  @endforeach
               </tbody>
@@ -241,20 +243,22 @@ $(function() {
     $('.batch_btn').click(function(){
         var order_id = $(this).data('order_id');
         var order_main_id = $(this).data('order_main_id');
+        var pgi_id = $(this).data('pgi_id');
         var open_qty = $(this).data('open_qty');
         var status = $(this).data('status');
         $('#order_id').val(order_id);
         $('#order_main_id').val(order_main_id);
+        $('#pgi_id').val(pgi_id);
         $('#open_qty').val(open_qty);
 
         if(order_id != ''){
           $.ajax({
-            url: "{{route('hos3pl.batch.data')}}",
+            url: "{{route('hos3pl.display.batch.data')}}",
             headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
             type: 'POST',
-            data: {"order_id":order_id,"order_main_id":order_main_id,"status":status},
+            data: {"order_id":order_id,"order_main_id":order_main_id,"status":status,"pgi_id":pgi_id},
             success : function(response) {
               var batch_tr = '';
               $.each(response, function(i, item) {

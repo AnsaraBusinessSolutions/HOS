@@ -7,7 +7,7 @@
         <div class="row mx-0">
           <div class="col-12 text-center">
             <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b> </h5>
-            @if(!empty($order_detail))<h6>PGI No. {{$order_detail[0]->pgi_id}}</h6>@endif
+            <!-- @if(!empty($order_detail))<h6>PGI No. {{$order_detail[0]->pgi_id}}</h6>@endif -->
           </div>
           </div>
           <div class="row mx-0 border">
@@ -50,22 +50,21 @@
                 <label class="col-md-6 col-sm-4 col-4"><b>Status</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-5 col-sm-7 col-7">
-                        @if($status_data->status == '2,3' || $status_data->status == '3,2')
-                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
-                        @elseif($status_data->status == '2,3,4' || $status_data->status == '3,4')
-                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DELIVERED</b></span>
-                        @elseif($status_data->status == 0)
+                        
+                        @if($status_data->status == '0')
                           <span class="text-warning"><b>NEW</b></span>
-                        @elseif($status_data->status == 1)
+                        @elseif($status_data->status == '1')
                           <span class="text-danger"><b>REJECTED</b></span>
-                        @elseif($status_data->status == 2)
+                        @elseif($status_data->status == '2')
                           <span class="text-success"><b>APPROVED</b></span>
-                        @elseif($status_data->status == 3)
+                        @elseif($status_data->status == '3')
                           <span class="text-primary"><b>DISPATCHED</b></span>
-                        @elseif($status_data->status == 4)
+                        @elseif($status_data->status == '4')
                           <span class="text-info"><b>DELIVERED</b></span>
-                        @elseif($status_data->status == 5)
-                          <span class="text-danger"><b>CANCELLED</b></span>
+                        @elseif(strpos($status_data->status, '5') !== false || strpos($status_data->status, '7') !== false)
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
+                        @elseif(strpos($status_data->status, '6') !== false || strpos($status_data->status, '8') !== false)
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DELIVERED</b></span>
                         @endif
                 </label>
               </div>
@@ -79,6 +78,7 @@
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">#</th>
                       <th class="text-nowrap px-3">Item #</th>
+                      <th class="text-nowrap px-3">PGI No</th>
                       <th class="text-nowrap px-3">NUPCO Material</th>
                       <th class="text-nowrap px-3">NUPCO Trade Code</th>
                       <th class="text-nowrap px-3">Customer Code</th>
@@ -96,6 +96,7 @@
                   <tr>
                       <td><input type="checkbox" class="select_item" data-row_id="{{$key}}"></td>
                       <td>{{$key+1}}</td>
+                      <td>{{$val->pgi_id}}</td>
                       <td>{{$val->nupco_generic_code}}</td>
                       <td>{{$val->nupco_trade_code}}</td>
                       <td>{{$val->customer_trade_code}}</td>

@@ -7,7 +7,6 @@
         <div class="row mx-0">
           <div class="col-12 text-center">
             <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b> </h5>
-            <h6>@if(!empty($pgi_details))PGI No. {{$pgi_details->pgi_id}}@endif</h6>
           </div>
           </div>
           <div class="row mx-0 border">
@@ -50,18 +49,19 @@
                 <label class="col-md-6 col-sm-4 col-4"><b>Status</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-5 col-sm-7 col-7">
-                        @if($status_data->status == '2,3,5' || $status_data->status == '2,3' || $status_data->status == '3,5' || $status_data->status == '2,5')
-                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
-                        @elseif($status_data->status == 0)
+                        
+                        @if($status_data->status == '0')
                           <span class="text-warning"><b>NEW</b></span>
-                        @elseif($status_data->status == 1)
+                        @elseif($status_data->status == '1')
                           <span class="text-danger"><b>REJECTED</b></span>
-                        @elseif($status_data->status == 2)
+                        @elseif($status_data->status == '2')
                           <span class="text-success"><b>APPROVED</b></span>
-                        @elseif($status_data->status == 3)
+                        @elseif($status_data->status == '3')
                           <span class="text-primary"><b>DISPATCHED</b></span>
-                        @elseif($status_data->status == 4)
+                        @elseif($status_data->status == '4')
                           <span class="text-info"><b>DELIVERED</b></span>
+                        @else
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
                         @endif
                 </label>
               </div>
@@ -139,9 +139,6 @@
       <input type="hidden" name="hss_master_no" value="{{$order_detail[0]->hss_master_no}}">
       <input type="hidden" name="hospital_name" value="{{$order_detail[0]->hospital_name}}">
       <input type="hidden" name="delivery_date" value="{{$order_detail[0]->delivery_date}}">
-      @if(!empty($pgi_details))
-      <input type="hidden" name="pgi_id" value="{{$pgi_details->pgi_id}}">
-      @endif
       <div class="modal-body">
        <div class="table-responsive">
         <table id="dispatch_table" class="table table-bordered table-sm text-center">

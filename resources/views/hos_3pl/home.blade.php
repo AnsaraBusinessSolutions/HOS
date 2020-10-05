@@ -20,7 +20,6 @@
               </thead>
               <tbody>
                  
-
                   @foreach($all_order as $key=>$val)
                   <tr onclick="window.location.href='{{url('hos3pl/order_detail/'.$val->order_id)}}'">
                       <td>{{$val->order_id}}</td>
@@ -30,18 +29,18 @@
                       <td>{{$val->total_qty}}</td>
                       <td>{{date('Y-m-d', strtotime($val->created_date))}}</td>
                       <td>
-                        @if($val->status == '2,3,5' ||  $val->status == '2,3' || $val->status == '3,5' || $val->status == '2,5')
-                        <span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>
-                        @elseif($val->status == 0)
-                            <span class="text-warning"><b>NEW</b></span>
-                        @elseif($val->status == 1)
-                            <span class="text-danger"><b>REJECTED</b></span>
-                        @elseif($val->status == 2)
+                        @if($val->status == '0')
+                          <span class="text-warning"><b>NEW</b></span>
+                        @elseif($val->status == '1')
+                          <span class="text-danger"><b>REJECTED</b></span>
+                        @elseif($val->status == '2')
                         <span class="text-success"><b>APPROVED</b></span>
-                        @elseif($val->status == 3)
+                        @elseif($val->status == '3')
                         <span class="text-primary"><b>DISPATCHED</b></span>
-                        @elseif($val->status == 4)
+                        @elseif($val->status == '4')
                         <span class="text-danger"><b>DELIVERED</b></span>
+                        @else
+                        <span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>
                         @endif
                       </td>
                   </tr>

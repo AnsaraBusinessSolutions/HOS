@@ -25,14 +25,22 @@ class HomeController extends Controller
                                 ->selectRaw('count(od.order_id) as total_item')
                                 ->having('status','2')
                                 ->orHaving('status','3')
+                                ->orHaving('status','5')
+                                ->orHaving('status','7')
                                 ->orHaving('status','2,3')
                                 ->orHaving('status','2,3,5')
                                 ->orHaving('status','3,5')
                                 ->orHaving('status','2,5')
+                                ->orHaving('status','2,7')
+                                ->orHaving('status','3,7')
+                                ->orHaving('status','5,7')
+                                ->orHaving('status','2,3,7')
+                                ->orHaving('status','2,5,7')
+                                ->orHaving('status','3,5,7')
                                 ->orderBy('status','ASC')
                                 ->orderBy('od.order_id','DESC')
                                 ->get();
-   
+  
         return view('hos_3pl.home', array('all_order'=>$all_order));
     }
 
@@ -45,13 +53,13 @@ class HomeController extends Controller
 
         $status = DB::table('order_details as od')->select(DB::raw('group_concat(distinct od.status) as status'))->where('od.order_id', $order_id)->first();
         
-        $pgi_details = DB::table('pgi_details as pd')->select('pd.pgi_id')->where('pd.order_id',$order_id)->first();
+        //$pgi_details = DB::table('pgi_details as pd')->select('pd.pgi_id')->where('pd.order_id',$order_id)->first();
         
         $total_qty = 0;
         foreach ($order_detail as $key=>$value) {
             $total_qty += $value->qty_ordered;
         }
-        return view('hos_3pl.request_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'pgi_details'=>$pgi_details,'status_data'=>$status));
+        return view('hos_3pl.request_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'status_data'=>$status));
     }
 
     public function orderStatusUpdate(Request $request){
@@ -170,25 +178,22 @@ class HomeController extends Controller
         if($order_id != ''){
            $batch_data =  DB::table('batch_list')->where('order_id',$order_id)->get();
            if(count($batch_data) > 0){
-            
-            if($request->has('pgi_id')){
-                $pgi_no=$request->input('pgi_id');
+           
+            $pgi_no = '500-000-001';
+            $last_pgi_id = DB::table('pgi_details')->select('pgi_id')->orderBy('pgi_id', 'DESC')->first();
+            if(empty($last_pgi_id)){
+                $lasts_pgi_id = '500-000-000';
             }else{
-                $pgi_no = '500-000-001';
-                $last_pgi_id = DB::table('pgi_details')->select('pgi_id')->orderBy('pgi_id', 'DESC')->first();
-                if(empty($last_pgi_id)){
-                    $lasts_pgi_id = '500-000-000';
-                }else{
-                    $lasts_pgi_id=$last_pgi_id->pgi_id;
-                }
-                
-                if($lasts_pgi_id!==''){
-                    $pgi_no=str_replace('-', '',$lasts_pgi_id);
-                    $pgi_no=$pgi_no+1;
-                    $pgi_no=str_pad($pgi_no,9,'0',STR_PAD_LEFT);
-                    $pgi_no = implode('-',str_split($pgi_no,3));
-                }
+                $lasts_pgi_id=$last_pgi_id->pgi_id;
             }
+            
+            if($lasts_pgi_id!==''){
+                $pgi_no=str_replace('-', '',$lasts_pgi_id);
+                $pgi_no=$pgi_no+1;
+                $pgi_no=str_pad($pgi_no,9,'0',STR_PAD_LEFT);
+                $pgi_no = implode('-',str_split($pgi_no,3));
+            }
+           
             foreach($batch_data as $key=>$val){
             $pgi_details[] = array(
                             'pgi_id'=>$pgi_no,
@@ -217,7 +222,7 @@ class HomeController extends Controller
                
                 if(!empty($pgi_details)){
                     $result = DB::table('pgi_details')->insert($pgi_details);
-                    print_r($order_main_id_arr);
+                   
                     
                     if(count($order_main_id_arr) > 0){
                     foreach($order_main_id_arr as $key=>$val){
@@ -226,12 +231,12 @@ class HomeController extends Controller
                         ->select('pg.qty_ordered')
                         ->selectRaw('sum(pg.batch_qty) as total_dispatch_qty')
                         ->first();
-                        print_r($dispatch_qty);
+
                         if(!empty($dispatch_qty)){
                             if($dispatch_qty->total_dispatch_qty < $dispatch_qty->qty_ordered){
+                                $order_status = 7;
+                            }elseif($dispatch_qty->total_dispatch_qty == $dispatch_qty->qty_ordered){
                                 $order_status = 5;
-                            }else{
-                                $order_status = 3;
                             }
 
                             DB::table('order_details')
@@ -241,9 +246,43 @@ class HomeController extends Controller
                                 'last_updated_date'=>date("Y-m-d H:i:s"),
                                 'last_updated_user'=>auth()->guard('hos3pl')->user()->name
                                 ]);
+
+                            DB::table('pgi_details')
+                            ->where('order_main_id',$val)
+                            ->update([
+                                'pgi_status' => $order_status,
+                                ]);
                         }
                     }
                 }
+
+                    $total_order_qty_sum = DB::table('order_details as od')
+                    ->where('od.order_id',$order_id)
+                    ->selectRaw('sum(od.qty_ordered) as total_order')
+                    ->first();
+
+                    $total_dispatch_qty_sum = DB::table('pgi_details as pg')
+                    ->where('pg.order_id',$order_id)
+                    ->selectRaw('sum(pg.batch_qty) as total_dispatch')
+                    ->first();
+                
+                    if(!empty($total_order_qty_sum) && !empty($total_dispatch_qty_sum)){
+                        if($total_order_qty_sum->total_order == $total_dispatch_qty_sum->total_dispatch){
+                            DB::table('order_details')
+                            ->where('order_id',$order_id)
+                            ->update([
+                                'status' => 3,
+                                'last_updated_date'=>date("Y-m-d H:i:s"),
+                                'last_updated_user'=>auth()->guard('hos3pl')->user()->name
+                                ]);
+
+                            DB::table('pgi_details')
+                            ->where('order_id',$order_id)
+                            ->update([
+                                'pgi_status' => 3,
+                                ]);
+                        }
+                    }
                     
                     DB::table('batch_list')->where('order_id', $order_id)->delete();
                     DB::statement('ALTER TABLE batch_list AUTO_INCREMENT = 0');
@@ -263,10 +302,18 @@ class HomeController extends Controller
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
                                 ->selectRaw('count(od.order_id) as total_item')
                                 ->having('status','2')
+                                ->orHaving('status','5')
+                                ->orHaving('status','7')
                                 ->orHaving('status','2,3')
                                 ->orHaving('status','2,3,5')
                                 ->orHaving('status','3,5')
                                 ->orHaving('status','2,5')
+                                ->orHaving('status','2,7')
+                                ->orHaving('status','3,7')
+                                ->orHaving('status','5,7')
+                                ->orHaving('status','2,3,7')
+                                ->orHaving('status','2,5,7')
+                                ->orHaving('status','3,5,7')
                                 ->orderBy('status','ASC')
                                 ->orderBy('od.order_id','DESC')
                                 ->get();
@@ -280,18 +327,18 @@ class HomeController extends Controller
         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
         ->select('hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT sum(pd.batch_qty) FROM pgi_details as pd WHERE pd.order_main_id = od.id) as dispatch_batch_count"))
         ->where('od.order_id', $order_id)
-        ->whereIn('od.status', [2,5])
+        ->whereIn('od.status', [2,7])
         ->get();
 
         $status = DB::table('order_details as od')->select(DB::raw('group_concat(distinct od.status) as status'))->where('od.order_id', $order_id)->first();
 
-        $pgi_details = DB::table('pgi_details as pd')->select('pd.pgi_id')->where('pd.order_id',$order_id)->first();
+        //$pgi_details = DB::table('pgi_details as pd')->select('pd.pgi_id')->where('pd.order_id',$order_id)->first();
 
         $total_qty = 0;
         foreach ($order_detail as $key=>$value) {
         $total_qty += $value->qty_ordered;
         }
-        return view('hos_3pl.open_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'pgi_details'=>$pgi_details,'status_data'=>$status));
+        return view('hos_3pl.open_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'status_data'=>$status));
     }
 
     public function displayOrder()
@@ -301,7 +348,7 @@ class HomeController extends Controller
                                 ->groupBy("pd.order_id")
                                 ->select('pd.order_id','pd.supplying_plant','pd.hospital_name','pd.delivery_date','pd.uom','pd.qty_ordered','pd.created_at')
                                 ->selectRaw('sum(pd.batch_qty) as total_batch_qty')
-                                ->selectRaw("count(DISTINCT(pd.order_main_id)) as total_item")
+                                ->selectRaw("count(DISTINCT(pd.id)) as total_item")
                                 ->orderBy('pd.order_id','DESC')
                                 ->get();
    
@@ -313,10 +360,10 @@ class HomeController extends Controller
         $order_detail = DB::table('pgi_details as pd')
         ->join('hss_master as hs','pd.hss_master_no','=','hs.hss_master_no')
         ->join('order_details as od','pd.order_main_id','=','od.id')
-        ->select('od.created_date','hs.delivery_wh_name','hs.address','pd.hss_master_no','pd.hospital_name','pd.id','pd.pgi_id','pd.order_id','pd.order_main_id','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.category','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no','pd.manufacture_date','pd.expiry_date')
-        ->selectRaw('sum(pd.batch_qty) as batch_qty')
+        ->select('pd.batch_qty','od.created_date','hs.delivery_wh_name','hs.address','pd.hss_master_no','pd.hospital_name','pd.id','pd.pgi_id','pd.order_id','pd.order_main_id','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.category','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no','pd.manufacture_date','pd.expiry_date')
+        ->selectraw('sum(pd.batch_qty) as batch_qty')
         ->where('pd.order_id', $order_id)
-        ->groupBy("pd.order_main_id")
+        ->groupBy(DB::raw("pd.order_main_id,pd.pgi_id"))
         ->get();
 
         $status = DB::table('order_details as od')->select(DB::raw('group_concat(distinct od.status) as status'))->where('od.order_id', $order_id)->first();
@@ -327,8 +374,21 @@ class HomeController extends Controller
         }
         return view('hos_3pl.display_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'status_data'=>$status));
     }
-    
 
-    
+
+    public function displayBatchData(Request $request){
+        $order_main_id = $request->input('order_main_id');
+        $status = $request->input('status');
+        $pgi_id = $request->input('pgi_id');
+        $batch_data = array();
+        $batch_data = DB::table('pgi_details')
+                    ->select('batch_qty','batch_no',DB::raw('DATE_FORMAT(manufacture_date, "%m/%d/%Y") as manufacture_date'),DB::raw('DATE_FORMAT(expiry_date, "%m/%d/%Y") as expiry_date'))
+                    ->where('order_main_id',$order_main_id)
+                    ->where('pgi_id',$pgi_id)
+                    ->get();
+           
+        return $batch_data;
+    }
+
 
 }
