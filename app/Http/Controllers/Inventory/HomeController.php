@@ -56,13 +56,13 @@ class HomeController extends Controller
         $order_detail = DB::table('pgi_details as pd')
                                         ->join('hss_master as hs','pd.hss_master_no','=','hs.hss_master_no')
                                         ->leftjoin('grn_details as gd','pd.order_main_id','=','gd.order_main_id')
-                                        ->select('gd.received_qty','pd.hss_master_no','pd.hospital_name','hs.delivery_wh_name','hs.address','pd.id','pd.pgi_id','pd.order_id','pd.category','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no')
+                                        ->select('pd.pgi_status','gd.received_qty','pd.hss_master_no','pd.hospital_name','hs.delivery_wh_name','hs.address','pd.id','pd.pgi_id','pd.order_id','pd.category','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no')
                                         ->where('pd.order_id', $order_id)
                                         ->get();
 
         // dd($order_detail);exit;
 
-        $status = DB::table('order_details as od')->select(DB::raw('group_concat(distinct od.status) as status'))->where('od.order_id', $order_id)->first();
+        $status = DB::table('pgi_details as od')->select(DB::raw('group_concat(distinct od.pgi_status) as status'))->where('od.order_id', $order_id)->first();
 
         return view('inventory.order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'status_data'=>$status));
     }
@@ -70,7 +70,7 @@ class HomeController extends Controller
     public function createGrn(Request $request){
         $pgi_main_id_arr = $request->input('pgi_main_id');
         $received_qty_arr = $request->input('received_qty');
-        
+        $order_id = $request->input('order_id');
         if(count($received_qty_arr) > 0 && count($pgi_main_id_arr) > 0){
             $grn_no = '600-000-001';
             $last_grn_id = DB::table('grn_details')->select('grn_id')->orderBy('grn_id', 'DESC')->first();
@@ -114,23 +114,88 @@ class HomeController extends Controller
                     'created_at'=>date('Y-m-d H:i:s'));
 
                     $order_main_id_arr[] = $pgi_data->order_main_id;
-
-
+                    $pgi_arr[] = array('pgi_main_id'=>$pgi_data->id,'order_main_id'=>$pgi_data->order_main_id);
                 }
             }
           
             if(!empty($grn_data_arr)){
                 $result = DB::table('grn_details')->insert($grn_data_arr);
 
-                if(!empty($order_main_id_arr)){
-                    DB::table('order_details')
-                        ->whereIn('id',$order_main_id_arr)
-                        ->update([
-                            'status' => 4,
-                            'last_updated_date'=>date("Y-m-d H:i:s"),
-                            'last_updated_user'=>auth()->guard('inventory')->user()->name
-                            ]);
+                if(count($pgi_arr) > 0){
+                    foreach($pgi_arr as $key=>$val){
+                        $received_qty = DB::table('grn_details as gd')
+                        ->where('gd.pgi_main_id',$val['pgi_main_id'])
+                        ->select('gd.batch_qty')
+                        ->selectRaw('sum(gd.received_qty) as total_received_qty')
+                        ->first();
+
+                        if(!empty($received_qty)){
+                            echo $received_qty->total_received_qty;
+                            echo $received_qty->batch_qty;
+                           
+                            $change_order_status = 4;
+                            if($received_qty->total_received_qty < $received_qty->batch_qty){
+                                $change_order_status = 8;
+                            }elseif($received_qty->total_received_qty == $received_qty->batch_qty){
+                                $change_order_status = 6;
+                            }
+                            
+                            $order_main_id_val = $val['order_main_id'];
+
+                            DB::table('order_details')
+                            ->where('id',$order_main_id_val)
+                            ->update([
+                                'status' => $change_order_status,
+                                'last_updated_date'=>date("Y-m-d H:i:s"),
+                                'last_updated_user'=>auth()->guard('inventory')->user()->name
+                                ]);
+
+                            DB::table('pgi_details')
+                            ->where('id',$val['pgi_main_id'])
+                            ->update([
+                                'pgi_status' => $change_order_status,
+                                ]);
+                        }
+                    }
                 }
+
+                    $total_order_qty_sum = DB::table('order_details as od')
+                    ->where('od.order_id',$order_id)
+                    ->selectRaw('sum(od.qty_ordered) as total_order')
+                    ->first();
+
+                    $total_received_qty_sum = DB::table('grn_details as gd')
+                    ->where('gd.order_id',$order_id)
+                    ->selectRaw('sum(gd.received_qty) as total_received')
+                    ->first();
+                
+                    if(!empty($total_order_qty_sum) && !empty($total_received_qty_sum)){
+                        if($total_order_qty_sum->total_order == $total_received_qty_sum->total_received){
+                            DB::table('order_details')
+                            ->where('order_id',$order_id)
+                            ->update([
+                                'status' => 4,
+                                'last_updated_date'=>date("Y-m-d H:i:s"),
+                                'last_updated_user'=>auth()->guard('inventory')->user()->name
+                                ]);
+
+                            DB::table('pgi_details')
+                            ->where('order_id',$order_id)
+                            ->update([
+                                'pgi_status' => 4,
+                                ]);
+                        }
+                    }
+
+                // if(!empty($order_main_id_arr)){
+                //     DB::table('order_details')
+                //         ->whereIn('id',$order_main_id_arr)
+                //         ->update([
+                //             'status' => 4,
+                //             'last_updated_date'=>date("Y-m-d H:i:s"),
+                //             'last_updated_user'=>auth()->guard('inventory')->user()->name
+                //             ]);
+                // }
             }
             return redirect()->route('inventory.home');
         }

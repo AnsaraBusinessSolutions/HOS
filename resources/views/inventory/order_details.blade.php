@@ -61,19 +61,24 @@
                           <span class="text-primary"><b>DISPATCHED</b></span>
                         @elseif($status_data->status == '4')
                           <span class="text-info"><b>DELIVERED</b></span>
+                        @elseif((strpos($status_data->status, '6') !== false || strpos($status_data->status, '8') !== false) && (strpos($status_data->status, '5') !== false || strpos($status_data->status, '7') !== false))
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED/DELIVERED</b></span>
                         @elseif(strpos($status_data->status, '5') !== false || strpos($status_data->status, '7') !== false)
                           <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
                         @elseif(strpos($status_data->status, '6') !== false || strpos($status_data->status, '8') !== false)
                           <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DELIVERED</b></span>
+                        @else
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED/PARTIALLY DELIVERED</b></span>
                         @endif
                 </label>
               </div>
             </div>
         </div>
-          <form action="{{route('inventory.create.grn')}}" method="POST">
+          <form action="{{route('inventory.create.grn')}}" method="POST" onsubmit="return checkQtyValidation();">
           @csrf
+          <input type="hidden" value="{{$order_id}}" name="order_id">
           <div class="col-12 text-center">
-            <table id="example" class="table table-striped table-bordered example">
+            <table id="order_detail" class="table table-striped table-bordered example">
               <thead>
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">#</th>
@@ -106,10 +111,10 @@
                       <td>{{$val->qty_ordered}}</td>
                       <td>{{$val->batch_qty}}</td>
                       <td>{{$val->batch_no}}</td>
-                      @if($status_data->status == 4)
+                      @if($val->pgi_status == 4 || $val->pgi_status == 6 || $val->pgi_status == 8)
                       <td>{{$val->received_qty}}</td>
                       @else
-                      <td><input type="hidden" name="pgi_main_id[]" id="pgi_main_id_{{$key}}" value="{{$val->id}}" disabled><input class="form-control" id="rec_qty_{{$key}}" type="text" name="received_qty[]" required autocomplete="off" disabled></td>
+                      <td><input type="hidden" name="pgi_main_id[]" id="pgi_main_id_{{$key}}" value="{{$val->id}}" disabled><input class="form-control received_qty" data-batch_qty="{{$val->batch_qty}}" id="rec_qty_{{$key}}" type="text" name="received_qty[]" required autocomplete="off" disabled></td>
                       @endif  
                   </tr>
                  @endforeach
@@ -117,9 +122,9 @@
               </tbody>
             </table>
           </div>
-          @if($status_data->status != 4)
+          @if($status_data->status != 4 || $status_data->status != 6 || $status_data->status != 8)
           <div class="col-12 text-center">
-            <button class="btn btn-success" type="submit">Update</button>
+            <button class="btn btn-success">Update</button>
           </div>
           @endif
           </form>
@@ -150,6 +155,28 @@
     });
 
   });
+
+  function checkQtyValidation(){
+  var check_qty = 1;
+      $("#order_detail .received_qty").each(function() {
+          var received_qty = $(this).val();
+          var batch_qty = $(this).data('batch_qty');
+          if($(this).prop('disabled') == false){
+            if(parseInt(batch_qty) < parseInt(received_qty)){
+              check_qty = 0;
+            }  
+          }
+      });
+      
+      if ($('.select_item:checked').length < 1) {
+        return false;
+      }else if(check_qty == 0){
+        alert('Please enter valid qty');
+        return false;
+      }else{
+        return true;
+      }
+ }
   </script>
   @endpush
 

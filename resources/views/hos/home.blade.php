@@ -53,18 +53,24 @@
                       <td>{{$val->total_qty}}</td>
                       <td>{{date('Y-m-d', strtotime($val->created_date))}}</td>
                       <td>
-                      @if($val->status == 0)
+                        @if($val->status == '0')
                           <span class="text-warning"><b>NEW</b></span>
-                        @elseif($val->status == 1)
+                        @elseif($val->status == '1')
                           <span class="text-danger"><b>REJECTED</b></span>
-                        @elseif($val->status == 2)
+                        @elseif($val->status == '2')
                           <span class="text-success"><b>APPROVED</b></span>
-                        @elseif($val->status == 3)
+                        @elseif($val->status == '3')
                           <span class="text-primary"><b>DISPATCHED</b></span>
-                        @elseif($val->status == 4)
+                        @elseif($val->status == '4')
                           <span class="text-info"><b>DELIVERED</b></span>
-                        @elseif($val->status == 5)
-                          <span class="text-danger"><b>CANCELLED</b></span>
+                        @elseif((strpos($val->status, '2') !== false || strpos($val->status, '6') !== false || strpos($val->status, '8') !== false) && (strpos($val->status, '2') !== false || strpos($val->status, '5') !== false || strpos($val->status, '7') !== false))
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED/DELIVERED</b></span>
+                        @elseif(strpos($val->status, '5') !== false || strpos($val->status, '7') !== false)
+                          <span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>
+                        @elseif(strpos($val->status, '6') !== false || strpos($val->status, '8') !== false)
+                          <span class="text-primary"><b>PARTIALLY DELIVERED</b></span>
+                        @else
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED/PARTIALLY DELIVERED</b></span>
                         @endif
                       </td>
                   </tr>
