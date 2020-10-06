@@ -6,8 +6,7 @@
         @endif
         <div class="row mx-0">
           <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b> </h5>
-            <!-- @if(!empty($order_detail))<h6>PGI No. {{$order_detail[0]->pgi_id}}</h6>@endif -->
+            <h5 style="color: steelblue">@if(!empty($order_detail[0]))Order {{$order_detail[0]->order_id}} Details @endif</h5>
           </div>
           </div>
           <div class="row mx-0 border">
@@ -43,14 +42,13 @@
               <div class="form-row">
                 <label class="col-md-6 col-sm-4 col-4"><b>Order Date</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-5 col-sm-7 col-7">{{date('Y-m-d',strtotime($order_detail[0]->created_at))}}
+                <label class="col-md-5 col-sm-7 col-7">{{date('Y-m-d',strtotime($order_detail[0]->created_date))}}
                 </label>
               </div>
               <div class="form-row">
                 <label class="col-md-6 col-sm-4 col-4"><b>Status</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-5 col-sm-7 col-7">
-                        
                         @if($status_data->status == '0')
                           <span class="text-warning"><b>NEW</b></span>
                         @elseif($status_data->status == '1')
@@ -61,45 +59,39 @@
                           <span class="text-primary"><b>DISPATCHED</b></span>
                         @elseif($status_data->status == '4')
                           <span class="text-info"><b>DELIVERED</b></span>
-                        @elseif(strpos($status_data->status, '6') !== false || strpos($status_data->status, '8') !== false)
-                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DELIVERED</b></span>
-                        @elseif(strpos($status_data->status, '5') !== false || strpos($status_data->status, '7') !== false)
-                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DISPATCHED</b></span>
                         @else
-                          <span class="text-primary" style="font-size: 14px"><b></b></span>
+                          <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DELIVERED</b></span>
                         @endif
                 </label>
               </div>
             </div>
-        </div>
-          <form action="{{route('inventory.create.grn')}}" method="POST" onsubmit="return checkQtyValidation();">
-          @csrf
-          <input type="hidden" value="{{$order_id}}" name="order_id">
+          </div>
           <div class="col-12 text-center">
-            <table id="order_detail" class="table table-striped table-bordered example">
+            <table id="display_order" class="table table-striped table-bordered example">
               <thead>
                   <tr class="bg_color">
-                      <th class="text-nowrap px-3">#</th>
                       <th class="text-nowrap px-3">Item #</th>
                       <th class="text-nowrap px-3">PGI No</th>
+                      <th class="text-nowrap px-3">GRN No</th>
                       <th class="text-nowrap px-3">NUPCO Material</th>
                       <th class="text-nowrap px-3">NUPCO Trade Code</th>
                       <th class="text-nowrap px-3">Customer Code</th>
                       <th class="text-nowrap px-3">Category</th>
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
-                      <th class="text-nowrap px-3" >Order Qty</th>
-                      <th class="text-nowrap px-3" >Batch Qty</th>
-                      <th class="text-nowrap px-3" >Batch No</th>
-                      <th class="text-nowrap px-3" >Received Qty</th>
+                      <th class="text-nowrap px-3">Qty Order</th>
+                      <th class="text-nowrap px-3">Qty Dispatch</th>
+                      <th class="text-nowrap px-3">Qty Received</th>
+                      <th class="text-nowrap px-3">Dispatch Date</th>
                   </tr>
               </thead>
               <tbody>
+              
               @foreach($order_detail as $key=>$val)
                   <tr>
-                      <td><input type="checkbox" class="select_item" data-row_id="{{$key}}"></td>
                       <td>{{$key+1}}</td>
                       <td>{{$val->pgi_id}}</td>
+                      <td>{{$val->grn_id}}</td>
                       <td>{{$val->nupco_generic_code}}</td>
                       <td>{{$val->nupco_trade_code}}</td>
                       <td>{{$val->customer_trade_code}}</td>
@@ -108,30 +100,21 @@
                       <td>{{$val->uom}}</td>
                       <td>{{$val->qty_ordered}}</td>
                       <td>{{$val->batch_qty}}</td>
-                      <td>{{$val->batch_no}}</td>
-                      @if($val->pgi_status == 4 || $val->pgi_status == 6 || $val->pgi_status == 8)
                       <td>{{$val->received_qty}}</td>
-                      @else
-                      <td><input type="hidden" name="pgi_main_id[]" id="pgi_main_id_{{$key}}" value="{{$val->id}}" disabled><input class="form-control received_qty" data-batch_qty="{{$val->batch_qty}}" id="rec_qty_{{$key}}" type="text" name="received_qty[]" required autocomplete="off" disabled></td>
-                      @endif  
+                      <td>{{date('Y-m-d',strtotime($val->created_at))}}</td>
                   </tr>
                  @endforeach
-                 
               </tbody>
             </table>
-          </div>
-          @if($status_data->status != 4 || $status_data->status != 6 || $status_data->status != 8)
-          <div class="col-12 text-center">
-            <button class="btn btn-success">Update</button>
-          </div>
-          @endif
-          </form>
+          </div> 
+        </div>
     </div>
 @stop
 @push('scripts')
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('.example').DataTable( {
+<script>
+$(function() {
+  var counter = 1;
+    $('#display_order').DataTable( {
         "ordering": false,
         "scrollY":        "55vh",
         "scrollCollapse": true,
@@ -140,41 +123,7 @@
         "lengthMenu": [ [15, 30, 50, 100, 250, 500, 1000, 1500], [15, 20, 50, 100, 250, 500, 1000, 1500] ],
         "iDisplayLength": 1000,
     });
-
-    $(".select_item").click(function () {
-      var row_id = $(this).data('row_id');
-      if ($(this).is(":checked")) {
-        $("#rec_qty_"+row_id).removeAttr("disabled");
-        $("#pgi_main_id_"+row_id).removeAttr("disabled");
-      }else{
-        $("#rec_qty_"+row_id).attr("disabled", "disabled");
-        $("#pgi_main_id_"+row_id).attr("disabled", "disabled");
-      }
-    });
-
-  });
-
-  function checkQtyValidation(){
-  var check_qty = 1;
-      $("#order_detail .received_qty").each(function() {
-          var received_qty = $(this).val();
-          var batch_qty = $(this).data('batch_qty');
-          if($(this).prop('disabled') == false){
-            if(parseInt(batch_qty) < parseInt(received_qty)){
-              check_qty = 0;
-            }  
-          }
-      });
-      
-      if ($('.select_item:checked').length < 1) {
-        return false;
-      }else if(check_qty == 0){
-        alert('Please enter valid qty');
-        return false;
-      }else{
-        return true;
-      }
- }
-  </script>
-  @endpush
+});
+</script>
+@endpush
 

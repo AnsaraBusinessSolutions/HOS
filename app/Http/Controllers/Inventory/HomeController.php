@@ -186,18 +186,42 @@ class HomeController extends Controller
                                 ]);
                         }
                     }
-
-                // if(!empty($order_main_id_arr)){
-                //     DB::table('order_details')
-                //         ->whereIn('id',$order_main_id_arr)
-                //         ->update([
-                //             'status' => 4,
-                //             'last_updated_date'=>date("Y-m-d H:i:s"),
-                //             'last_updated_user'=>auth()->guard('inventory')->user()->name
-                //             ]);
-                // }
             }
             return redirect()->route('inventory.home');
         }
+    }
+
+    public function displayOrder()
+    {
+        $user_id = auth()->guard('inventory')->user()->id;
+        $all_order = DB::table('grn_details as gd')
+                                ->groupBy("gd.order_id")
+                                ->select('gd.order_id','gd.supplying_plant','gd.hospital_name','gd.delivery_date','gd.uom','gd.qty_ordered','gd.created_at')
+                                ->selectRaw('sum(gd.received_qty) as total_batch_qty')
+                                ->selectRaw("count(DISTINCT(gd.id)) as total_item")
+                                ->orderBy('gd.order_id','DESC')
+                                ->get();
+   
+        return view('inventory.display_order', array('all_order'=>$all_order));
+    }
+
+    public function displayOrderDetail($order_id)
+    {
+        $order_detail = DB::table('grn_details as gd')
+        ->join('hss_master as hs','gd.hss_master_no','=','hs.hss_master_no')
+        ->join('order_details as od','gd.order_main_id','=','od.id')
+        ->select('gd.batch_qty','od.created_date','hs.delivery_wh_name','hs.address','gd.hss_master_no','gd.hospital_name','gd.id','gd.pgi_id','gd.order_id','gd.order_main_id','gd.nupco_generic_code','gd.nupco_trade_code','gd.customer_trade_code','gd.category','gd.material_desc','gd.uom','gd.qty_ordered','gd.delivery_date','gd.created_at','gd.batch_qty','gd.batch_no','gd.manufacture_date','gd.expiry_date','gd.received_qty','gd.grn_id')
+        ->selectraw('sum(gd.batch_qty) as batch_qty')
+        ->where('gd.order_id', $order_id)
+        ->groupBy(DB::raw("gd.order_main_id,gd.pgi_id"))
+        ->get();
+
+        $status = DB::table('order_details as od')->select(DB::raw('group_concat(distinct od.status) as status'))->where('od.order_id', $order_id)->first();
+
+        $total_qty = 0;
+        foreach ($order_detail as $key=>$value) {
+        $total_qty += $value->qty_ordered;
+        }
+        return view('inventory.display_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'status_data'=>$status));
     }
 }

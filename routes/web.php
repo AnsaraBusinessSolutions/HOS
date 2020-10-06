@@ -78,7 +78,8 @@ Route::prefix('inventory')->group(function () {
     Route::get('/home', 'Inventory\HomeController@index')->name('inventory.home');
     Route::get('/order_detail/{order_id}', 'Inventory\HomeController@orderDetail')->name('inventory.order.detail');
     Route::post('/create_grn', 'Inventory\HomeController@createGrn')->name('inventory.create.grn');
-    
+    Route::get('/display_order', 'Inventory\HomeController@displayOrder')->name('inventory.display.order');
+    Route::get('/display_order_detail/{order_id}', 'Inventory\HomeController@displayOrderDetail')->name('inventory.display.order.detail');
 });
 
 Auth::routes();
