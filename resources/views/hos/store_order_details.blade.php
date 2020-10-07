@@ -12,11 +12,6 @@
           @if(Session::has('message'))
             {!! Session::get('message') !!}
           @endif
-
-          <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b></h5>
-            
-          </div>
           </div>
           <form action="{{route('hos.order.update')}}" method="POST" onsubmit="return checkQtyValidation();">
           @csrf
@@ -37,7 +32,7 @@
               <div class="form-row">
                 <label class="col-md-4 col-sm-4 col-4"><b>Delivery Address</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-7 col-sm-7 col-7 text-truncate">{{$order_detail[0]->address}} </label>
+                <label class="col-md-7 col-sm-7 col-7">{{$order_detail[0]->address}} </label>
               </div>
             </div>
             <div class="col-md-2 col-sm-6 col-12">

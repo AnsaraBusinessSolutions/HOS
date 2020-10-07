@@ -47,7 +47,7 @@ class HomeController extends Controller
     public function requestOrderDetail($order_id){
         $order_detail = DB::table('order_details as od')
                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
-                        ->select('hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT sum(pd.batch_qty) FROM pgi_details as pd WHERE pd.order_main_id = od.id) as dispatch_batch_count"))
+                        ->select('hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT sum(pd.batch_qty) FROM pgi_details as pd WHERE pd.order_main_id = od.id) as dispatch_batch_count"),DB::raw("(SELECT sum(bl.batch_qty) FROM batch_list as bl WHERE bl.order_main_id = od.id) as added_batch_qty"))
                         ->where('od.order_id', $order_id)
                         ->get();
 
@@ -289,8 +289,11 @@ class HomeController extends Controller
                 }
            }
         }
-        //return redirect()->route('hos3pl.home');
-        return back();
+        if($request->has('redirect_page_name')){
+            return redirect()->route('hos3pl.open.order');
+        }
+        return redirect()->route('hos3pl.home');
+        // return back();
     }
 
     public function openOrder()
@@ -325,7 +328,7 @@ class HomeController extends Controller
     {
         $order_detail = DB::table('order_details as od')
         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
-        ->select('hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT sum(pd.batch_qty) FROM pgi_details as pd WHERE pd.order_main_id = od.id) as dispatch_batch_count"))
+        ->select('hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT sum(pd.batch_qty) FROM pgi_details as pd WHERE pd.order_main_id = od.id) as dispatch_batch_count"),DB::raw("(SELECT sum(bl.batch_qty) FROM batch_list as bl WHERE bl.order_main_id = od.id) as added_batch_qty"))
         ->where('od.order_id', $order_id)
         ->whereIn('od.status', [2,7])
         ->get();

@@ -67,6 +67,14 @@ echo $currentTime; ?></span> |
           <a class="nav-link" href="{{ route('inventory.home') }}">
           <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Dashboard</a>
         </li>
+        @if(Request::path() == 'inventory/open_order' || Request::is('inventory/open_order_detail/*'))
+        <li class="nav-item my-1 active">
+        @else
+        <li class="nav-item my-1 ">
+        @endif
+          <a class="nav-link" href="{{ route('inventory.open.order') }}">
+          <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Open Order</a>
+        </li>
         @if(Request::path() == 'inventory/display_order' || Request::is('inventory/display_order_detail/*'))
         <li class="nav-item my-1 active">
         @else
@@ -79,7 +87,7 @@ echo $currentTime; ?></span> |
     </div>
     <div class="main px-3 py-5">
       <nav class="navbar navbar-expand navbar-light bg-white shadow topsecnav py-0 px-0">
-        <a class="navbar-brand mr-0" href="#" style=""></a>
+        <a class="navbar-brand mr-0" href="#"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>

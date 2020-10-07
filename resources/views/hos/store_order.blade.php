@@ -83,7 +83,7 @@
                    <th width="20%" class="p-0">
                     <select class="form-control" name="order_type" id="order_type">
                       <option value="normal">Normal</option>
-                      <option value="emergancy">Emergancy</option>
+                      <option value="emergency">Emergency</option>
                     </select>
                      <th width="2%" class="p-0">&ensp;</th>
                    <th width="10%" class="p-0">

@@ -69,6 +69,7 @@
           <form action="{{route('inventory.create.grn')}}" method="POST" onsubmit="return checkQtyValidation();">
           @csrf
           <input type="hidden" value="{{$order_id}}" name="order_id">
+          <input type="hidden" name="redirect_page_name" value="open_order">
           <div class="col-12 text-center">
             <table id="order_detail" class="table table-striped table-bordered example">
               <thead>

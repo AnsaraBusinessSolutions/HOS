@@ -4,11 +4,6 @@
         @if(Session::has('message'))
           {!! Session::get('message') !!}
         @endif
-        <div class="row mx-0">
-          <div class="col-12 text-center">
-            <h5 style="color: steelblue">@if(!empty($order_detail[0]))Order {{$order_detail[0]->order_id}} Details @endif</h5>
-          </div>
-          </div>
           <div class="row mx-0 border">
             <div class="col-md-5 col-sm-6 col-12">
               <div class="form-row">
@@ -26,7 +21,7 @@
               <div class="form-row">
                 <label class="col-md-4 col-sm-4 col-4"><b>Delivery Address</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-7 col-sm-7 col-7 text-truncate">{{$order_detail[0]->address}} </label>
+                <label class="col-md-7 col-sm-7 col-7">{{$order_detail[0]->address}} </label>
               </div>
             </div>
             <div class="col-md-2 col-sm-6 col-12">
@@ -82,6 +77,8 @@
                       <th class="text-nowrap px-3">Qty Order</th>
                       <th class="text-nowrap px-3">Qty Dispatch</th>
                       <th class="text-nowrap px-3">Qty Received</th>
+                      <th class="text-nowrap px-3">Manufacture Date</th>
+                      <th class="text-nowrap px-3">Expiry Date</th>
                       <th class="text-nowrap px-3">Dispatch Date</th>
                   </tr>
               </thead>
@@ -101,6 +98,8 @@
                       <td>{{$val->qty_ordered}}</td>
                       <td>{{$val->batch_qty}}</td>
                       <td>{{$val->received_qty}}</td>
+                      <td>{{$val->manufacture_date}}</td>
+                      <td>{{$val->expiry_date}}</td>
                       <td>{{date('Y-m-d',strtotime($val->created_at))}}</td>
                   </tr>
                  @endforeach

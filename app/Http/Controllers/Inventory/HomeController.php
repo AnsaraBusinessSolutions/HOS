@@ -31,37 +31,14 @@ class HomeController extends Controller
         return view('inventory.home', array('all_order'=>$all_order));
     }
 
-    public function index_old()
-    {   
-        $user_id = auth()->guard('inventory')->user()->id;
-        $all_order = DB::table('order_details as od')
-                        ->groupBy("od.order_id")
-                        ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date')
-                        ->selectRaw('sum(od.qty_ordered) as total_qty')
-                        ->selectRaw('count(od.order_id) as total_item')
-                        ->selectRaw(DB::raw('group_concat(distinct od.status) as status'))
-                        ->having('status','2,3')
-                        ->orHaving('status','2,3,4')
-                        ->orHaving('status','3,4')
-                        ->orHaving('status',3)
-                        ->orHaving('status',4)
-                        ->orderBy('status','ASC')
-                        ->orderBy('od.order_id','DESC')
-                        ->get();
-                       
-        return view('inventory.home', array('all_order'=>$all_order));
-    }
-
     public function orderDetail($order_id){
         $order_detail = DB::table('pgi_details as pd')
                                         ->join('hss_master as hs','pd.hss_master_no','=','hs.hss_master_no')
                                         ->leftjoin('grn_details as gd','pd.order_main_id','=','gd.order_main_id')
-                                        ->select('pd.pgi_status','gd.received_qty','pd.hss_master_no','pd.hospital_name','hs.delivery_wh_name','hs.address','pd.id','pd.pgi_id','pd.order_id','pd.category','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no')
+                                        ->select('pd.pgi_status','gd.received_qty','pd.hss_master_no','pd.hospital_name','hs.delivery_wh_name','hs.address','pd.id','pd.pgi_id','pd.order_id','pd.category','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no','pd.manufacture_date','pd.expiry_date')
                                         ->where('pd.order_id', $order_id)
                                         ->get();
-
-        // dd($order_detail);exit;
-
+       
         $status = DB::table('pgi_details as od')->select(DB::raw('group_concat(distinct od.pgi_status) as status'))->where('od.order_id', $order_id)->first();
 
         return view('inventory.order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'status_data'=>$status));
@@ -187,8 +164,43 @@ class HomeController extends Controller
                         }
                     }
             }
+            if($request->has('redirect_page_name')){
+                return redirect()->route('inventory.open.order');
+            }
             return redirect()->route('inventory.home');
         }
+    }
+
+    public function openOrder()
+    {   
+        $user_id = auth()->guard('inventory')->user()->id;
+        $all_order = DB::table('pgi_details as pd')
+                        ->groupBy("pd.order_id")
+                        ->select('pd.order_id','pd.supplying_plant','pd.hospital_name','pd.delivery_date','pd.uom','pd.qty_ordered','pd.created_at')
+                        ->selectRaw('sum(pd.qty_ordered) as total_qty')
+                        ->selectRaw('sum(pd.batch_qty) as dispatch_qty')
+                        ->selectRaw('count(pd.order_id) as dispatch_item')
+                        ->selectRaw(DB::raw('group_concat(distinct pd.pgi_status) as status'))
+                        ->orderBy('status','ASC')
+                        ->orderBy('pd.order_id','DESC')
+                        ->where('pd.pgi_status','!=',4)
+                        ->get();
+                       
+        return view('inventory.open_order', array('all_order'=>$all_order));
+    }
+
+    public function openOrderDetail($order_id){
+        $order_detail = DB::table('pgi_details as pd')
+                                        ->join('hss_master as hs','pd.hss_master_no','=','hs.hss_master_no')
+                                        ->leftjoin('grn_details as gd','pd.order_main_id','=','gd.order_main_id')
+                                        ->select('pd.pgi_status','gd.received_qty','pd.hss_master_no','pd.hospital_name','hs.delivery_wh_name','hs.address','pd.id','pd.pgi_id','pd.order_id','pd.category','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no','pd.manufacture_date','pd.expiry_date')
+                                        ->where('pd.order_id', $order_id)
+                                        ->whereIn('pd.pgi_status', [3,5,7])
+                                        ->get();
+       
+        $status = DB::table('pgi_details as od')->select(DB::raw('group_concat(distinct od.pgi_status) as status'))->where('od.order_id', $order_id)->first();
+
+        return view('inventory.open_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'status_data'=>$status));
     }
 
     public function displayOrder()

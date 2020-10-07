@@ -4,11 +4,6 @@
         @if(Session::has('message'))
           {!! Session::get('message') !!}
         @endif
-        <div class="row mx-0">
-          <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>Order {{$order_id}} Details</b> </h5>
-          </div>
-          </div>
           <div class="row mx-0 border">
             <div class="col-md-5 col-sm-6 col-12">
               <div class="form-row">
@@ -26,7 +21,7 @@
               <div class="form-row">
                 <label class="col-md-4 col-sm-4 col-4"><b>Delivery Address</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-7 col-sm-7 col-7 text-truncate">{{$order_detail[0]->address}} </label>
+                <label class="col-md-7 col-sm-7 col-7">{{$order_detail[0]->address}} </label>
               </div>
             </div>
             <div class="col-md-2 col-sm-6 col-12">
@@ -107,7 +102,7 @@
                       <td>{{$val->qty_ordered - $val->dispatch_batch_count}}</td>
                       <td>@if($val->is_deleted == 0)<button class="btn btn-small btn-warning batch_btn" data-open_qty="{{$val->qty_ordered - $val->dispatch_batch_count}}" data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->id}}" data-status="{{$val->status}}">Batch</button>@endif</td>
                       @else
-                      <td>0</td>
+                      <td>@if(!empty($val->added_batch_qty)){{$val->added_batch_qty}}@else 0 @endif</td>
                       <td>{{$val->qty_ordered - 0}}</td>
                       <td>@if($val->is_deleted == 0)<button class="btn btn-small btn-warning batch_btn" data-open_qty="{{$val->qty_ordered - 0}}" data-order_id="{{$val->order_id}}" data-order_main_id="{{$val->id}}" data-status="{{$val->status}}">Batch</button>@endif</td>
                       @endif

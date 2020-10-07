@@ -51,9 +51,13 @@ class HomeController extends Controller
         $material_data = DB::table('material_master')->select('id','nupco_generic_code','nupco_trade_code','customer_code','customer_code_cat','nupco_desc','uom')->where($input_name, $input_data)->get();
        
         $availability = 0;
+
+        $hss_master_id = Auth::user()->hss_master_id;
+        $hss_data = DB::table('hss_master')->where('id',$hss_master_id)->first();
         
-            $plant = Auth::user()->plant_name;
-            $storage_location = Auth::user()->storage_location;
+
+            $plant = $hss_data->delivery_warehouse;
+            $storage_location = $hss_data->sloc_id;
 
             $stock_data = DB::table('stock')->where('plant',$plant)
                                             ->where('storage_location',$storage_location)
@@ -177,8 +181,11 @@ class HomeController extends Controller
     }
 
     public function orderDetail($order_id){
-        $plant = Auth::user()->plant_name;
-        $storage_location = Auth::user()->storage_location;
+        $hss_master_id = Auth::user()->hss_master_id;
+        $hss_data = DB::table('hss_master')->where('id',$hss_master_id)->first();
+
+        $plant = $hss_data->delivery_warehouse;
+        $storage_location = $hss_data->sloc_id;
 
         $order_detail = DB::table('order_details as od')
                                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
@@ -265,7 +272,7 @@ class HomeController extends Controller
             $new_category_arr = $request->input('new_customer_code_cat');
             $new_material_desc_arr = $request->input('new_nupco_desc');
             $new_uom_arr = $request->input('new_uom');
-           // dd($request);
+         
 
             $order_item = DB::table('order_details')->select('order_item')->orderBy('order_item','DESC')->where('order_id',$order_id)->first();
             $order_item_val = $order_item->order_item;
@@ -292,7 +299,7 @@ class HomeController extends Controller
                     'status'=>0 );
 
                     DB::table('stock')
-                        ->where('nupco_generic_code',$nupco_generic_code_arr[$key])
+                        ->where('nupco_generic_code',$new_nupco_generic_code_arr[$key])
                         ->increment('open_qty',$val);
                 }
             }
