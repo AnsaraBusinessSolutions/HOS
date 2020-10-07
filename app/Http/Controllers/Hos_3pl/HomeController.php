@@ -17,6 +17,7 @@ class HomeController extends Controller
     public function index()
     {
         $user_id = auth()->guard('hos3pl')->user()->id;
+        $plant_name = auth()->guard('hos3pl')->user()->plant_name;
        // $user_id = Auth::user()->id;
         // $all_order = DB::table('order_details as od')
         //                         ->groupBy("od.order_id")
@@ -46,11 +47,9 @@ class HomeController extends Controller
 
         $all_order = DB::table('order_details as od')
                                 ->groupBy("od.order_id")
-                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date',DB::raw('group_concat(distinct od.status) as status'))
-                                ->selectRaw('sum(od.qty_ordered) as total_qty')
-                                ->selectRaw('count(od.order_id) as total_item')
+                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date')
                                 ->whereIn('od.status',[2,3,5,7])
-                                ->orderBy('status','ASC')
+                                ->where('supplying_plant',$plant_name)
                                 ->orderBy('od.order_id','DESC')
                                 ->get();
 
@@ -335,15 +334,13 @@ class HomeController extends Controller
         //                         ->orderBy('od.order_id','DESC')
         //                         ->get();
 
+
         $all_order = DB::table('order_details as od')
-                                ->groupBy("od.order_id")
-                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date',DB::raw('group_concat(distinct od.status) as status'))
-                                ->selectRaw('sum(od.qty_ordered) as total_qty')
-                                ->selectRaw('count(od.order_id) as total_item')
-                                ->whereIn('od.status',[2,5,7])
-                                ->orderBy('status','ASC')
-                                ->orderBy('od.order_id','DESC')
-                                ->get();
+                    ->groupBy("od.order_id")
+                    ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date')
+                    ->whereIn('od.status',[2,5,7])
+                    ->orderBy('od.order_id','DESC')
+                    ->get();
    
         return view('hos_3pl.open_order', array('all_order'=>$all_order));
     }

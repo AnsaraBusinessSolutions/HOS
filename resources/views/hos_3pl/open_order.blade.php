@@ -22,24 +22,33 @@
                  
 
                   @foreach($all_order as $key=>$val)
+                  @php
+                  $order_data = DB::table('order_details as od')
+                                ->select(DB::raw('group_concat(distinct od.status) as status'))
+                                ->selectRaw('sum(od.qty_ordered) as total_qty')
+                                ->selectRaw('count(od.order_id) as total_item')
+                                ->where('od.order_id',$val->order_id)
+                                ->orderBy('od.status','ASC')
+                                ->first();
+                  @endphp
                   <tr onclick="window.location.href='{{url('hos3pl/open_order_detail/'.$val->order_id)}}'">
                       <td>{{$val->order_id}}</td>
                       <td>{{$val->hospital_name}}</td>
                       <td>{{$val->delivery_date}}</td>
-                      <td>{{$val->total_item}}</td>
-                      <td>{{$val->total_qty}}</td>
+                      <td>{{$order_data->total_item}}</td>
+                      <td>{{$order_data->total_qty}}</td>
                       <td>{{date('Y-m-d', strtotime($val->created_date))}}</td>
                       <td>
                         
-                        @if($val->status == '0')
+                        @if($order_data->status == '0')
                             <span class="text-warning"><b>NEW</b></span>
-                        @elseif($val->status == '1')
+                        @elseif($order_data->status == '1')
                             <span class="text-danger"><b>REJECTED</b></span>
-                        @elseif($val->status == '2')
+                        @elseif($order_data->status == '2')
                         <span class="text-success"><b>APPROVED</b></span>
-                        @elseif($val->status == '3')
+                        @elseif($order_data->status == '3')
                         <span class="text-primary"><b>DISPATCHED</b></span>
-                        @elseif($val->status == '4')
+                        @elseif($order_data->status == '4')
                         <span class="text-danger"><b>DELIVERED</b></span>
                         @else
                         <span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>
