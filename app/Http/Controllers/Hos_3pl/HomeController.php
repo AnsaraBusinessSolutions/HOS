@@ -337,7 +337,7 @@ class HomeController extends Controller
 
         $all_order = DB::table('order_details as od')
                                 ->groupBy("od.order_id")
-                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date','od.status')
+                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date',DB::raw('group_concat(distinct od.status) as status'))
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
                                 ->selectRaw('count(od.order_id) as total_item')
                                 ->whereIn('od.status',[2,5,7])
