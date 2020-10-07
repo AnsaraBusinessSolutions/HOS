@@ -18,30 +18,43 @@ class HomeController extends Controller
     {
         $user_id = auth()->guard('hos3pl')->user()->id;
        // $user_id = Auth::user()->id;
+        // $all_order = DB::table('order_details as od')
+        //                         ->groupBy("od.order_id")
+        //                         ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date',DB::raw('group_concat(distinct od.status) as status'))
+        //                         ->selectRaw('sum(od.qty_ordered) as total_qty')
+        //                         ->selectRaw('count(od.order_id) as total_item')
+        //                         ->having('status','2')
+        //                         ->orHaving('status','3')
+        //                         ->orHaving('status','5')
+        //                         ->orHaving('status','7')
+        //                         ->orHaving('status','2,3')
+        //                         ->orHaving('status','2,3,5')
+        //                         ->orHaving('status','3,5')
+        //                         ->orHaving('status','2,5')
+        //                         ->orHaving('status','2,7')
+        //                         ->orHaving('status','3,7')
+        //                         ->orHaving('status','5,7')
+        //                         ->orHaving('status','2,3,7')
+        //                         ->orHaving('status','2,5,7')
+        //                         ->orHaving('status','3,5,7')
+        //                         ->orderBy('status','ASC')
+        //                         ->orderBy('od.order_id','DESC')
+        //                         ->get();
+
+//                                 dd($all_order);
+//   exit;
+
         $all_order = DB::table('order_details as od')
                                 ->groupBy("od.order_id")
-                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date',DB::raw('group_concat(distinct od.status) as status'))
+                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date','od.status')
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
                                 ->selectRaw('count(od.order_id) as total_item')
-                                ->having('status','2')
-                                ->orHaving('status','3')
-                                ->orHaving('status','5')
-                                ->orHaving('status','7')
-                                ->orHaving('status','2,3')
-                                ->orHaving('status','2,3,5')
-                                ->orHaving('status','3,5')
-                                ->orHaving('status','2,5')
-                                ->orHaving('status','2,7')
-                                ->orHaving('status','3,7')
-                                ->orHaving('status','5,7')
-                                ->orHaving('status','2,3,7')
-                                ->orHaving('status','2,5,7')
-                                ->orHaving('status','3,5,7')
+                                ->whereIn('od.status',[2,3,5,7])
                                 ->orderBy('status','ASC')
                                 ->orderBy('od.order_id','DESC')
                                 ->get();
-  dd($all_order);
-  exit;
+
+ 
         return view('hos_3pl.home', array('all_order'=>$all_order));
     }
 
@@ -300,24 +313,34 @@ class HomeController extends Controller
     public function openOrder()
     {
         $user_id = auth()->guard('hos3pl')->user()->id;
+        // $all_order = DB::table('order_details as od')
+        //                         ->groupBy("od.order_id")
+        //                         ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date',DB::raw('group_concat(distinct od.status) as status'))
+        //                         ->selectRaw('sum(od.qty_ordered) as total_qty')
+        //                         ->selectRaw('count(od.order_id) as total_item')
+        //                         ->having('status','2')
+        //                         ->orHaving('status','5')
+        //                         ->orHaving('status','7')
+        //                         ->orHaving('status','2,3')
+        //                         ->orHaving('status','2,3,5')
+        //                         ->orHaving('status','3,5')
+        //                         ->orHaving('status','2,5')
+        //                         ->orHaving('status','2,7')
+        //                         ->orHaving('status','3,7')
+        //                         ->orHaving('status','5,7')
+        //                         ->orHaving('status','2,3,7')
+        //                         ->orHaving('status','2,5,7')
+        //                         ->orHaving('status','3,5,7')
+        //                         ->orderBy('status','ASC')
+        //                         ->orderBy('od.order_id','DESC')
+        //                         ->get();
+
         $all_order = DB::table('order_details as od')
                                 ->groupBy("od.order_id")
-                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date',DB::raw('group_concat(distinct od.status) as status'))
+                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date','od.status')
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
                                 ->selectRaw('count(od.order_id) as total_item')
-                                ->having('status','2')
-                                ->orHaving('status','5')
-                                ->orHaving('status','7')
-                                ->orHaving('status','2,3')
-                                ->orHaving('status','2,3,5')
-                                ->orHaving('status','3,5')
-                                ->orHaving('status','2,5')
-                                ->orHaving('status','2,7')
-                                ->orHaving('status','3,7')
-                                ->orHaving('status','5,7')
-                                ->orHaving('status','2,3,7')
-                                ->orHaving('status','2,5,7')
-                                ->orHaving('status','3,5,7')
+                                ->whereIn('od.status',[2,5,7])
                                 ->orderBy('status','ASC')
                                 ->orderBy('od.order_id','DESC')
                                 ->get();
