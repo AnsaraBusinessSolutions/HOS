@@ -40,7 +40,8 @@ class HomeController extends Controller
                                 ->orderBy('status','ASC')
                                 ->orderBy('od.order_id','DESC')
                                 ->get();
-  
+  dd($all_order);
+  exit;
         return view('hos_3pl.home', array('all_order'=>$all_order));
     }
 
