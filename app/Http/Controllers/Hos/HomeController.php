@@ -63,12 +63,13 @@ class HomeController extends Controller
                                             ->where('storage_location',$storage_location)
                                             ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
                                             ->groupBy('nupco_generic_code')
-                                            ->select('open_qty')
+                                            ->select('open_qty','delete_qty')
                                             ->selectRaw('sum(unrestricted_stock_qty) as total_qty')
                                             ->first();
             if(!empty($stock_data)){
                 if($stock_data->total_qty > $stock_data->open_qty){
-                    $availability = $stock_data->total_qty - $stock_data->open_qty;
+                    $total_available =  $stock_data->total_qty + $stock_data->delete_qty;
+                    $availability = $total_available - $stock_data->open_qty;
                 }
             }
            
@@ -109,6 +110,7 @@ class HomeController extends Controller
             $category_arr = $request->input('customer_code_cat');
             $material_desc_arr = $request->input('nupco_desc');
             $uom_arr = $request->input('uom');
+            $supplying_plant_code = $request->input('supplying_plant_code');
             $supplying_plant = $request->input('supplying_plant');
             $hss_master_no = $request->input('hss_master_no');
             $hospital_name = $request->input('hospital_name');
@@ -148,6 +150,7 @@ class HomeController extends Controller
                                     'qty_ordered'=>$val,
                                     'uom'=>$uom_arr[$key],
                                     'delivery_date'=>$delivery_date,
+                                    'supplying_plant_code'=>$supplying_plant_code,
                                     'supplying_plant'=>$supplying_plant,
                                     'hss_master_no'=>$hss_master_no,
                                     'hospital_name'=>$hospital_name,
@@ -189,8 +192,8 @@ class HomeController extends Controller
 
         $order_detail = DB::table('order_details as od')
                                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
-                                        ->select('od.hss_master_no','od.hospital_name','hs.delivery_wh_name','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
-                                        ->selectRaw(DB::raw("(SELECT (sum(sq.unrestricted_stock_qty)-sq.open_qty) FROM stock as sq WHERE sq.storage_location = '$storage_location' AND sq.plant='$plant' AND sq.nupco_generic_code=od.nupco_generic_code limit 1) as available"))
+                                        ->select('od.hss_master_no','od.hospital_name','hs.delivery_wh_name','hs.delivery_warehouse','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                                        ->selectRaw(DB::raw("(SELECT (sum(sq.unrestricted_stock_qty)+sq.delete_qty-sq.open_qty) FROM stock as sq WHERE sq.storage_location = '$storage_location' AND sq.plant='$plant' AND sq.nupco_generic_code=od.nupco_generic_code limit 1) as available"))
                                         ->where('od.order_id', $order_id)
                                         ->get();
 
@@ -200,9 +203,9 @@ class HomeController extends Controller
     }
 
     public function orderUpdate(Request $request){
-
         if($request->has('delete_row')){
             $delete_row_id_arr = $request->input('delete_row');
+            
             foreach($delete_row_id_arr as $key=>$val) {
                 DB::table('order_details')
                 ->where('id',$val)
@@ -210,8 +213,19 @@ class HomeController extends Controller
                     'is_deleted'=>1,
                 ]);
             }
+
+            $delete_qty_arr_for_stock = DB::table('order_details')->select('nupco_generic_code','qty_ordered')->whereIn('id',$delete_row_id_arr)->get();
+            
+            if(count($delete_qty_arr_for_stock) > 0){
+                foreach($delete_qty_arr_for_stock as $key=>$val) {
+                    DB::table('stock')
+                    ->where('nupco_generic_code',$val->nupco_generic_code)
+                    ->increment('delete_qty',$val->qty_ordered);
+                } 
+            }
         }
         
+        $supplying_plant_code = $request->input('supplying_plant_code');
         $supplying_plant = $request->input('supplying_plant');
         $hss_master_no = $request->input('hss_master_no');
         $hospital_name = $request->input('hospital_name');
@@ -226,6 +240,7 @@ class HomeController extends Controller
         $material_desc_arr = $request->input('nupco_desc');
         $uom_arr = $request->input('uom');
         $old_qty_arr = $request->input('old_qty');
+        $old_nupco_generic_code_arr = $request->input('old_nupco_generic_code');
         
         
        
@@ -250,7 +265,7 @@ class HomeController extends Controller
             $new_qty_val = $qty_arr[$key];
           
             DB::table('stock')
-            ->where('nupco_generic_code',$nupco_generic_code_arr[$key])
+            ->where('nupco_generic_code',$old_nupco_generic_code_arr[$key])
             ->decrement('open_qty',$old_qty_val);
 
             DB::table('stock')
@@ -293,6 +308,7 @@ class HomeController extends Controller
                     'qty_ordered'=>$val,
                     'uom'=>$new_uom_arr[$key],
                     'delivery_date'=>$delivery_date,
+                    'supplying_plant_code'=>$supplying_plant_code,
                     'supplying_plant'=>$supplying_plant,
                     'hss_master_no'=>$hss_master_no,
                     'hospital_name'=>$hospital_name,

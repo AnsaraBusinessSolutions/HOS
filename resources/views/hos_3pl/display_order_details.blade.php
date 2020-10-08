@@ -118,6 +118,7 @@
       <form id="approve_form" method="POST" action="{{route('hos3pl.order.dispatch')}}">
       @csrf
       <input type="hidden" value="{{$order_id}}" name="order_id">
+      <input type="hidden" name="supplying_plant_code" value="{{$order_detail[0]->delivery_warehouse}}">
       <input type="hidden" name="supplying_plant" value="{{$order_detail[0]->delivery_wh_name}}">
       <input type="hidden" name="hss_master_no" value="{{$order_detail[0]->hss_master_no}}">
       <input type="hidden" name="hospital_name" value="{{$order_detail[0]->hospital_name}}">

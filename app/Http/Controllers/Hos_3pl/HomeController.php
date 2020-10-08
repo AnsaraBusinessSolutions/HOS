@@ -18,38 +18,12 @@ class HomeController extends Controller
     {
         $user_id = auth()->guard('hos3pl')->user()->id;
         $plant_name = auth()->guard('hos3pl')->user()->plant_name;
-       // $user_id = Auth::user()->id;
-        // $all_order = DB::table('order_details as od')
-        //                         ->groupBy("od.order_id")
-        //                         ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date',DB::raw('group_concat(distinct od.status) as status'))
-        //                         ->selectRaw('sum(od.qty_ordered) as total_qty')
-        //                         ->selectRaw('count(od.order_id) as total_item')
-        //                         ->having('status','2')
-        //                         ->orHaving('status','3')
-        //                         ->orHaving('status','5')
-        //                         ->orHaving('status','7')
-        //                         ->orHaving('status','2,3')
-        //                         ->orHaving('status','2,3,5')
-        //                         ->orHaving('status','3,5')
-        //                         ->orHaving('status','2,5')
-        //                         ->orHaving('status','2,7')
-        //                         ->orHaving('status','3,7')
-        //                         ->orHaving('status','5,7')
-        //                         ->orHaving('status','2,3,7')
-        //                         ->orHaving('status','2,5,7')
-        //                         ->orHaving('status','3,5,7')
-        //                         ->orderBy('status','ASC')
-        //                         ->orderBy('od.order_id','DESC')
-        //                         ->get();
-
-//                                 dd($all_order);
-//   exit;
 
         $all_order = DB::table('order_details as od')
                                 ->groupBy("od.order_id")
                                 ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date')
                                 ->whereIn('od.status',[2,3,5,7])
-                                ->where('supplying_plant',$plant_name)
+                                ->where('supplying_plant_code',$plant_name)
                                 ->orderBy('od.order_id','DESC')
                                 ->get();
 
@@ -60,7 +34,7 @@ class HomeController extends Controller
     public function requestOrderDetail($order_id){
         $order_detail = DB::table('order_details as od')
                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
-                        ->select('hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT sum(pd.batch_qty) FROM pgi_details as pd WHERE pd.order_main_id = od.id) as dispatch_batch_count"),DB::raw("(SELECT sum(bl.batch_qty) FROM batch_list as bl WHERE bl.order_main_id = od.id) as added_batch_qty"))
+                        ->select('hs.delivery_warehouse','hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT sum(pd.batch_qty) FROM pgi_details as pd WHERE pd.order_main_id = od.id) as dispatch_batch_count"),DB::raw("(SELECT sum(bl.batch_qty) FROM batch_list as bl WHERE bl.order_main_id = od.id) as added_batch_qty"))
                         ->where('od.order_id', $order_id)
                         ->get();
 
@@ -224,6 +198,7 @@ class HomeController extends Controller
                             'qty_ordered'=>$val->qty_ordered,
                             'uom'=>$val->uom,
                             'delivery_date'=>$request->input('delivery_date'),
+                            'supplying_plant_code'=>$request->input('supplying_plant_code'),
                             'supplying_plant'=>$request->input('supplying_plant'),
                             'hss_master_no'=>$request->input('hss_master_no'),
                             'hospital_name'=>$request->input('hospital_name'),
@@ -312,33 +287,13 @@ class HomeController extends Controller
     public function openOrder()
     {
         $user_id = auth()->guard('hos3pl')->user()->id;
-        // $all_order = DB::table('order_details as od')
-        //                         ->groupBy("od.order_id")
-        //                         ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date',DB::raw('group_concat(distinct od.status) as status'))
-        //                         ->selectRaw('sum(od.qty_ordered) as total_qty')
-        //                         ->selectRaw('count(od.order_id) as total_item')
-        //                         ->having('status','2')
-        //                         ->orHaving('status','5')
-        //                         ->orHaving('status','7')
-        //                         ->orHaving('status','2,3')
-        //                         ->orHaving('status','2,3,5')
-        //                         ->orHaving('status','3,5')
-        //                         ->orHaving('status','2,5')
-        //                         ->orHaving('status','2,7')
-        //                         ->orHaving('status','3,7')
-        //                         ->orHaving('status','5,7')
-        //                         ->orHaving('status','2,3,7')
-        //                         ->orHaving('status','2,5,7')
-        //                         ->orHaving('status','3,5,7')
-        //                         ->orderBy('status','ASC')
-        //                         ->orderBy('od.order_id','DESC')
-        //                         ->get();
-
+        $plant_name = auth()->guard('hos3pl')->user()->plant_name;
 
         $all_order = DB::table('order_details as od')
                     ->groupBy("od.order_id")
                     ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date')
                     ->whereIn('od.status',[2,5,7])
+                    ->where('supplying_plant_code',$plant_name)
                     ->orderBy('od.order_id','DESC')
                     ->get();
    
@@ -349,7 +304,7 @@ class HomeController extends Controller
     {
         $order_detail = DB::table('order_details as od')
         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
-        ->select('hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT sum(pd.batch_qty) FROM pgi_details as pd WHERE pd.order_main_id = od.id) as dispatch_batch_count"),DB::raw("(SELECT sum(bl.batch_qty) FROM batch_list as bl WHERE bl.order_main_id = od.id) as added_batch_qty"))
+        ->select('hs.delivery_warehouse','hs.delivery_wh_name','hs.address','od.hss_master_no','od.hospital_name','od.id','od.order_id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT sum(pd.batch_qty) FROM pgi_details as pd WHERE pd.order_main_id = od.id) as dispatch_batch_count"),DB::raw("(SELECT sum(bl.batch_qty) FROM batch_list as bl WHERE bl.order_main_id = od.id) as added_batch_qty"))
         ->where('od.order_id', $order_id)
         ->whereIn('od.status', [2,7])
         ->get();
@@ -368,12 +323,14 @@ class HomeController extends Controller
     public function displayOrder()
     {
         $user_id = auth()->guard('hos3pl')->user()->id;
+        $plant_name = auth()->guard('hos3pl')->user()->plant_name;
         $all_order = DB::table('pgi_details as pd')
                                 ->groupBy("pd.order_id")
                                 ->select('pd.order_id','pd.supplying_plant','pd.hospital_name','pd.delivery_date','pd.uom','pd.qty_ordered','pd.created_at')
                                 ->selectRaw('sum(pd.batch_qty) as total_batch_qty')
                                 ->selectRaw("count(DISTINCT(pd.id)) as total_item")
                                 ->orderBy('pd.order_id','DESC')
+                                ->where('supplying_plant_code',$plant_name)
                                 ->get();
    
         return view('hos_3pl.display_order', array('all_order'=>$all_order));
@@ -384,7 +341,7 @@ class HomeController extends Controller
         $order_detail = DB::table('pgi_details as pd')
         ->join('hss_master as hs','pd.hss_master_no','=','hs.hss_master_no')
         ->join('order_details as od','pd.order_main_id','=','od.id')
-        ->select('pd.batch_qty','od.created_date','hs.delivery_wh_name','hs.address','pd.hss_master_no','pd.hospital_name','pd.id','pd.pgi_id','pd.order_id','pd.order_main_id','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.category','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no','pd.manufacture_date','pd.expiry_date')
+        ->select('pd.batch_qty','od.created_date','hs.delivery_warehouse','hs.delivery_wh_name','hs.address','pd.hss_master_no','pd.hospital_name','pd.id','pd.pgi_id','pd.order_id','pd.order_main_id','pd.nupco_generic_code','pd.nupco_trade_code','pd.customer_trade_code','pd.category','pd.material_desc','pd.uom','pd.qty_ordered','pd.delivery_date','pd.created_at','pd.batch_qty','pd.batch_no','pd.manufacture_date','pd.expiry_date')
         ->selectraw('sum(pd.batch_qty) as batch_qty')
         ->where('pd.order_id', $order_id)
         ->groupBy(DB::raw("pd.order_main_id,pd.pgi_id"))

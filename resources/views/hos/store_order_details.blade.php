@@ -80,6 +80,7 @@
              </div>
           </div>
           @endif
+          <input type="hidden" name="supplying_plant_code" value="{{$order_detail[0]->delivery_warehouse}}">
           <input type="hidden" name="supplying_plant" value="{{$order_detail[0]->delivery_wh_name}}">
           <input type="hidden" name="hss_master_no" value="{{$order_detail[0]->hss_master_no}}">
           <input type="hidden" name="hospital_name" value="{{$order_detail[0]->hospital_name}}">
@@ -93,13 +94,13 @@
                       @endif
                       <th class="text-nowrap px-3 w_3">Item #</th>
                       <th class="text-nowrap px-3 w_12">NUPCO Material</th>
-                      <th class="text-nowrap px-3 w_12">NUPCO Trade Code</th>
-                      <th class="text-nowrap px-3 w_10">Customer Code</th>
-                      <th class="text-nowrap px-3 w_9">Category</th>
+                      <th class="text-nowrap px-3 w_9">NUPCO Trade Code</th>
+                      <th class="text-nowrap px-3 w_8">Customer Code</th>
+                      <th class="text-nowrap px-3 w_7">Category</th>
                       <th class="text-nowrap px-3 w_36">Description</th>
                       <th class="text-nowrap px-3 w_4">UOM</th>
-                      <th class="text-nowrap px-3 w-4">Order Qty</th>
-                      <th class="text-nowrap px-3 w_8">Availability</th>
+                      <th class="text-nowrap px-3 w-14">Order Qty</th>
+                      <th class="text-nowrap px-3 w_7">Availability</th>
                   </tr>
               </thead>
               <tbody>
@@ -110,15 +111,19 @@
                   <tr>
                   @endif
                       @if($val->status == 0 || $val->status == 1)
+                      @if($val->is_deleted == 1)
+                      <td><i class="fa fa-trash" aria-hidden="true"></i></td>
+                      @else
                       <td><input type="checkbox" class="delete_row" name="delete_row[]" data-delete_id = "{{$val->id}}" /></td>
+                      @endif
                       <td>{{$key+1}}</td>
-                      <td><input type="text" class="material_data form-control form-control-sm h_1rem" data-row_id="{{$key}}" data-name="nupco_generic_code"  id="nupco_generic_code_{{$key}}" name="nupco_generic_code[]" value="{{$val->nupco_generic_code}}" autocomplete="off"><div id="nupco_generic_code_list_{{$key}}" class="position-relative"></div></td>
+                      <td><input type="hidden" name="old_nupco_generic_code[]" value="{{$val->nupco_generic_code}}"><input type="text" class="material_data form-control form-control-sm h_1rem" data-row_id="{{$key}}" data-name="nupco_generic_code"  id="nupco_generic_code_{{$key}}" name="nupco_generic_code[]" value="{{$val->nupco_generic_code}}" autocomplete="off" required><div id="nupco_generic_code_list_{{$key}}" class="position-relative"></div></td>
                       <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="nupco_trade_code_" id="nupco_trade_code_{{$key}}" name="nupco_trade_code[]" value="{{$val->nupco_trade_code}}" readonly></td>
-                      <td><input type="text" class="material_data form-control form-control-sm" data-row_id="{{$key}}" data-name="customer_code" id="customer_code_{{$key}}" name="customer_code[]" value="{{$val->customer_trade_code}}" autocomplete="off"></td>
+                      <td><input type="text" class="material_data form-control form-control-sm" data-row_id="{{$key}}" data-name="customer_code" id="customer_code_{{$key}}" name="customer_code[]" value="{{$val->customer_trade_code}}" autocomplete="off" required></td>
                       <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="customer_code_cat" id="customer_code_cat_{{$key}}" name="customer_code_cat[]" value="{{$val->category}}" readonly></td>
-                      <td><input type="text" class="material_data form-control form-control-sm" data-row_id="{{$key}}" data-name="nupco_desc" id="nupco_desc_{{$key}}" name="nupco_desc[]" value="{{$val->material_desc}}" autocomplete="off"><div id="nupco_desc_list_{{$key}}" class="position-relative"></div></td>
+                      <td><input type="text" class="material_data form-control form-control-sm" data-row_id="{{$key}}" data-name="nupco_desc" id="nupco_desc_{{$key}}" name="nupco_desc[]" value="{{$val->material_desc}}" autocomplete="off"><div id="nupco_desc_list_{{$key}}" class="position-relative" required></div></td>
                       <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="uom" id="uom_{{$key}}" name="uom[]" value="{{$val->uom}}" readonly></td>
-                      <td><input type="hidden" name="order_primary_id[]" value="{{$val->id}}"><input type="hidden" name="old_qty[]" value="{{$val->qty_ordered}}"><input type="text" class="form-control form-control-sm qty_input" data-row_id="{{$key}}" data-name="qty" id="qty_{{$key}}" name="qty[]" value="{{$val->qty_ordered}}"></td>
+                      <td><input type="hidden" name="order_primary_id[]" value="{{$val->id}}"><input type="hidden" name="old_qty[]" value="{{$val->qty_ordered}}"><input type="text" class="form-control form-control-sm qty_input_update" data-row_id="{{$key}}" data-name="qty" id="qty_{{$key}}" name="qty[]" data-old_qty_update="{{$val->qty_ordered}}" value="{{$val->qty_ordered}}"></td>
                       <td><input type="text" class="form-control form-control-sm text-success" data-row_id="{{$key}}" data-name="available" id="available_{{$key}}" value="{{$val->available}}" name="available[]" readonly></td>
                       @else
                       <td>{{$key+1}}</td>
@@ -325,6 +330,8 @@ function setMaterialData(element,input_name,row_id){
                   $('#available_'+row_id).val(response.availability);
                   $('#qty_'+row_id).val('');
                   $('#qty_'+row_id).attr("readonly", false); 
+                  $('#qty_'+row_id).removeClass('qty_input_update');
+                  $('#qty_'+row_id).addClass('qty_input');
               }else{
                   $('#'+input_name+'_'+row_id).val('');
               }
@@ -354,6 +361,20 @@ function setMaterialData(element,input_name,row_id){
             check_qty = 0;
           }
       });
+
+      $("#order_detail .qty_input_update").each(function() {
+          var qty_val_submit = $(this).val();
+          var row_no_submit = $(this).data('row_id');
+          var old_qty_update = $(this).data('old_qty_update');
+          var available_val_submit = $('#available_'+row_no_submit).val();
+          if(old_qty_update < qty_val_submit){
+            var diff_qty = parseInt(qty_val_submit) - parseInt(old_qty_update);
+            if(parseInt(diff_qty) > parseInt(available_val_submit)){
+              check_qty = 0;
+            }
+          }
+      });
+
       if(check_qty == 0){
         alert('Please enter valid qty');
         return false;

@@ -161,7 +161,7 @@
             <td class="py-0 px-1" width="20%" style="border:0"><b>comment</b></td>
             <td class="py-0 px-0" width="1%">:</td>
             <td class="py-0 px-1">
-              <textarea class="form-control py-0 mb-1" rows="2" name="approve_comment" style="width: 80%;" required></textarea>
+              <textarea class="form-control py-0 mb-1" rows="2" name="approve_comment" style="width: 80%;"></textarea>
             </td>
           </tr>
         </tbody>

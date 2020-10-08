@@ -68,10 +68,12 @@
                     @if(count($delivery_wh) > 0)
                    <th width="20%" class="p-0 border">
                     <label class="mb-0 py-2" ><b>{{$delivery_wh[0]->delivery_wh_name}}</b></label>
+                    <input type="hidden" name="supplying_plant_code" value="{{$delivery_wh[0]->delivery_warehouse}}">
                     <input type="hidden" name="supplying_plant" value="{{$delivery_wh[0]->delivery_wh_name}}">
                     <input type="hidden" name="hss_master_no" value="{{$delivery_wh[0]->hss_master_no}}">
                     <input type="hidden" name="hospital_name" value="{{$delivery_wh[0]->name1}}">
                     @else
+                    <input type="hidden" name="supplying_plant_code" value="">
                     <input type="hidden" name="supplying_plant" value="">
                     <input type="hidden" name="hss_master_no" value="">
                     <input type="hidden" name="hospital_name" value="">
@@ -105,8 +107,8 @@
                             <th class="text-nowrap px-3 w_7">Customer Code</th>
                             <th class="text-nowrap px-3 w_10">Category</th>
                             <th class="text-nowrap px-3 w_36">Description</th>
-                            <th class="text-nowrap px-3 w_7">UOM</th>
-                            <th class="text-nowrap px-3 w_6">Qty</th>
+                            <th class="text-nowrap px-3 w_4">UOM</th>
+                            <th class="text-nowrap px-3 w_8">Qty</th>
                             <th class="text-nowrap px-3 w_8">Available</th>
                         </tr>
                     </thead>
@@ -250,8 +252,12 @@ $(function() {
                  contentType: false,
                  cache: false,
                  processData: false,
+                 beforeSend: function() { 
+                    $("#save_order").prop('disabled', true); 
+                  },
                  success:function(data)
                  {
+                    $("#save_order").prop('disabled', false);
                     if(data == 0){
                       location.reload(true);
                     }else{

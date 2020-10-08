@@ -17,6 +17,8 @@ class HomeController extends Controller
     public function index()
     {   
         $user_id = auth()->guard('inventory')->user()->id;
+        $plant_name = auth()->guard('inventory')->user()->plant_name;
+
         $all_order = DB::table('pgi_details as pd')
                         ->groupBy("pd.order_id")
                         ->select('pd.order_id','pd.supplying_plant','pd.hospital_name','pd.delivery_date','pd.uom','pd.qty_ordered','pd.created_at')
@@ -24,6 +26,7 @@ class HomeController extends Controller
                         ->selectRaw('sum(pd.batch_qty) as dispatch_qty')
                         ->selectRaw('count(pd.order_id) as dispatch_item')
                         ->selectRaw(DB::raw('group_concat(distinct pd.pgi_status) as status'))
+                        ->where('supplying_plant_code',$plant_name)
                         ->orderBy('status','ASC')
                         ->orderBy('pd.order_id','DESC')
                         ->get();
@@ -84,6 +87,7 @@ class HomeController extends Controller
                     'qty_ordered'=>$pgi_data->qty_ordered,
                     'uom'=>$pgi_data->uom,
                     'delivery_date'=>$pgi_data->delivery_date,
+                    'supplying_plant_code'=>$pgi_data->supplying_plant_code,
                     'supplying_plant'=>$pgi_data->supplying_plant,
                     'hss_master_no'=>$pgi_data->hss_master_no,
                     'hospital_name'=>$pgi_data->hospital_name,
@@ -174,6 +178,7 @@ class HomeController extends Controller
     public function openOrder()
     {   
         $user_id = auth()->guard('inventory')->user()->id;
+        $plant_name = auth()->guard('inventory')->user()->plant_name;
         $all_order = DB::table('pgi_details as pd')
                         ->groupBy("pd.order_id")
                         ->select('pd.order_id','pd.supplying_plant','pd.hospital_name','pd.delivery_date','pd.uom','pd.qty_ordered','pd.created_at')
@@ -184,6 +189,7 @@ class HomeController extends Controller
                         ->orderBy('status','ASC')
                         ->orderBy('pd.order_id','DESC')
                         ->where('pd.pgi_status','!=',4)
+                        ->where('supplying_plant_code',$plant_name)
                         ->get();
                        
         return view('inventory.open_order', array('all_order'=>$all_order));
@@ -206,11 +212,13 @@ class HomeController extends Controller
     public function displayOrder()
     {
         $user_id = auth()->guard('inventory')->user()->id;
+        $plant_name = auth()->guard('inventory')->user()->plant_name;
         $all_order = DB::table('grn_details as gd')
                                 ->groupBy("gd.order_id")
                                 ->select('gd.order_id','gd.supplying_plant','gd.hospital_name','gd.delivery_date','gd.uom','gd.qty_ordered','gd.created_at')
                                 ->selectRaw('sum(gd.received_qty) as total_batch_qty')
                                 ->selectRaw("count(DISTINCT(gd.id)) as total_item")
+                                ->where('supplying_plant_code',$plant_name)
                                 ->orderBy('gd.order_id','DESC')
                                 ->get();
    
