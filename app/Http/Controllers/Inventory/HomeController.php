@@ -189,6 +189,7 @@ class HomeController extends Controller
                         ->orderBy('status','ASC')
                         ->orderBy('pd.order_id','DESC')
                         ->where('pd.pgi_status','!=',4)
+                        ->where('pd.pgi_status','!=',6)
                         ->where('supplying_plant_code',$plant_name)
                         ->get();
                        
