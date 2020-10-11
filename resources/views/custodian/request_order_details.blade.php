@@ -1,5 +1,13 @@
 @extends('custodian.layouts.app')
 @section('content')
+<style type="text/css">
+  .gj-datepicker-bootstrap [role=right-icon] button .gj-icon {
+    position: absolute;
+    font-size: 21px;
+    top: 5px!important;
+    left: 9px;
+}
+</style>
 <div class="container-fluid main_content bg-white p-2">
         @if(Session::has('message'))
           {!! Session::get('message') !!}
@@ -34,21 +42,22 @@
             </div>
             <div class="col-md-5 col-sm-6 col-12 order-3 order-sm-3">
               <div class="form-row">
-                <label class="col-md-6 col-sm-4 col-4"><b>Delivery Date</b></label>
+                <label class="col-md-4 col-sm-4 col-4"><b>Delivery Date</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-5 col-sm-7 col-7" >{{$order_detail[0]->delivery_date}}
+                <label class="col-md-3 col-sm-7 col-7" >{{$order_detail[0]->delivery_date}}
+                </label>
+                 <button class="btn btn-warning btn-sm col-md-4" data-toggle="modal" data-target="#date_change">Date/Time Change</button>
+              </div>
+              <div class="form-row">
+                <label class="col-md-4 col-sm-4 col-4"><b>Order Date</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-7 col-sm-7 col-7">{{date('Y-m-d',strtotime($order_detail[0]->created_date))}}
                 </label>
               </div>
               <div class="form-row">
-                <label class="col-md-6 col-sm-4 col-4"><b>Order Date</b></label>
+                <label class="col-md-4 col-sm-4 col-4"><b>Status</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-5 col-sm-7 col-7">{{date('Y-m-d',strtotime($order_detail[0]->created_date))}}
-                </label>
-              </div>
-              <div class="form-row">
-                <label class="col-md-6 col-sm-4 col-4"><b>Status</b></label>
-                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
-                <label class="col-md-5 col-sm-7 col-7">
+                <label class="col-md-7 col-sm-7 col-7">
                         @if($order_detail[0]->status == 0)
                           <span class="text-warning"><b>NEW</b></span>
                         @elseif($order_detail[0]->status == 1)
@@ -207,6 +216,48 @@
         </div>
       </div>
       </form>
+    </div>
+  </div>
+</div>
+<!-- The Modal -->
+<div class="modal" id="date_change">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title"><b>Change Date</b></h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="form-group">
+          <label><b>Date :</b></label>
+          <input type="" class="form-control form-control-sm datepicker pb-1" name="" value="29/10/2020">
+          <label><b>Time :</b></label>
+          <select class="form-control form-control-sm mb-1">
+            <option></option>
+            <option>09:00 am</option>
+            <option>10:00 am</option>
+            <option>11:00 am</option>
+            <option>12:00 pm</option>
+            <option>01:00 pm</option>
+            <option>02:00 pm</option>
+            <option>03:00 pm</option>
+            <option>04:00 pm</option>
+            <option>05:00 pm</option>
+            <option>06:00 pm</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-success btn-sm">Submit</button>
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">close</button>
+      </div>
+
     </div>
   </div>
 </div>
