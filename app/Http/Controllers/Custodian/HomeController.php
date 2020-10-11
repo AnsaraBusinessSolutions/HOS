@@ -105,4 +105,16 @@ class HomeController extends Controller
         return $batch_data;
     }
 
+    public function orderDateChange(Request $request){
+        $order_id = $request->input('order_id');
+        DB::table('order_details')
+               ->where('order_id',$order_id)
+               ->update([
+                'delivery_date' => $request->input('delivery_date_order'),
+                'last_updated_date'=>date("Y-m-d H:i:s"),
+                'last_updated_user'=>auth()->guard('custodian')->user()->name,
+           ]);
+           return back()->with("message","<div class='col-12 text-center alert alert-success' role='alert'>Delivery Date Updated Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");         
+    }
+
 }

@@ -51,6 +51,7 @@ Route::prefix('custodian')->group(function () {
     Route::post('/batch_data', 'Custodian\HomeController@batchData')->name('custodian.order.batch.data');
     Route::post('/order_reject', 'Custodian\HomeController@orderRejected')->name('custodian.order.reject');
     Route::post('/order_approve', 'Custodian\HomeController@orderApprove')->name('custodian.order.approve');
+    Route::post('/order_date_change', 'Custodian\HomeController@orderDateChange')->name('custodian.order.date.change');
 });
 
 Route::prefix('hos3pl')->group(function () {

@@ -46,7 +46,7 @@
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-3 col-sm-7 col-7" >{{$order_detail[0]->delivery_date}}
                 </label>
-                 <button class="btn btn-warning btn-sm col-md-4" data-toggle="modal" data-target="#date_change">Date Change</button>
+                 <button class="btn btn-warning btn-sm col-md-4" data-delivery_date="{{$order_detail[0]->delivery_date}}" id="date_change_btn">Date Change</button>
               </div>
               <div class="form-row">
                 <label class="col-md-4 col-sm-4 col-4"><b>Order Date</b></label>
@@ -229,21 +229,23 @@
         <h5 class="modal-title"><b>Change Date</b></h5>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-        <div class="form-group">
-          <!-- <label><b>Date :</b></label> -->
-          <input type="" class="form-control form-control-sm datepicker pb-1" name="" value="29/10/2020">
+      <form action="{{route('custodian.order.date.change')}}" method="POST">
+      @csrf
+        <!-- Modal body -->
+        <div class="modal-body">
+        <input type="hidden" name="order_id" value="{{$order_id}}">
+          <div class="form-group">
+            <!-- <label><b>Date :</b></label> -->
+            <input type="" class="form-control form-control-sm pb-1" id="delivery_date_order" name="delivery_date_order">
+          </div>
         </div>
-      </div>
 
-      <!-- Modal footer -->
-      <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-success btn-sm">Submit</button>
-        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">close</button>
-      </div>
-
+        <!-- Modal footer -->
+        <div class="modal-footer justify-content-center">
+          <button class="btn btn-success btn-sm">Submit</button>
+          <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">close</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -285,6 +287,18 @@
               $('#batch_modal').modal('show');
             }
           });
+    });
+
+    $("#delivery_date_order").datepicker({ 
+      format: 'yyyy-mm-dd',
+      uiLibrary: 'bootstrap4'
+    });  
+
+    $('#date_change_btn').click(function(e){
+      e.preventDefault();
+      var delivery_date = $(this).data('delivery_date');
+      $('#delivery_date_order').val(delivery_date);
+      $('#date_change').modal('show');
     });
   });
   </script>
