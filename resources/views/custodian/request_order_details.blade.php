@@ -46,7 +46,7 @@
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-3 col-sm-7 col-7" >{{$order_detail[0]->delivery_date}}
                 </label>
-                 <button class="btn btn-warning btn-sm col-md-4" data-toggle="modal" data-target="#date_change">Date/Time Change</button>
+                 <button class="btn btn-warning btn-sm col-md-4" data-toggle="modal" data-target="#date_change">Date Change</button>
               </div>
               <div class="form-row">
                 <label class="col-md-4 col-sm-4 col-4"><b>Order Date</b></label>
@@ -233,22 +233,8 @@
       <!-- Modal body -->
       <div class="modal-body">
         <div class="form-group">
-          <label><b>Date :</b></label>
+          <!-- <label><b>Date :</b></label> -->
           <input type="" class="form-control form-control-sm datepicker pb-1" name="" value="29/10/2020">
-          <label><b>Time :</b></label>
-          <select class="form-control form-control-sm mb-1">
-            <option></option>
-            <option>09:00 am</option>
-            <option>10:00 am</option>
-            <option>11:00 am</option>
-            <option>12:00 pm</option>
-            <option>01:00 pm</option>
-            <option>02:00 pm</option>
-            <option>03:00 pm</option>
-            <option>04:00 pm</option>
-            <option>05:00 pm</option>
-            <option>06:00 pm</option>
-          </select>
         </div>
       </div>
 
