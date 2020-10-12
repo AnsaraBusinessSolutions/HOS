@@ -266,7 +266,7 @@ $(function() {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
             type: 'POST',
-            data: {"order_id":order_id,"order_main_id":order_main_id,"status":status},
+            data: {"order_id":order_id,"order_main_id":order_main_id,"status":status,"open_qty":open_qty},
             success : function(response) {
               var batch_tr = '';
               $.each(response, function(i, item) {
@@ -288,7 +288,7 @@ $(function() {
                       autoclose: true,
                       uiLibrary: 'bootstrap4'
               });
-              if(status == 3){
+              if(open_qty == 0){
                 $('.hide_btn').hide();
                 $('#batch_modal input').prop('disabled',true);
               }else{
