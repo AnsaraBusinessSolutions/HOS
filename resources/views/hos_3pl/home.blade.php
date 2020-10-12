@@ -15,7 +15,7 @@
                       <th class="text-nowrap px-3">Order Items</th>
                       <th class="text-nowrap px-3">Qty Ordered</th>
                       <th class="text-nowrap px-3">Ordered Date</th>
-                      <th class="text-nowrap px-3">Status</th>
+                      <th class="text-nowrap px-3 reorder">Status</th>
                   </tr>
               </thead>
               <tbody>
@@ -63,9 +63,24 @@
       @stop
 @push('scripts')
 <script type="text/javascript">
+
+    $.fn.dataTable.ext.type.order['order-status-pre'] = function ( d ) {
+        switch ( d ) {
+            case '<span class="text-primary"><b>APPROVED</b></span>':    return 1;
+            case '<span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>': return 2;
+            case '<span class="text-primary"><b>DISPATCHED</b></span>':   return 3;
+        }
+        return 0;
+    };
+
     $(document).ready(function() {
         $('.example').DataTable( {
-            "ordering": false,
+           "order": [6,'asc'],
+              columnDefs: [
+                { orderable: false, targets: 0},
+                { orderable: true, className: 'reorder', targets: 6 , type: "order-status"},
+                { orderable: false, targets: '_all' }
+            ],
             "scrollY":        "55vh",
             "scrollCollapse": true,
             "paging":         false,

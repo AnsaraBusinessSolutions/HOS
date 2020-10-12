@@ -24,6 +24,7 @@ class HomeController extends Controller
                                 ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date')
                                 ->whereIn('od.status',[2,3,5,7])
                                 ->where('supplying_plant_code',$plant_name)
+                                ->orderBy('od.status','ASC')
                                 ->orderBy('od.order_id','DESC')
                                 ->get();
 
@@ -295,6 +296,7 @@ class HomeController extends Controller
                     ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date')
                     ->whereIn('od.status',[2,5,7])
                     ->where('supplying_plant_code',$plant_name)
+                    ->orderBy('od.status','ASC')
                     ->orderBy('od.order_id','DESC')
                     ->get();
    
