@@ -73,7 +73,7 @@ echo $currentTime; ?></span> |
         <li class="nav-item my-1 ">
         @endif
           <a class="nav-link" href="{{ route('inventory.open.order') }}">
-          <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Open Order</a>
+          <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Open Orders</a>
         </li>
         @if(Request::path() == 'inventory/display_order' || Request::is('inventory/display_order_detail/*'))
         <li class="nav-item my-1 active">
@@ -81,7 +81,7 @@ echo $currentTime; ?></span> |
         <li class="nav-item my-1 ">
         @endif
           <a class="nav-link" href="{{ route('inventory.display.order') }}">
-          <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Display Order</a>
+          <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Display Documents</a>
         </li>
       </ul>
     </div>

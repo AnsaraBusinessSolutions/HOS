@@ -1,20 +1,20 @@
 <?php 
 
 return[
-	'help'=>'مساعدة',
-	'dashboard'=>'لوحة القيادة',
-	'store_order'=>'طلب المتجر',
-	'medical_list'=>'القائمة الطبية',
-	'inventory'=>'المخزون',
-	'sales'=>'مبيعات',
-	'exist_order_list'=>'قائمة الطلبات الموجودة',
-	'supplying_plant'=>'توريد النبات',
-    'delivery_date'=>'تاريخ التسليم او الوصول',
-    'order_items'=>'طلب بضاعة',
-    'qty_ordered'=>'الكمية المطلوبة',
-    'ordered_date'=>'تاريخ الطلب',
-	'status'=>'الحالة',
-	'showing_entries'=>'عرض _START_ إلى _END_ من _TOTAL_ إدخالات',
+    'help'=>'Help',
+	'dashboard'=>'Dashboard',
+	'store_order'=>'Store Order',
+	'medical_list'=>'Medical List',
+	'inventory'=>'Inventory',
+    'sales'=>'Sales',
+    'exist_order_list'=>'Exist Order list',
+    'supplying_plant'=>'Supplying Plant',
+    'delivery_date'=>'Delivery Date',
+    'order_items'=>'Order Items',
+    'qty_ordered'=>'Qty Ordered',
+    'ordered_date'=>'Ordered Date',
+    'status'=>'Status',
+    'showing_entries'=>'Showing _START_ to _END_ of _TOTAL_ entries',
 ];
 
 ?>
