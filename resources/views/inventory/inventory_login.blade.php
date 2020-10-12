@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="{{ asset('public/hos/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed|Titillium+Web|Changa|Montserrat|Ubuntu&display=swap" rel="stylesheet">
-  <link rel="manifest" href="assets/lib/manifest.json">
+  <link rel="manifest" href="{{ asset('public/hos/manifest.json') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('public/hos/css/style.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('public/hos/css/style2.css') }}">
   <!--------table style lib------------------------>

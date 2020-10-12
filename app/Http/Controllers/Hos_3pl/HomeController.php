@@ -24,6 +24,7 @@ class HomeController extends Controller
                                 ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date')
                                 ->whereIn('od.status',[2,3,5,7])
                                 ->where('supplying_plant_code',$plant_name)
+                                ->orderBy('od.status','ASC')
                                 ->orderBy('od.order_id','DESC')
                                 ->get();
 
@@ -144,9 +145,10 @@ class HomeController extends Controller
     public function batchData(Request $request){
         $order_main_id = $request->input('order_main_id');
         $status = $request->input('status');
+        $open_qty = $request->input('open_qty');
         $batch_data = array();
         if($order_main_id != ''){
-            if($status == 3){
+            if($open_qty == 0){
             $batch_data = DB::table('pgi_details')
                                     ->select('batch_qty','batch_no',DB::raw('DATE_FORMAT(manufacture_date, "%m/%d/%Y") as manufacture_date'),DB::raw('DATE_FORMAT(expiry_date, "%m/%d/%Y") as expiry_date'))
                                     ->where('order_main_id',$order_main_id)->get();
@@ -294,6 +296,7 @@ class HomeController extends Controller
                     ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.created_date')
                     ->whereIn('od.status',[2,5,7])
                     ->where('supplying_plant_code',$plant_name)
+                    ->orderBy('od.status','ASC')
                     ->orderBy('od.order_id','DESC')
                     ->get();
    
