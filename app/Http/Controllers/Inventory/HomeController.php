@@ -17,7 +17,7 @@ class HomeController extends Controller
     public function index()
     {   
         $user_id = auth()->guard('inventory')->user()->id;
-        $plant_name = auth()->guard('inventory')->user()->plant_name;
+        $hss_master_no = auth()->guard('inventory')->user()->hss_master_no;
 
         $all_order = DB::table('pgi_details as pd')
                         ->groupBy("pd.order_id")
@@ -26,7 +26,7 @@ class HomeController extends Controller
                         ->selectRaw('sum(pd.batch_qty) as dispatch_qty')
                         ->selectRaw('count(pd.order_id) as dispatch_item')
                         ->selectRaw(DB::raw('group_concat(distinct pd.pgi_status) as status'))
-                        ->where('supplying_plant_code',$plant_name)
+                        ->where('hss_master_no',$hss_master_no)
                         ->orderBy('status','ASC')
                         ->orderBy('pd.order_id','DESC')
                         ->get();
@@ -89,6 +89,7 @@ class HomeController extends Controller
                     'delivery_date'=>$pgi_data->delivery_date,
                     'supplying_plant_code'=>$pgi_data->supplying_plant_code,
                     'supplying_plant'=>$pgi_data->supplying_plant,
+                    'sloc_id'=>$pgi_data->sloc_id,
                     'hss_master_no'=>$pgi_data->hss_master_no,
                     'hospital_name'=>$pgi_data->hospital_name,
                     'vehicle_no'=>$pgi_data->vehicle_no,
@@ -96,7 +97,50 @@ class HomeController extends Controller
 
                     $order_main_id_arr[] = $pgi_data->order_main_id;
                     $pgi_arr[] = array('pgi_main_id'=>$pgi_data->id,'order_main_id'=>$pgi_data->order_main_id);
+
+
+                    $check_stock_available = DB::table('stock as s')
+                                            ->where('s.nupco_generic_code',$pgi_data->nupco_generic_code)
+                                            ->where('s.vendor_batch',$pgi_data->batch_no)
+                                            ->where('s.mfg_date',$pgi_data->manufacture_date)
+                                            ->where('s.expiry_date',$pgi_data->expiry_date) 
+                                            ->where('s.plant',$pgi_data->supplying_plant_code) 
+                                            ->where('s.storage_location',$pgi_data->sloc_id) 
+                                            ->select('s.id')
+                                            ->first();
+                    
+                    if(!empty($check_stock_available)){
+                        DB::table('stock')
+                        ->where('id',$check_stock_available->id)
+                        ->increment('unrestricted_stock_qty',$received_qty_arr[$key]);
+
+                        DB::table('stock')
+                        ->where('id',$check_stock_available->id)
+                        ->update([
+                            'last_updated_at'=>date("Y-m-d H:i:s"),
+                            ]);
+
+                    }else{
+                        $stock_data = array('customer'=>$pgi_data->hss_master_no,
+                        'nupco_generic_code'=>$pgi_data->nupco_generic_code,
+                        'nupco_trade_code'=>$pgi_data->nupco_trade_code,
+                        'customer_trade_code'=>$pgi_data->customer_trade_code,
+                        'nupco_desc'=>$pgi_data->material_desc,
+                        'plant'=>$pgi_data->supplying_plant_code,
+                        'storage_location'=>$pgi_data->sloc_id,
+                        'unrestricted_stock_qty'=>$received_qty_arr[$key],
+                        'vendor_batch'=>$pgi_data->batch_no,
+                        'uom'=>$pgi_data->uom,
+                        'batch'=>'',
+                        'mfg_date'=>$pgi_data->manufacture_date,
+                        'expiry_date'=>$pgi_data->expiry_date,
+                        'created_at'=>date('Y-m-d H:i:s'));
+
+                        DB::table('stock')->insert($stock_data);
+                    }
+
                 }
+
             }
           
             if(!empty($grn_data_arr)){
@@ -111,9 +155,6 @@ class HomeController extends Controller
                         ->first();
 
                         if(!empty($received_qty)){
-                            echo $received_qty->total_received_qty;
-                            echo $received_qty->batch_qty;
-                           
                             $change_order_status = 4;
                             if($received_qty->total_received_qty < $received_qty->batch_qty){
                                 $change_order_status = 8;
@@ -142,6 +183,7 @@ class HomeController extends Controller
 
                     $total_order_qty_sum = DB::table('order_details as od')
                     ->where('od.order_id',$order_id)
+                    ->where('od.is_deleted', 0)
                     ->selectRaw('sum(od.qty_ordered) as total_order')
                     ->first();
 
@@ -178,7 +220,8 @@ class HomeController extends Controller
     public function openOrder()
     {   
         $user_id = auth()->guard('inventory')->user()->id;
-        $plant_name = auth()->guard('inventory')->user()->plant_name;
+        $hss_master_no = auth()->guard('inventory')->user()->hss_master_no;
+
         $all_order = DB::table('pgi_details as pd')
                         ->groupBy("pd.order_id")
                         ->select('pd.order_id','pd.supplying_plant','pd.hospital_name','pd.delivery_date','pd.uom','pd.qty_ordered','pd.created_at')
@@ -190,7 +233,7 @@ class HomeController extends Controller
                         ->orderBy('pd.order_id','DESC')
                         ->where('pd.pgi_status','!=',4)
                         ->where('pd.pgi_status','!=',6)
-                        ->where('supplying_plant_code',$plant_name)
+                        ->where('hss_master_no',$hss_master_no)
                         ->get();
                        
         return view('inventory.open_order', array('all_order'=>$all_order));
@@ -213,13 +256,14 @@ class HomeController extends Controller
     public function displayOrder()
     {
         $user_id = auth()->guard('inventory')->user()->id;
-        $plant_name = auth()->guard('inventory')->user()->plant_name;
+        $hss_master_no = auth()->guard('inventory')->user()->hss_master_no;
+        
         $all_order = DB::table('grn_details as gd')
                                 ->groupBy("gd.order_id")
                                 ->select('gd.order_id','gd.supplying_plant','gd.hospital_name','gd.delivery_date','gd.uom','gd.qty_ordered','gd.created_at')
                                 ->selectRaw('sum(gd.received_qty) as total_batch_qty')
                                 ->selectRaw("count(DISTINCT(gd.id)) as total_item")
-                                ->where('supplying_plant_code',$plant_name)
+                                ->where('hss_master_no',$hss_master_no)
                                 ->orderBy('gd.order_id','DESC')
                                 ->get();
    

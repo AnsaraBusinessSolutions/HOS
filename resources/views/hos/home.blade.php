@@ -24,6 +24,9 @@
     .example_wrapper .table tr:nth-child(1) th {
     background-color: #3276b1!important;
 }
+.fs_10{
+  font-size: 10px;
+}
   </style>
    <div class="container-fluid main_content bg-white p-2">
         <div class="row mx-0">
@@ -46,7 +49,7 @@
               <tbody>
               @foreach($all_order as $key=>$val)
                   <tr onclick="window.location.href='{{url('store/order_detail/'.$val->order_id)}}'">
-                      <td>{{$val->order_id}}</td>
+                      <td>@if($val->order_type == 'emergency')<i class="fas fa-circle text-danger fs_10"></i>&ensp;@endif{{$val->order_id}}</td>
                       <td>{{$val->supplying_plant}}</td>
                       <td>{{$val->delivery_date}}</td>
                       <td>{{$val->total_item}}</td>

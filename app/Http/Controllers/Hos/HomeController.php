@@ -16,16 +16,18 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+
+    /*This function is use for geting all the orders according the hospital users with the status. */
     public function index()
-    {   
-        
+    {     
         $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->where('od.user_id','=',$user_id)
+                                ->orderBy('od.order_type','ASC')
                                 ->orderBy('od.status','ASC')
                                 ->orderBy('od.order_id','DESC')
                                 ->groupBy("od.order_id")
-                                ->select('od.order_id','od.supplying_plant','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date')
+                                ->select('od.order_id','od.supplying_plant','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date','od.order_type')
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
                                 ->selectRaw('count(od.order_id) as total_item')
                                 ->get();
@@ -33,6 +35,7 @@ class HomeController extends Controller
         return view('hos.home', array('all_order'=>$all_order));
     }
 
+    /*redirect to the store order page with hospital related details. */
     public function storeOrder()
     {
         $hss_master_id = Auth::user()->hss_master_id;
@@ -41,10 +44,14 @@ class HomeController extends Controller
         return view('hos.store_order',array('delivery_wh'=>$delivery_wh));
     }
 
+    /*This function is used for Displaying the profile page. */
     public function profile(){
         return view('hos.profile');
     }
 
+    /*When user select any Nupco code, material,Customer code at that time this function is use and this function give the all details of that code.
+    Also here calculating the stock availability.
+    This function is calling through ajax function*/
     public function materialData(Request $request){
         $input_data = $request->input_data;
         $input_name = $request->input_name;
@@ -63,19 +70,35 @@ class HomeController extends Controller
                                             ->where('storage_location',$storage_location)
                                             ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
                                             ->groupBy('nupco_generic_code')
-                                            ->select('open_qty','delete_qty')
                                             ->selectRaw('sum(unrestricted_stock_qty) as total_qty')
                                             ->first();
+            $open_qty_data = DB::table('order_details')
+                            ->where('supplying_plant_code',$plant)
+                            ->where('sloc_id',$storage_location)
+                            ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
+                            ->where('is_deleted',0)
+                            ->whereIn('status',[0,2])
+                            ->groupBy('nupco_generic_code')
+                            ->selectRaw('sum(qty_ordered) as open_qty')
+                            ->first();
+           
+            $total_qty = 0;
+            $open_qty = 0;
             if(!empty($stock_data)){
-                if($stock_data->total_qty > $stock_data->open_qty){
-                    $total_available =  $stock_data->total_qty + $stock_data->delete_qty;
-                    $availability = $total_available - $stock_data->open_qty;
-                }
+                $total_qty = $stock_data->total_qty;
+            }
+            if(!empty($open_qty_data)){
+                $open_qty =  $open_qty_data->open_qty;
+            }
+            if($total_qty > $open_qty){
+                $availability =  $total_qty - $open_qty;
             }
            
         return response()->json(array('data'=>$material_data,'availability'=>$availability));
     }
 
+    /* Used For searching data from material master table in store order page.
+     This function is calling through ajax function*/
     public function searchData(Request $request){
         $input_data = $request->input_data;
         $input_name = $request->input_name;
@@ -86,7 +109,6 @@ class HomeController extends Controller
             $search_data = DB::table('material_master')->where($input_name,'LIKE',"{$input_data}%")->select('id',$input_name)->take(50)->get();
         }
         
-
         if(count($search_data) > 0){
             $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
             foreach($search_data as $row)
@@ -100,6 +122,8 @@ class HomeController extends Controller
         echo $output;
     }
 
+    /*Generating the order_id and add all the items of order in order details table.
+    This function is calling through ajax function.*/
     public function addOrder(Request $request){
         $result = 0;
         if($request->has('qty')){
@@ -112,9 +136,12 @@ class HomeController extends Controller
             $uom_arr = $request->input('uom');
             $supplying_plant_code = $request->input('supplying_plant_code');
             $supplying_plant = $request->input('supplying_plant');
+            $sloc_id = $request->input('sloc_id');
             $hss_master_no = $request->input('hss_master_no');
             $hospital_name = $request->input('hospital_name');
             $order_type = $request->input('order_type');
+            $item_text = $request->input('item_text');
+            $header_text = $request->input('header_text');
             if(count($qty_arr) > 0){
                 $order_data = array();
                 $ord_no = '000-000-001';
@@ -152,15 +179,14 @@ class HomeController extends Controller
                                     'delivery_date'=>$delivery_date,
                                     'supplying_plant_code'=>$supplying_plant_code,
                                     'supplying_plant'=>$supplying_plant,
+                                    'sloc_id'=>$sloc_id,
                                     'hss_master_no'=>$hss_master_no,
                                     'hospital_name'=>$hospital_name,
                                     'order_type'=>$order_type,
+                                    'header_text'=>$header_text,
+                                    'item_text'=>$item_text[$key],
                                     'status'=>0 );
                         $order_item = $order_item + 10;
-
-                        DB::table('stock')
-                        ->where('nupco_generic_code',$nupco_generic_code_arr[$key])
-                        ->increment('open_qty',$val);
                     }
                     
                 }
@@ -183,6 +209,8 @@ class HomeController extends Controller
         
     }
 
+    /*Displaying particular order details using order id.
+    Also Here getting the hospital related details.*/
     public function orderDetail($order_id){
         $hss_master_id = Auth::user()->hss_master_id;
         $hss_data = DB::table('hss_master')->where('id',$hss_master_id)->first();
@@ -192,17 +220,19 @@ class HomeController extends Controller
 
         $order_detail = DB::table('order_details as od')
                                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
-                                        ->select('od.hss_master_no','od.hospital_name','hs.delivery_wh_name','hs.delivery_warehouse','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.is_deleted',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
-                                        ->selectRaw(DB::raw("(SELECT (sum(sq.unrestricted_stock_qty)+sq.delete_qty-sq.open_qty) FROM stock as sq WHERE sq.storage_location = '$storage_location' AND sq.plant='$plant' AND sq.nupco_generic_code=od.nupco_generic_code limit 1) as available"))
+                                        ->select('od.hss_master_no','od.hospital_name','od.order_type','hs.delivery_wh_name','hs.delivery_warehouse','hs.address','hs.sloc_id','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.header_text','od.item_text','od.is_deleted',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                                        ->selectRaw(DB::raw("(SELECT (sum(sq.unrestricted_stock_qty)) FROM stock as sq WHERE sq.storage_location = '$storage_location' AND sq.plant='$plant' AND sq.nupco_generic_code=od.nupco_generic_code limit 1) as unrestricted_stock_qty"))
                                         ->where('od.order_id', $order_id)
                                         ->get();
 
         $pgi_details = DB::table('pgi_details as pd')->select('pd.pgi_id')->where('pd.order_id',$order_id)->first();
 
-        return view('hos.store_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'pgi_details'=>$pgi_details));
+        return view('hos.store_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'pgi_details'=>$pgi_details,'plant'=>$plant,'storage_location'=>$storage_location));
     }
 
+    /*This function is use for order delete,update and add new item in perticular order using the order id. */
     public function orderUpdate(Request $request){
+    
         if($request->has('delete_row')){
             $delete_row_id_arr = $request->input('delete_row');
             
@@ -213,23 +243,17 @@ class HomeController extends Controller
                     'is_deleted'=>1,
                 ]);
             }
-
-            $delete_qty_arr_for_stock = DB::table('order_details')->select('nupco_generic_code','qty_ordered')->whereIn('id',$delete_row_id_arr)->get();
             
-            if(count($delete_qty_arr_for_stock) > 0){
-                foreach($delete_qty_arr_for_stock as $key=>$val) {
-                    DB::table('stock')
-                    ->where('nupco_generic_code',$val->nupco_generic_code)
-                    ->increment('delete_qty',$val->qty_ordered);
-                } 
-            }
         }
         
         $supplying_plant_code = $request->input('supplying_plant_code');
         $supplying_plant = $request->input('supplying_plant');
+        $sloc_id =$request->input('sloc_id');
         $hss_master_no = $request->input('hss_master_no');
         $hospital_name = $request->input('hospital_name');
+        $order_type = $request->input('order_type');
         $delivery_date = date('Y-m-d',strtotime($request->input('delivery_date')));
+        $header_text = $request->input('header_text');
 
         $order_primary_id_arr = $request->input('order_primary_id');
         $qty_arr = $request->input('qty');
@@ -239,10 +263,9 @@ class HomeController extends Controller
         $category_arr = $request->input('customer_code_cat');
         $material_desc_arr = $request->input('nupco_desc');
         $uom_arr = $request->input('uom');
+        $item_text_arr = $request->input('item_text');
         $old_qty_arr = $request->input('old_qty');
         $old_nupco_generic_code_arr = $request->input('old_nupco_generic_code');
-        
-        
        
         foreach($order_primary_id_arr as $key=>$val){
             DB::table('order_details')
@@ -254,27 +277,15 @@ class HomeController extends Controller
                     'nupco_trade_code'=>$nupco_trade_code_arr[$key],
                     'customer_trade_code'=>$customer_trade_code_arr[$key],
                     'material_desc'=>$material_desc_arr[$key],
+                    'header_text'=>$header_text,
+                    'item_text'=>$item_text_arr[$key],
                     'uom'=>$uom_arr[$key],
                     'delivery_date'=>$delivery_date,
                     'last_updated_date'=>date("Y-m-d H:i:s"),
                     'last_updated_user'=>Auth::user()->name,
                     'status'=>0
-            ]);
-
-            $old_qty_val = $old_qty_arr[$key];
-            $new_qty_val = $qty_arr[$key];
-          
-            DB::table('stock')
-            ->where('nupco_generic_code',$old_nupco_generic_code_arr[$key])
-            ->decrement('open_qty',$old_qty_val);
-
-            DB::table('stock')
-            ->where('nupco_generic_code',$nupco_generic_code_arr[$key])
-            ->increment('open_qty',$new_qty_val);
-                        
+            ]);                        
         }
-
-        
 
         if($request->has('new_qty')){
         $new_qty_arr = $request->input('new_qty');
@@ -287,7 +298,7 @@ class HomeController extends Controller
             $new_category_arr = $request->input('new_customer_code_cat');
             $new_material_desc_arr = $request->input('new_nupco_desc');
             $new_uom_arr = $request->input('new_uom');
-         
+            $new_item_text_arr = $request->input('new_item_text');
 
             $order_item = DB::table('order_details')->select('order_item')->orderBy('order_item','DESC')->where('order_id',$order_id)->first();
             $order_item_val = $order_item->order_item;
@@ -310,13 +321,13 @@ class HomeController extends Controller
                     'delivery_date'=>$delivery_date,
                     'supplying_plant_code'=>$supplying_plant_code,
                     'supplying_plant'=>$supplying_plant,
+                    'sloc_id'=>$sloc_id,
                     'hss_master_no'=>$hss_master_no,
                     'hospital_name'=>$hospital_name,
+                    'order_type'=>$order_type,
+                    'header_text'=>$header_text,
+                    'item_text'=>$new_item_text_arr[$key],
                     'status'=>0 );
-
-                    DB::table('stock')
-                        ->where('nupco_generic_code',$new_nupco_generic_code_arr[$key])
-                        ->increment('open_qty',$val);
                 }
             }
 
@@ -327,20 +338,69 @@ class HomeController extends Controller
             }
         }
 
-        
         return back()->with("message","<div class='col-12 text-center alert alert-success' role='alert'>Request Updated Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
         
     }
 
+    /*This function is use for displaying the batch details of the items. */
     public function batchData(Request $request){
         $order_id = $request->input('order_id');
         
         $batch_data = array();
         if($order_id != ''){
             $batch_data = DB::table('batch_list')
-                                    ->select('batch_qty','batch_no','manufacture_date','expiry_date')
-                                    ->where('order_id',$order_id)->get();
+                        ->select('batch_qty','batch_no','manufacture_date','expiry_date')
+                        ->where('order_id',$order_id)->get();
         }
         return $batch_data;
     }
+
+    /*User for the displaying the stock report for inventory menu*/
+    public function stockReport(){
+        return view('hos.stock_report');
+    }
+
+    /*Search stock according the supplying plant,nupco code and description.
+    Make tbody string and return the encoded string.
+    This function is calling through ajax function.*/
+    public function searchStock(Request $request){
+        $nupco_generic_code =$request->input('nupco_generic_code');
+        $plant =$request->input('plant');
+        $nupco_desc =$request->input('nupco_desc');
+
+        $where_arr = array();
+        if($plant != ''){
+            $where_arr['plant'] = $plant;
+        }
+        
+        $stock_data = DB::table('stock')
+        ->where($where_arr)
+        ->where('nupco_generic_code','like',$nupco_generic_code.'%')
+        ->where('nupco_desc','like','%'.$nupco_desc.'%')
+        ->get();
+
+        $table_html['data'] = '';
+        if(!empty($stock_data)){
+            foreach($stock_data as $key=>$val){
+            $table_html['data'] .= "<tr>
+                        <td>".($key + 1)."</td>
+                        <td>".$val->nupco_generic_code."</td>
+                        <td>".$val->nupco_trade_code."</td>
+                        <td>".$val->customer_trade_code."</td>
+                        <td>".$val->nupco_desc."</td>
+                        <td>".$val->unrestricted_stock_qty."</td>
+                        <td>".$val->vendor_batch."</td>
+                        <td>".$val->uom."</td>
+                        <td>".$val->mfg_date."</td>
+                        <td>".$val->expiry_date."</td>
+                        <td>".$val->plant."</td>
+                        <td>".$val->storage_location."</td>
+                    </tr>";
+            }
+        }
+        echo json_encode($table_html);
+
+    }
+
+    
 }

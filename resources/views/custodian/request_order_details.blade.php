@@ -73,6 +73,14 @@
                         @endif
                 </label>
               </div>
+              <div class="form-row">
+                <label class="col-md-4 col-sm-4 col-4"><b>Header Text</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-7 col-sm-7 col-7">
+                  <input type="hidden" class="form-control h_1rem" data-row_id="ht1" data-name="header_text" id="text_ht1" name="header_text" value="{{$order_detail[0]->header_text}}">
+                  <i class="fas fa-file-alt text_icon" aria-hidden="true" data-row_id="ht1"></i>
+                </label>
+              </div>
             </div>
         </div>
           <form action="{{route('custodian.order.update')}}" method="POST">
@@ -89,6 +97,7 @@
                       <th class="text-nowrap px-3">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3" >Order Qty</th>
+                      <th class="text-nowrap px-3">Item Text</th> 
                   </tr>
               </thead>
               <tbody>
@@ -102,6 +111,7 @@
                       <td>{{$val->material_desc}}</td>
                       <td>{{$val->uom}}</td>
                       <td>{{$val->qty_ordered}}</td>
+                      <td><input type="hidden" class="form-control h_1rem" data-row_id ="{{$key}}" data-name="item_text" id="text_{{$key}}" name="item_text[]" value="{{$val->item_text}}"><i class="fas fa-file-alt text_icon" aria-hidden="true" data-row_id ="{{$key}}"></i></td>
                   </tr>
                  @endforeach
                  
@@ -249,6 +259,35 @@
     </div>
   </div>
 </div>
+
+ <!-- The text Modal -->
+ <div class="modal" id="text_modal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header border-0">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <h5 class="mb-3 text-danger text-center"><b>Order Text</b></h5>
+        <table id="" class="table table-borderless reason_table mb-0">
+          <tbody><tr>
+            <td class="py-0 px-1" width="20%" style="border:0"><b>Text  : </b></td>
+            <td class="py-0 px-1">
+              <textarea class="form-control py-0 mb-1" rows="2" name="item_text" id="text_input" style="width: 80%;" disabled></textarea>
+            </td>
+          </tr>
+        </tbody>
+        </table>
+      </div>
+       <!-- Modal footer -->
+       <div class="modal-footer py-2 my-3 border-0">
+      </div>
+    </div>
+  </div>
+</div>
+
 @endpush
 @stop
 @push('scripts')
@@ -300,6 +339,14 @@
       $('#delivery_date_order').val(delivery_date);
       $('#date_change').modal('show');
     });
+
+    $(".text_icon").click(function(){
+        var icon_row_id = $(this).data('row_id');
+        $('#text_input').val($('#text_'+icon_row_id).val());
+        $('#text_save').data('row_id',icon_row_id);
+        $('#text_modal').modal('show');
+    });
+
   });
   </script>
   @endpush

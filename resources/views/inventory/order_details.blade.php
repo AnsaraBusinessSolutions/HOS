@@ -1,4 +1,21 @@
 @extends('inventory.layouts.app')
+<style>
+.dataTables_scrollBody{
+  position: relative;
+    overflow: hidden!important;
+    width: 130%!important;
+    max-height: 41vh;
+}
+.dataTables_scrollHead{
+  overflow: hidden;
+    position: relative;
+    border: 0px;
+    width: 130%!important;
+}
+.dataTables_scroll{
+  overflow-x:auto;
+}
+</style>
 @section('content')
 <div class="container-fluid main_content bg-white p-2">
         @if(Session::has('message'))
@@ -53,7 +70,7 @@
                           <span class="text-success"><b>APPROVED</b></span>
                         @elseif($status_data->status == '3')
                           <span class="text-primary"><b>DISPATCHED</b></span>
-                        @elseif($status_data->status == '4')
+                        @elseif($status_data->status == '4' || $status_data->status == '6')
                           <span class="text-info"><b>DELIVERED</b></span>
                         @elseif(strpos($status_data->status, '6') !== false || strpos($status_data->status, '8') !== false)
                           <span class="text-primary" style="font-size: 14px"><b>PARTIALLY DELIVERED</b></span>
@@ -75,12 +92,12 @@
                   <tr class="bg_color">
                       <th class="text-nowrap px-3">#</th>
                       <th class="text-nowrap px-3">Item #</th>
-                      <th class="text-nowrap px-3">PGI No</th>
+                      <th class="text-nowrap px-3" width="10%">PGI No</th>
                       <th class="text-nowrap px-3">NUPCO Material</th>
                       <th class="text-nowrap px-3">NUPCO Trade Code</th>
                       <th class="text-nowrap px-3">Customer Code</th>
                       <th class="text-nowrap px-3">Category</th>
-                      <th class="text-nowrap px-3">Description</th>
+                      <th class="text-nowrap px-3" width="30%">Description</th>
                       <th class="text-nowrap px-3">UOM</th>
                       <th class="text-nowrap px-3" >Order Qty</th>
                       <th class="text-nowrap px-3" >Dispatch Qty</th>
@@ -133,6 +150,7 @@
         "ordering": false,
         "scrollY":        "41vh",
         "scrollCollapse": true,
+        "scrollX": true,
         "paging":         false,
         "searching": false,
         "lengthMenu": [ [15, 30, 50, 100, 250, 500, 1000, 1500], [15, 20, 50, 100, 250, 500, 1000, 1500] ],

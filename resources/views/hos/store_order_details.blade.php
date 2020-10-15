@@ -71,6 +71,20 @@
                         @endif
                 </label>
               </div>
+              <div class="form-row">
+                <label class="col-md-6 col-sm-4 col-4"><b>Header Text</b></label>
+                <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
+                <label class="col-md-5 col-sm-7 col-7">
+                @php
+                if($order_detail[0]->status == 0 || $order_detail[0]->status == 1)
+                  $class = '';
+                else
+                  $class = 'only_show';
+                @endphp
+                  <input type="hidden" class="form-control h_1rem" data-row_id="ht1" data-name="header_text" id="text_ht1" name="header_text" value="{{$order_detail[0]->header_text}}">
+                  <i class="fas fa-file-alt text_icon {{$class}}" aria-hidden="true" data-row_id="ht1"></i>
+                </label>
+              </div>
             </div>
           </div>
           @if($order_detail[0]->status == 0 || $order_detail[0]->status == 1)
@@ -82,8 +96,10 @@
           @endif
           <input type="hidden" name="supplying_plant_code" value="{{$order_detail[0]->delivery_warehouse}}">
           <input type="hidden" name="supplying_plant" value="{{$order_detail[0]->delivery_wh_name}}">
+          <input type="hidden" name="sloc_id" value="{{$order_detail[0]->sloc_id}}">
           <input type="hidden" name="hss_master_no" value="{{$order_detail[0]->hss_master_no}}">
           <input type="hidden" name="hospital_name" value="{{$order_detail[0]->hospital_name}}">
+          <input type="hidden" name="order_type" value="{{$order_detail[0]->order_type}}">
           <input type="hidden" name="order_id" value="{{$order_id}}">
           <div class="col-12 text-center">
             <table id="order_detail" class="table table-striped table-bordered example search_data text-center">
@@ -101,40 +117,66 @@
                       <th class="text-nowrap px-3 w_4">UOM</th>
                       <th class="text-nowrap px-3 w-14">Order Qty</th>
                       <th class="text-nowrap px-3 w_7">Availability</th>
+                      <th class="text-nowrap px-3 w_2">Item Text</th> 
                   </tr>
               </thead>
               <tbody>
                   @foreach($order_detail as $key=>$val)
+                  @php
+                      $availability = 0;
+                      $open_qty_data = DB::table('order_details')
+                                ->where('supplying_plant_code',$plant)
+                                ->where('sloc_id',$storage_location)
+                                ->where('nupco_generic_code',$val->nupco_generic_code)
+                                ->where('is_deleted',0)
+                                ->whereIn('status',[0,2])
+                                ->groupBy('nupco_generic_code')
+                                ->selectRaw('sum(qty_ordered) as open_qty')
+                                ->first();
+                      $total_qty = 0;
+                      $open_qty = 0;
+                      if(!empty($val->unrestricted_stock_qty)){
+                          $total_qty = $val->unrestricted_stock_qty;
+                      }
+                      if(!empty($open_qty_data)){
+                          $open_qty =  $open_qty_data->open_qty;
+                      }
+                      if($total_qty > $open_qty){
+                          $availability =  $total_qty - $open_qty;
+                      }
+                  @endphp
                   @if($val->is_deleted == 1)
                   <tr class="dis_row_input">
                   @else
                   <tr>
                   @endif
                       @if($val->status == 0 || $val->status == 1)
-                      @if($val->is_deleted == 1)
-                      <td><i class="fa fa-trash" aria-hidden="true"></i></td>
+                        @if($val->is_deleted == 1)
+                        <td><i class="fa fa-trash" aria-hidden="true"></i></td>
+                        @else
+                        <td><input type="checkbox" class="delete_row" name="delete_row[]" data-delete_id = "{{$val->id}}" /></td>
+                        @endif
+                        <td>{{$key+1}}</td>
+                        <td><input type="hidden" name="old_nupco_generic_code[]" value="{{$val->nupco_generic_code}}"><input type="text" class="material_data form-control form-control-sm h_1rem" data-row_id="{{$key}}" data-name="nupco_generic_code"  id="nupco_generic_code_{{$key}}" name="nupco_generic_code[]" value="{{$val->nupco_generic_code}}" autocomplete="off" required><div id="nupco_generic_code_list_{{$key}}" class="position-relative"></div></td>
+                        <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="nupco_trade_code_" id="nupco_trade_code_{{$key}}" name="nupco_trade_code[]" value="{{$val->nupco_trade_code}}" readonly></td>
+                        <td><input type="text" class="material_data form-control form-control-sm" data-row_id="{{$key}}" data-name="customer_code" id="customer_code_{{$key}}" name="customer_code[]" value="{{$val->customer_trade_code}}" autocomplete="off" required></td>
+                        <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="customer_code_cat" id="customer_code_cat_{{$key}}" name="customer_code_cat[]" value="{{$val->category}}" readonly></td>
+                        <td><input type="text" class="material_data form-control form-control-sm" data-row_id="{{$key}}" data-name="nupco_desc" id="nupco_desc_{{$key}}" name="nupco_desc[]" value="{{$val->material_desc}}" autocomplete="off"><div id="nupco_desc_list_{{$key}}" class="position-relative" required></div></td>
+                        <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="uom" id="uom_{{$key}}" name="uom[]" value="{{$val->uom}}" readonly></td>
+                        <td><input type="hidden" name="order_primary_id[]" value="{{$val->id}}"><input type="hidden" name="old_qty[]" value="{{$val->qty_ordered}}"><input type="text" class="form-control form-control-sm qty_input_update" data-row_id="{{$key}}" data-name="qty" id="qty_{{$key}}" name="qty[]" data-old_qty_update="{{$val->qty_ordered}}" value="{{$val->qty_ordered}}"></td>
+                        <td><input type="text" class="form-control form-control-sm text-success" data-row_id="{{$key}}" data-name="available" id="available_{{$key}}" value="{{$availability}}" name="available[]" readonly></td>
+                        <td><input type="hidden" class="form-control h_1rem" data-row_id ="{{$key}}" data-name="item_text" id="text_{{$key}}" name="item_text[]" value="{{$val->item_text}}"><i class="fas fa-file-alt text_icon" aria-hidden="true" data-row_id ="{{$key}}"></i></td>
                       @else
-                      <td><input type="checkbox" class="delete_row" name="delete_row[]" data-delete_id = "{{$val->id}}" /></td>
-                      @endif
-                      <td>{{$key+1}}</td>
-                      <td><input type="hidden" name="old_nupco_generic_code[]" value="{{$val->nupco_generic_code}}"><input type="text" class="material_data form-control form-control-sm h_1rem" data-row_id="{{$key}}" data-name="nupco_generic_code"  id="nupco_generic_code_{{$key}}" name="nupco_generic_code[]" value="{{$val->nupco_generic_code}}" autocomplete="off" required><div id="nupco_generic_code_list_{{$key}}" class="position-relative"></div></td>
-                      <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="nupco_trade_code_" id="nupco_trade_code_{{$key}}" name="nupco_trade_code[]" value="{{$val->nupco_trade_code}}" readonly></td>
-                      <td><input type="text" class="material_data form-control form-control-sm" data-row_id="{{$key}}" data-name="customer_code" id="customer_code_{{$key}}" name="customer_code[]" value="{{$val->customer_trade_code}}" autocomplete="off" required></td>
-                      <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="customer_code_cat" id="customer_code_cat_{{$key}}" name="customer_code_cat[]" value="{{$val->category}}" readonly></td>
-                      <td><input type="text" class="material_data form-control form-control-sm" data-row_id="{{$key}}" data-name="nupco_desc" id="nupco_desc_{{$key}}" name="nupco_desc[]" value="{{$val->material_desc}}" autocomplete="off"><div id="nupco_desc_list_{{$key}}" class="position-relative" required></div></td>
-                      <td><input type="text" class="form-control form-control-sm" data-row_id="{{$key}}" data-name="uom" id="uom_{{$key}}" name="uom[]" value="{{$val->uom}}" readonly></td>
-                      <td><input type="hidden" name="order_primary_id[]" value="{{$val->id}}"><input type="hidden" name="old_qty[]" value="{{$val->qty_ordered}}"><input type="text" class="form-control form-control-sm qty_input_update" data-row_id="{{$key}}" data-name="qty" id="qty_{{$key}}" name="qty[]" data-old_qty_update="{{$val->qty_ordered}}" value="{{$val->qty_ordered}}"></td>
-                      <td><input type="text" class="form-control form-control-sm text-success" data-row_id="{{$key}}" data-name="available" id="available_{{$key}}" value="{{$val->available}}" name="available[]" readonly></td>
-                      @else
-                      <td>{{$key+1}}</td>
-                      <td>{{$val->nupco_generic_code}}</td>
-                      <td>{{$val->nupco_trade_code}}</td>
-                      <td>{{$val->customer_trade_code}}</td>
-                      <td>{{$val->category}}</td>
-                      <td>{{$val->material_desc}}</td>
-                      <td>{{$val->uom}}</td>
-                      <td>{{$val->qty_ordered}}</td>
-                      <td>Available</td>
+                        <td>{{$key+1}}</td>
+                        <td>{{$val->nupco_generic_code}}</td>
+                        <td>{{$val->nupco_trade_code}}</td>
+                        <td>{{$val->customer_trade_code}}</td>
+                        <td>{{$val->category}}</td>
+                        <td>{{$val->material_desc}}</td>
+                        <td>{{$val->uom}}</td>
+                        <td>{{$val->qty_ordered}}</td>
+                        <td>Available</td>
+                        <td><input type="hidden" class="form-control h_1rem" data-row_id ="{{$key}}" data-name="item_text" id="text_{{$key}}" name="item_text[]" value="{{$val->item_text}}"><i class="fas fa-file-alt text_icon only_show" aria-hidden="true" data-row_id ="{{$key}}"></i></td>
                       @endif
                       
                   </tr>
@@ -184,6 +226,36 @@
     </div>
   </div>
 </div>
+
+  <!-- The text Modal -->
+  <div class="modal" id="text_modal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header border-0">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <h5 class="mb-3 text-danger text-center"><b>Add Text</b></h5>
+        <table id="" class="table table-borderless reason_table mb-0">
+          <tbody><tr>
+            <td class="py-0 px-1" width="20%" style="border:0"><b>Text  : </b></td>
+            <td class="py-0 px-1">
+              <textarea class="form-control py-0 mb-1" rows="2" name="item_text" id="text_input" style="width: 80%;"></textarea>
+            </td>
+          </tr>
+        </tbody>
+        </table>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer py-2 my-3 border-0">
+        <button type="button" class="btn btn-info px-5 mx-auto" id="text_save">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endpush
 @stop
 @push('scripts')
@@ -226,6 +298,7 @@ var table;
 
     autoSearchMaterial();
     deleteRow();
+    textAddAndDisplay();
 
     var counter = {{count($order_detail)}};
     $('#addRow').on('click', function (e) { 
@@ -242,10 +315,12 @@ var table;
             '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="new_uom[]" readonly></td>',
             '<td class="p-0"><input type="text" class="form-control form-control-sm qty_input" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="new_qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off" readonly></td>',
             '<td class="p-0"><input type="text" class="form-control form-control-sm" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="new_available[]" readonly></td>',
+            '<td class="p-0"><input type="hidden" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="item_text" id="text_'+counter+'" name="new_item_text[]"><i class="fas fa-file-alt text_icon" aria-hidden="true" data-row_id ="'+counter+'"></i></td>',
            ]).draw( false );
         counter++;
         autoSearchMaterial();
         deleteRow();
+        textAddAndDisplay();
     });
 
       $('.btn_batch').click(function(e){
@@ -269,9 +344,9 @@ var table;
            });
       });
 
-  });
+   
 
-  
+  });
 
   function autoSearchMaterial(){
   $('input.material_data').keyup(function(){ 
@@ -385,6 +460,29 @@ function setMaterialData(element,input_name,row_id){
       }else{
         return true;
       }
+ }
+
+ function textAddAndDisplay(){
+  $(".text_icon").click(function(){
+        var icon_row_id = $(this).data('row_id');
+        $('#text_input').val($('#text_'+icon_row_id).val());
+        $('#text_save').data('row_id',icon_row_id);
+      
+        if($(this).hasClass("only_show")){
+          $('#text_save').hide();
+          $('#text_input').prop('disabled',true);
+        }else{
+          $('#text_save').show();
+          $('#text_input').prop('disabled',false);
+        }
+        $('#text_modal').modal('show');
+    });
+
+    $("#text_save").click(function(){
+      var row_id_save = $(this).data('row_id');
+      $('#text_'+row_id_save).val($('#text_input').val());
+      $('#text_modal').modal('hide');
+    });
  }
 </script>
 @endpush

@@ -22,7 +22,7 @@
               <tbody>
                   @foreach($all_order as $key=>$val)
                   <tr onclick="window.location.href='{{url('custodian/request_order_detail/'.$val->order_id)}}'">
-                      <td>{{$val->order_id}}</td>
+                      <td>@if($val->order_type == 'emergency')<i class="fas fa-circle text-danger fs_10"></i>&ensp;@endif{{$val->order_id}}</td>
                       <td>{{$val->hospital_name}}</td>
                       <td>{{$val->supplying_plant}}</td>
                       <td>{{$val->delivery_date}}</td>

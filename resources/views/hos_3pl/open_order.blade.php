@@ -28,6 +28,7 @@
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
                                 ->selectRaw('count(od.order_id) as total_item')
                                 ->where('od.order_id',$val->order_id)
+                                ->where('od.is_deleted', 0)
                                 ->orderBy('od.status','ASC')
                                 ->first();
                   @endphp

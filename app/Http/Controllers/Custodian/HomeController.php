@@ -20,6 +20,7 @@ class HomeController extends Controller
         $user_id = auth()->guard('custodian')->user()->id;
        // $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
+                                ->orderBy('od.order_type','ASC')
                                 ->orderBy('od.status','ASC')
                                 ->orderBy('od.order_id','DESC')
                                 ->groupBy("od.order_id")
@@ -29,7 +30,8 @@ class HomeController extends Controller
                                     ->where('user_id', auth()->guard('custodian')->user()->id);
                                 })
                                 ->whereIn('od.status',[0,1,2])
-                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date')
+                                ->where('od.is_deleted', 0)
+                                ->select('od.order_id','od.supplying_plant','od.hospital_name','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date','od.order_type')
                                 ->selectRaw('sum(od.qty_ordered) as total_qty')
                                 ->selectRaw('count(od.order_id) as total_item')
                                 ->get();
@@ -40,8 +42,9 @@ class HomeController extends Controller
     public function requestOrderDetail($order_id){
         $order_detail = DB::table('order_details as od')
                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
-                        ->select('hs.delivery_wh_name','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
+                        ->select('hs.delivery_wh_name','hs.address','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.header_text','od.item_text','od.status',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
                         ->where('od.order_id', $order_id)
+                        ->where('od.is_deleted', 0)
                         ->get();
         return view('custodian.request_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id));
     }

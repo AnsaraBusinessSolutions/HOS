@@ -38,6 +38,8 @@ Route::prefix('store')->group(function () {
     Route::post('/order_detail', 'Hos\HomeController@orderUpdate')->name('hos.order.update')->middleware('auth');
     Route::post('search_data', 'Hos\HomeController@searchData')->name('hos.search.data');
     Route::post('material_data', 'Hos\HomeController@materialData')->name('hos.material.data');
+    Route::get('/stock_report', 'Hos\HomeController@stockReport')->name('hos.stock.report');
+    Route::post('/search_stock', 'Hos\HomeController@searchStock')->name('hos.search.stock');
 });
 
 Route::prefix('custodian')->group(function () {
@@ -70,6 +72,7 @@ Route::prefix('hos3pl')->group(function () {
     Route::get('/open_order_detail/{order_id}', 'Hos_3pl\HomeController@openOrderDetail')->name('hos3pl.open.order.detail');
     Route::get('/display_order', 'Hos_3pl\HomeController@displayOrder')->name('hos3pl.display.order');
     Route::get('/display_order_detail/{order_id}', 'Hos_3pl\HomeController@displayOrderDetail')->name('hos3pl.display.order.detail');
+    Route::post('tradecode_data', 'Hos_3pl\HomeController@tradeCodeData')->name('hos3pl.tradecode.data');
 });
 
 Route::prefix('inventory')->group(function () {
