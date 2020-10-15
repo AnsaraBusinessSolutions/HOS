@@ -1,4 +1,21 @@
 @extends('inventory.layouts.app')
+<style>
+.dataTables_scrollBody{
+  position: relative;
+    overflow: hidden!important;
+    width: 130%!important;
+    max-height: 41vh;
+}
+.dataTables_scrollHead{
+  overflow: hidden;
+    position: relative;
+    border: 0px;
+    width: 130%!important;
+}
+.dataTables_scroll{
+  overflow-x:auto;
+}
+</style>
 @section('content')
 <div class="container-fluid main_content bg-white p-2">
         @if(Session::has('message'))
