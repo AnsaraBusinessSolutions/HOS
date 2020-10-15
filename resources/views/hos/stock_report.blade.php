@@ -31,7 +31,8 @@
             <table id="stock_report_table" class="table table-striped table-bordered example">
                 <thead>
                     <tr class="bg_color">
-                        <th width="5%" class="text-nowrap px-3">Item #</th>
+                        <th width="3%" class="text-nowrap px-3">Plant</th>
+                        <th width="10%" class="text-nowrap px-3">Storage Location</th>
                         <th width="10%" class="text-nowrap px-3">NUPCO Material</th>
                         <th width="10%" class="text-nowrap px-3">NUPCO Trade Code</th>
                         <th width="5%" class="text-nowrap px-3">Customer Code</th>
@@ -41,8 +42,6 @@
                         <th width="5%" class="text-nowrap px-3">UOM</th>
                         <th width="10%" class="text-nowrap px-3">Mfg Date</th>
                         <th width="8%" class="text-nowrap px-3">Expiry Date</th>
-                        <th width="3%" class="text-nowrap px-3">Plant</th>
-                        <th width="10%" class="text-nowrap px-3">Storage Location</th>
                     </tr>
                 </thead>
                 <tbody>

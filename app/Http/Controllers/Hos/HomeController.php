@@ -383,7 +383,8 @@ class HomeController extends Controller
         if(!empty($stock_data)){
             foreach($stock_data as $key=>$val){
             $table_html['data'] .= "<tr>
-                        <td>".($key + 1)."</td>
+                        <td>".$val->plant."</td>
+                        <td>".$val->storage_location."</td>
                         <td>".$val->nupco_generic_code."</td>
                         <td>".$val->nupco_trade_code."</td>
                         <td>".$val->customer_trade_code."</td>
@@ -393,8 +394,6 @@ class HomeController extends Controller
                         <td>".$val->uom."</td>
                         <td>".$val->mfg_date."</td>
                         <td>".$val->expiry_date."</td>
-                        <td>".$val->plant."</td>
-                        <td>".$val->storage_location."</td>
                     </tr>";
             }
         }
