@@ -4,22 +4,23 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use DB;
 
 class ApiController extends Controller
 {
     public function AddStock(Request $request){
-        $f11 = $request->input('wsdl_link');
-        $f12 = $request->input('user_name');
-        $f13 = $request->input('pass_word');
-        $f14 = $request->input('soap_header');
-        $f15 = $request->input('parameters');
+        $wsdl_link = $request->input('wsdl_link');
+        $user_name = $request->input('user_name');
+        $pass_word = $request->input('pass_word');
+        $soap_header = $request->input('soap_header');
+        $parameters = $request->input('parameters');
         
         $data = array(
-        "wsdl_link" => $f11,
-        "user_name" => $f12,
-        "pass_word" => $f13,
-        "soap_header" => $f14,
-        "parameters" =>$f15
+        "wsdl_link" => $wsdl_link,
+        "user_name" => $user_name,
+        "pass_word" => $pass_word,
+        "soap_header" => $soap_header,
+        "parameters" =>$parameters
         );
 
         $data_string = json_encode($data);
@@ -42,6 +43,68 @@ class ApiController extends Controller
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         $res = curl_exec($curl);
         curl_close($curl);
-        print_r($res);
+        $res = json_decode($res);
+
+        if(!empty($res)){
+            $stock_details_arr = $res->O_WH_STOCK->DETAILS->item;
+            $stock_data = array();
+            foreach($stock_details_arr as $key=>$val){
+               
+                $data = array(
+                    'customer'=>$val->ZKUNNR,
+                    'nupco_generic_code'=>$val->MATNR,
+                    'nupco_trade_code'=>$val->BWTAR,
+                    'customer_trade_code'=>$val->ZCTMATNR,
+                    'nupco_desc'=>$val->ZNTCDES,
+                    'plant'=>$val->WERKS,
+                    'storage_location'=>$val->LGORT,
+                    'unrestricted_stock_qty'=>$val->CLABS,
+                    'vendor_batch'=>$val->LICHA,
+                    'uom'=>$val->MEINS,
+                    'batch'=>$val->CHARG,
+                    'map'=>$val->VERPR,
+                    'stock_value'=>$val->STOCKV,
+                    'return_stock'=>$val->CRETM,
+                    'mfg_date'=>$val->HSDAT,
+                    'expiry_date'=>$val->VFDAT);
+
+                $check_stock_available = DB::table('stock')
+                                            ->where($data)
+                                            ->select('id')
+                                            ->first();
+                                          
+                if(empty($check_stock_available)){
+                    $stock_data[] = array(
+                    'customer'=>$val->ZKUNNR,
+                    'nupco_generic_code'=>$val->MATNR,
+                    'nupco_trade_code'=>$val->BWTAR,
+                    'customer_trade_code'=>$val->ZCTMATNR,
+                    'nupco_desc'=>$val->ZNTCDES,
+                    'plant'=>$val->WERKS,
+                    'storage_location'=>$val->LGORT,
+                    'unrestricted_stock_qty'=>$val->CLABS,
+                    'vendor_batch'=>$val->LICHA,
+                    'uom'=>$val->MEINS,
+                    'batch'=>$val->CHARG,
+                    'map'=>$val->VERPR,
+                    'stock_value'=>$val->STOCKV,
+                    'return_stock'=>$val->CRETM,
+                    'mfg_date'=>$val->HSDAT,
+                    'expiry_date'=>$val->VFDAT,
+                    'created_at'=>date('Y-m-d H:i:s'));
+                }
+            }
+            
+           if(count($stock_data) > 0){
+              $result = DB::table('stock')->insert($stock_data);
+                if($result){
+                echo 'Stock inserted successfully';
+                }
+           }else{
+                echo 'Stock data already inserted';
+           }
+          
+        }
+        
     }
 }

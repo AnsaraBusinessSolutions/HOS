@@ -105,9 +105,7 @@
             <table id="order_detail" class="table table-striped table-bordered example search_data text-center">
               <thead>
                   <tr class="bg_color">
-                      @if($order_detail[0]->status == 0 || $order_detail[0]->status == 1)
                       <th class="w_3">Delete</th>
-                      @endif
                       <th class="text-nowrap px-3 w_3">Item #</th>
                       <th class="text-nowrap px-3 w_12">NUPCO Material</th>
                       <th class="text-nowrap px-3 w_9">NUPCO Trade Code</th>
@@ -167,6 +165,11 @@
                         <td><input type="text" class="form-control form-control-sm text-success" data-row_id="{{$key}}" data-name="available" id="available_{{$key}}" value="{{$availability}}" name="available[]" readonly></td>
                         <td><input type="hidden" class="form-control h_1rem" data-row_id ="{{$key}}" data-name="item_text" id="text_{{$key}}" name="item_text[]" value="{{$val->item_text}}"><i class="fas fa-file-alt text_icon" aria-hidden="true" data-row_id ="{{$key}}"></i></td>
                       @else
+                        @if($val->is_deleted == 1)
+                        <td><i class="fa fa-trash" aria-hidden="true"></i></td>
+                        @else
+                        <td></td>
+                        @endif
                         <td>{{$key+1}}</td>
                         <td>{{$val->nupco_generic_code}}</td>
                         <td>{{$val->nupco_trade_code}}</td>
