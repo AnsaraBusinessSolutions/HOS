@@ -135,7 +135,7 @@
               </tbody>
             </table>
           </div>
-          @if($status_data->status != 4 || $status_data->status != 6 || $status_data->status != 8)
+          @if($status_data->status != '4' && $status_data->status != '6' && $status_data->status != '8')
           <div class="col-12 text-center">
             <button class="btn btn-success">Update</button>
           </div>

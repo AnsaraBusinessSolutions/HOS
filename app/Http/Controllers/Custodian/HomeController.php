@@ -15,10 +15,10 @@ class HomeController extends Controller
         
     }
 
+    /* Display all new, approved and rejected order from order details table with status  */
     public function index()
     {
         $user_id = auth()->guard('custodian')->user()->id;
-       // $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->orderBy('od.order_type','ASC')
                                 ->orderBy('od.status','ASC')
@@ -39,6 +39,7 @@ class HomeController extends Controller
         return view('custodian.home', array('all_order'=>$all_order));
     }
 
+    /* Getting all details of perticular order by order_id */
     public function requestOrderDetail($order_id){
         $order_detail = DB::table('order_details as od')
                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
@@ -49,6 +50,7 @@ class HomeController extends Controller
         return view('custodian.request_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id));
     }
 
+    /*This function is not using currently. This function used for the update qty.*/
     public function orderUpdate(Request $request){
         $order_id_arr = $request->input('order_id');
         $qty_arr = $request->input('qty_ordered');
@@ -65,6 +67,7 @@ class HomeController extends Controller
         return back()->with("message","<div class='col-12 text-center alert alert-success' role='alert'>Request Updated Successfully<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden = 'true' >&times; </span></button></div>");
     }
 
+    /*Change reject order status with rejection reason and date */
     public function orderRejected(Request $request){
          $order_id = $request->input('order_id');
          $rejection_date = date("Y-m-d");
@@ -80,6 +83,7 @@ class HomeController extends Controller
         return redirect('custodian/home');
     }
 
+    /*Aproove order with approve comment,date and status */
     public function orderApprove(Request $request){
         $order_id = $request->input('order_id');
         if($order_id != ''){
@@ -95,7 +99,7 @@ class HomeController extends Controller
        return redirect('custodian/home');
    }
 
-
+   /*This function is use for displaying the batch details of the items. */
    public function batchData(Request $request){
         $order_id = $request->input('order_id');
         
@@ -108,6 +112,7 @@ class HomeController extends Controller
         return $batch_data;
     }
 
+    /*This function is use for change the delivery date*/
     public function orderDateChange(Request $request){
         $order_id = $request->input('order_id');
         DB::table('order_details')

@@ -102,7 +102,7 @@ echo $currentTime; ?></span> |
                     </li>
                     <li class="nav-item mb-1">
                         <a class="nav-link" href=#>
-                            <i class="fas fa-pills fs_18"></i> &ensp;{{__('lang.medical_list')}}</a>
+                            <i class="fas fa-pills fs_18"></i> &ensp;{{__('lang.material_list')}}</a>
                     </li>
                     @if(Request::path() == 'store/stock_report')
                     <li class="nav-item my-1 active">
@@ -112,10 +112,10 @@ echo $currentTime; ?></span> |
                         <a class="nav-link" href="{{route('hos.stock.report')}}">
                             <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;{{__('lang.inventory')}}</a>
                     </li>
-                    <li class="nav-item mb-1">
+                    <!-- <li class="nav-item mb-1">
                         <a class="nav-link" href="#">
                             <i class="fas fa-balance-scale fs_18"></i> &ensp;{{__('lang.sales')}}</a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <div class="main px-3 py-5">

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
+use Config;
 ini_set('memory_limit', '-1');
 
 class HomeController extends Controller
@@ -66,6 +67,18 @@ class HomeController extends Controller
             $plant = $hss_data->delivery_warehouse;
             $storage_location = $hss_data->sloc_id;
 
+             //call soap api
+            $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant;
+            $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
+            $input_arr = array(
+                "wsdl_link" => $wsdl_link,
+                "user_name" => Config::get('constants.soap_api_username'),
+                "pass_word" => Config::get('constants.soap_api_password'),
+                "soap_header" => 'ZMM_WHS_STOCK_INTF',
+                "parameters" =>$parameters
+                );
+            $api_response = $this->AddStockSoapApi($input_arr);
+            
             $stock_data = DB::table('stock')->where('plant',$plant)
                                             ->where('storage_location',$storage_location)
                                             ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
@@ -368,6 +381,22 @@ class HomeController extends Controller
         $plant =$request->input('plant');
         $nupco_desc =$request->input('nupco_desc');
 
+        //call soap api
+        $hss_master_id = Auth::user()->hss_master_id;
+        $hss_data = DB::table('hss_master')->select('sloc_id')->where('id',$hss_master_id)->first();
+        $storage_location = $hss_data->sloc_id;
+
+        $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant;
+        $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
+        $input_arr = array(
+            "wsdl_link" => $wsdl_link,
+            "user_name" => Config::get('constants.soap_api_username'),
+            "pass_word" => Config::get('constants.soap_api_password'),
+            "soap_header" => 'ZMM_WHS_STOCK_INTF',
+            "parameters" =>$parameters
+            );
+        $api_response = $this->AddStockSoapApi($input_arr);
+            
         $where_arr = array();
         if($plant != ''){
             $where_arr['plant'] = $plant;
@@ -375,14 +404,14 @@ class HomeController extends Controller
         
         $stock_data = DB::table('stock')
         ->where($where_arr)
-        ->where('nupco_generic_code','like',$nupco_generic_code.'%')
+        ->where('nupco_generic_code',$nupco_generic_code)
         ->where('nupco_desc','like','%'.$nupco_desc.'%')
         ->get();
 
-        $table_html['data'] = '';
+        $result['data'] = '';
         if(!empty($stock_data)){
             foreach($stock_data as $key=>$val){
-            $table_html['data'] .= "<tr>
+            $result['data'] .= "<tr>
                         <td>".$val->plant."</td>
                         <td>".$val->storage_location."</td>
                         <td>".$val->nupco_generic_code."</td>
@@ -397,8 +426,98 @@ class HomeController extends Controller
                     </tr>";
             }
         }
-        echo json_encode($table_html);
+        $result['api_response'] = $api_response;
+        echo json_encode($result);
 
+    }
+
+    /*Add stock data using the soap api */
+    public function AddStockSoapApi($input_arr){
+    if(!empty($input_arr)){
+        $response = '';
+        $data_string = json_encode($input_arr);
+        //print_r($data_string);exit;
+       $url="https://tfms.nupco.com/nupco_service/api.php";
+        $curl_timeout = 5;
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data_string))
+        );
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $curl_timeout);
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        $res = curl_exec($curl);
+        curl_close($curl);
+        $res = json_decode($res);
+
+        if(!empty($res)){
+            $stock_details_arr = $res->O_WH_STOCK->DETAILS->item;
+            $stock_data = array();
+            foreach($stock_details_arr as $key=>$val){
+                $nupco_generic_code = ltrim($val->MATNR, '0');
+                $data = array(
+                    'customer'=>$val->ZKUNNR,
+                    'nupco_generic_code'=>$nupco_generic_code,
+                   // 'nupco_trade_code'=>$val->BWTAR,
+                   // 'customer_trade_code'=>$val->ZCTMATNR,
+                   // 'nupco_desc'=>$val->ZNTCDES,
+                    'plant'=>$val->WERKS,
+                    'storage_location'=>$val->LGORT,
+                   // 'unrestricted_stock_qty'=>$val->CLABS,
+                    'vendor_batch'=>$val->LICHA,
+                   // 'uom'=>$val->MEINS,
+                    'batch'=>$val->CHARG,
+                   // 'map'=>$val->VERPR,
+                   // 'stock_value'=>$val->STOCKV,
+                   // 'return_stock'=>$val->CRETM,
+                    'mfg_date'=>$val->HSDAT,
+                    'expiry_date'=>$val->VFDAT);
+
+                $check_stock_available = DB::table('stock')
+                                            ->where($data)
+                                            ->select('id')
+                                            ->first();
+                        //print_r($check_stock_available);                  
+                if(empty($check_stock_available)){
+                    $stock_data[] = array(
+                    'customer'=>$val->ZKUNNR,
+                    'nupco_generic_code'=>$nupco_generic_code,
+                    'nupco_trade_code'=>$val->BWTAR,
+                    'customer_trade_code'=>$val->ZCTMATNR,
+                    'nupco_desc'=>$val->ZNTCDES,
+                    'plant'=>$val->WERKS,
+                    'storage_location'=>$val->LGORT,
+                    'unrestricted_stock_qty'=>$val->CLABS,
+                    'vendor_batch'=>$val->LICHA,
+                    'uom'=>$val->MEINS,
+                    'batch'=>$val->CHARG,
+                    'map'=>$val->VERPR,
+                    'stock_value'=>$val->STOCKV,
+                    'return_stock'=>$val->CRETM,
+                    'mfg_date'=>$val->HSDAT,
+                    'expiry_date'=>$val->VFDAT,
+                    'created_at'=>date('Y-m-d H:i:s'));
+                }
+            }
+            // print_r($stock_data);
+            // exit;
+           if(count($stock_data) > 0){
+              $result = DB::table('stock')->insert($stock_data);
+           }
+            $response = true; 
+        }
+    }else{
+        $response = false;
+    }
+     return $response;
+        
     }
 
     

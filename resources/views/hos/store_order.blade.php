@@ -50,6 +50,9 @@
   height: 55vh;
   overflow-y: auto;
 }
+#preloader {
+  background: transparent!important;
+}
 </style>
 @section('content')
 <div class="container-fluid main_content bg-white p-2">
@@ -121,6 +124,7 @@
                         
                     </tbody>
                   </table>
+                  <div id="preloader" style="display:none"></div>
                 </div>
                 <div class="col-12 text-center">
                   <!-- <button id="store_order_submit" class="btn btn-info my-2">Create Order</button> -->
@@ -378,9 +382,13 @@ function setMaterialData(element,input_name,row_id){
       data: {
           input_data:input_data,
           input_name:input_name
+      },
+      beforeSend: function() { 
+          $("#preloader").css('display','block'); 
       }, 
       success: function(response)
       {
+        $("#preloader").css('display','none'); 
         if(response.data.length > 0){
             $('#nupco_trade_code_'+row_id).val(response.data[0].nupco_trade_code);
             $('#nupco_generic_code_'+row_id).val(response.data[0].nupco_generic_code);

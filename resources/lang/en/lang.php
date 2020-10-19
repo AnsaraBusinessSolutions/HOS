@@ -4,7 +4,7 @@ return[
     'help'=>'Help',
 	'dashboard'=>'Dashboard',
 	'store_order'=>'Store Order',
-	'medical_list'=>'Medical List',
+	'material_list'=>'Material List',
 	'inventory'=>'Inventory',
     'sales'=>'Sales',
     'exist_order_list'=>'Exist Order list',

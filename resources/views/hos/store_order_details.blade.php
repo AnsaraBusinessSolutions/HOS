@@ -4,6 +4,9 @@
     color:#AAA;
     background:#F5F5F5;
  }
+ #preloader {
+  background: transparent!important;
+}
 </style>
 @extends('hos.layouts.app')
 @section('content')
@@ -186,6 +189,7 @@
                  @endforeach
               </tbody>
             </table>
+            <div id="preloader" style="display:none"></div>
           </div>
           @if(count($order_detail) > 0 && ($order_detail[0]->status == 0 || $order_detail[0]->status == 1))
           <div class="col-12 text-center">
@@ -396,8 +400,12 @@ function setMaterialData(element,input_name,row_id){
               input_data:input_data,
               input_name:input_name
           }, 
+          beforeSend: function() { 
+              $("#preloader").css('display','block'); 
+          },
           success: function(response)
           {
+              $("#preloader").css('display','none'); 
               if(response.data.length > 0){
                   $('#nupco_trade_code_'+row_id).val(response.data[0].nupco_trade_code);
                   $('#nupco_generic_code_'+row_id).val(response.data[0].nupco_generic_code);

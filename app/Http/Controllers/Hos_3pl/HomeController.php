@@ -14,6 +14,7 @@ class HomeController extends Controller
         $this->middleware('auth.hos3pl');
     }
 
+    /* Getting all order with the status of approve, dispatch, partially dispatch.*/
     public function index()
     {
         $user_id = auth()->guard('hos3pl')->user()->id;
@@ -34,6 +35,8 @@ class HomeController extends Controller
         return view('hos_3pl.home', array('all_order'=>$all_order));
     }
 
+    /* Fetching all details of order, Calculate qty total of order items 
+    Pass the status in different array */
     public function requestOrderDetail($order_id){
         $order_detail = DB::table('order_details as od')
                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
@@ -53,6 +56,7 @@ class HomeController extends Controller
         return view('hos_3pl.request_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'status_data'=>$status));
     }
 
+     /*This function is not using currently. This function used for the update status with vehical no.*/
     public function orderStatusUpdate(Request $request){
         $order_id = $request->input('order_id');
         if($order_id != ''){
@@ -68,6 +72,8 @@ class HomeController extends Controller
         return redirect()->route('hos3pl.home');
     }
 
+    /*Generated batch id and insert the batch in temp table. 
+    Here one condition applying that first delete batches of perticular order and then add batches*/
     public function orderBatchInsert(Request $request){
         $result = 0;
         $batch_qty_array = $request->input('batch_qty');
@@ -119,6 +125,8 @@ class HomeController extends Controller
 
     }
 
+    /*This function is use for displaying the batch details of the items. 
+    If item dispatch, getting details from pgi table other wise getting from batch_list table*/
     public function batchData(Request $request){
         $order_main_id = $request->input('order_main_id');
         $status = $request->input('status');
@@ -138,6 +146,8 @@ class HomeController extends Controller
         return $batch_data;
     }
 
+    /*Dispatch order with generated pgi id and add all details in pgi_details table.
+     Change the status of order in order_details table*/
     public function orderDispatch(Request $request){
         $order_id = $request->input('order_id');
         $pgi_details = array();
@@ -275,6 +285,7 @@ class HomeController extends Controller
         // return back();
     }
 
+    /* Getting all order with the status of approve, partially dispatch.*/
     public function openOrder()
     {
         $user_id = auth()->guard('hos3pl')->user()->id;
@@ -294,6 +305,8 @@ class HomeController extends Controller
         return view('hos_3pl.open_order', array('all_order'=>$all_order));
     }
 
+    /* Fetching all details of order, Calculate qty total of order items 
+    Pass the status in different array */
     public function openOrderDetail($order_id)
     {
         $order_detail = DB::table('order_details as od')
@@ -315,6 +328,7 @@ class HomeController extends Controller
         return view('hos_3pl.open_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'status_data'=>$status));
     }
 
+    /*Getting all the dispatch order from pgi_details table */
     public function displayOrder()
     {
         $user_id = auth()->guard('hos3pl')->user()->id;
