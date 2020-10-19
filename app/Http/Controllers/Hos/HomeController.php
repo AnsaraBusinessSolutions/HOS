@@ -399,12 +399,14 @@ class HomeController extends Controller
             
         $where_arr = array();
         if($plant != ''){
-            $where_arr['plant'] = $plant;
+            $where_arr['plant'] = $plant;  
+        }
+        if($nupco_generic_code != ''){
+            $where_arr['nupco_generic_code'] = $nupco_generic_code;
         }
         
         $stock_data = DB::table('stock')
         ->where($where_arr)
-        ->where('nupco_generic_code',$nupco_generic_code)
         ->where('nupco_desc','like','%'.$nupco_desc.'%')
         ->get();
 
