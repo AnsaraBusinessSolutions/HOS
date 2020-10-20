@@ -59,18 +59,22 @@
                 <label class="col-md-6 col-sm-4 col-4"><b>Status</b></label>
                 <label class="col-md-1 col-sm-1 col-1 px-0">:</label>
                 <label class="col-md-5 col-sm-7 col-7">
-                        @if($order_detail[0]->status == 0)
+                        @if($order_detail[0]->status == '0')
                           <span class="text-warning"><b>NEW</b></span>
-                        @elseif($order_detail[0]->status == 1)
+                        @elseif($order_detail[0]->status == '1')
                           <span class="text-danger"><b>REJECTED</b></span>
-                        @elseif($order_detail[0]->status == 2)
+                        @elseif($order_detail[0]->status == '2')
                           <span class="text-success"><b>APPROVED</b></span>
-                        @elseif($order_detail[0]->status == 3)
+                        @elseif($order_detail[0]->status == '3')
                           <span class="text-primary"><b>DISPATCHED</b></span>
-                        @elseif($order_detail[0]->status == 4)
+                        @elseif($order_detail[0]->status == '4' || $order_detail[0]->status == '6')
                           <span class="text-info"><b>DELIVERED</b></span>
-                        @elseif($order_detail[0]->status == 5)
-                          <span class="text-danger"><b>CANCELLED</b></span>
+                        @elseif(strpos($order_detail[0]->status, '6') !== false || strpos($order_detail[0]->status, '8') !== false)
+                          <span class="text-primary"><b>PARTIALLY DELIVERED</b></span>
+                        @elseif(strpos($order_detail[0]->status, '5') !== false || strpos($order_detail[0]->status, '7') !== false)
+                          <span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>
+                        @else
+                          <span class="text-primary" style="font-size: 14px"><b></b></span>
                         @endif
                 </label>
               </div>

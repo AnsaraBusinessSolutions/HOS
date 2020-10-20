@@ -64,12 +64,12 @@
                           <span class="text-success"><b>APPROVED</b></span>
                         @elseif($val->status == '3')
                           <span class="text-primary"><b>DISPATCHED</b></span>
-                        @elseif($val->status == '4')
+                        @elseif($val->status == '4' || $val->status == '6')
                           <span class="text-info"><b>DELIVERED</b></span>
-                        @elseif(strpos($val->status, '5') !== false || strpos($val->status, '7') !== false)
-                          <span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>
                         @elseif(strpos($val->status, '6') !== false || strpos($val->status, '8') !== false)
                           <span class="text-primary"><b>PARTIALLY DELIVERED</b></span>
+                        @elseif(strpos($val->status, '5') !== false || strpos($val->status, '7') !== false)
+                          <span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>
                         @else
                           <span class="text-primary" style="font-size: 14px"><b></b></span>
                         @endif

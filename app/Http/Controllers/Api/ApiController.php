@@ -44,7 +44,8 @@ class ApiController extends Controller
         $res = curl_exec($curl);
         curl_close($curl);
         $res = json_decode($res);
-
+        // print_r($res);
+        // exit;
         if(!empty($res)){
             $stock_details_arr = $res->O_WH_STOCK->DETAILS->item;
             $stock_data = array();
@@ -95,14 +96,14 @@ class ApiController extends Controller
                 }
             }
             
-           if(count($stock_data) > 0){
-              $result = DB::table('stock')->insert($stock_data);
-                if($result){
-                echo 'Stock inserted successfully';
-                }
-           }else{
-                echo 'Stock data already inserted';
-           }
+        //    if(count($stock_data) > 0){
+        //       $result = DB::table('stock')->insert($stock_data);
+        //         if($result){
+        //         echo 'Stock inserted successfully';
+        //         }
+        //    }else{
+        //         echo 'Stock data already inserted';
+        //    }
           
         }
         
