@@ -77,7 +77,7 @@ class HomeController extends Controller
                 "soap_header" => 'ZMM_WHS_STOCK_INTF',
                 "parameters" =>$parameters
                 );
-            $api_response = $this->AddStockSoapApi($input_arr);
+            $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location);
             
             $stock_data = DB::table('stock')->where('plant',$plant)
                                             ->where('storage_location',$storage_location)
@@ -395,7 +395,7 @@ class HomeController extends Controller
             "soap_header" => 'ZMM_WHS_STOCK_INTF',
             "parameters" =>$parameters
             );
-        $api_response = $this->AddStockSoapApi($input_arr);
+        $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location);
             
         $where_arr = array();
         if($plant != ''){
@@ -413,9 +413,38 @@ class HomeController extends Controller
         $result['data'] = '';
         if(!empty($stock_data)){
             foreach($stock_data as $key=>$val){
+
+                // $stock_data = DB::table('stock')->where('plant',$plant)
+                // ->where('storage_location',$storage_location)
+                // ->where('nupco_generic_code',$val->nupco_generic_code)
+                // ->groupBy('nupco_generic_code')
+                // ->selectRaw('sum(unrestricted_stock_qty) as total_qty')
+                // ->first();
+            
+                // $open_qty_data = DB::table('order_details')
+                // ->where('supplying_plant_code',$plant)
+                // ->where('sloc_id',$storage_location)
+                // ->where('nupco_generic_code',$val->nupco_generic_code)
+                // ->where('is_deleted',0)
+                // ->whereIn('status',[0,2])
+                // ->groupBy('nupco_generic_code')
+                // ->selectRaw('sum(qty_ordered) as open_qty')
+                // ->first();
+
+                // $total_qty = 0;
+                // $open_qty = 0;
+                // $availability = 0;
+                // if(!empty($stock_data)){
+                // $total_qty = $stock_data->total_qty;
+                // }
+                // if(!empty($open_qty_data)){
+                // $open_qty =  $open_qty_data->open_qty;
+                // }
+                // if($total_qty > $open_qty){
+                // $availability =  $total_qty - $open_qty;
+                // }
+
             $result['data'] .= "<tr>
-                        <td>".$val->plant."</td>
-                        <td>".$val->storage_location."</td>
                         <td>".$val->nupco_generic_code."</td>
                         <td>".$val->nupco_trade_code."</td>
                         <td>".$val->customer_trade_code."</td>
@@ -423,18 +452,19 @@ class HomeController extends Controller
                         <td>".$val->unrestricted_stock_qty."</td>
                         <td>".$val->vendor_batch."</td>
                         <td>".$val->uom."</td>
-                        <td>".$val->mfg_date."</td>
                         <td>".$val->expiry_date."</td>
                     </tr>";
             }
         }
         $result['api_response'] = $api_response;
+        $result['plant_name'] = $plant;
+        $result['sloc_name'] = $storage_location;
         echo json_encode($result);
 
     }
 
     /*Add stock data using the soap api */
-    public function AddStockSoapApi($input_arr){
+    public function AddStockSoapApi($input_arr,$plant,$storage_location){
     if(!empty($input_arr)){
         $response = '';
         $data_string = json_encode($input_arr);
@@ -458,62 +488,87 @@ class HomeController extends Controller
         $res = curl_exec($curl);
         curl_close($curl);
         $res = json_decode($res);
-
+        
         if(!empty($res)){
-            $stock_details_arr = $res->O_WH_STOCK->DETAILS->item;
-            $stock_data = array();
-            foreach($stock_details_arr as $key=>$val){
-                $nupco_generic_code = ltrim($val->MATNR, '0');
-                $data = array(
-                    'customer'=>$val->ZKUNNR,
-                    'nupco_generic_code'=>$nupco_generic_code,
-                   // 'nupco_trade_code'=>$val->BWTAR,
-                   // 'customer_trade_code'=>$val->ZCTMATNR,
-                   // 'nupco_desc'=>$val->ZNTCDES,
-                    'plant'=>$val->WERKS,
-                    'storage_location'=>$val->LGORT,
-                   // 'unrestricted_stock_qty'=>$val->CLABS,
-                    'vendor_batch'=>$val->LICHA,
-                   // 'uom'=>$val->MEINS,
-                    'batch'=>$val->CHARG,
-                   // 'map'=>$val->VERPR,
-                   // 'stock_value'=>$val->STOCKV,
-                   // 'return_stock'=>$val->CRETM,
-                    'mfg_date'=>$val->HSDAT,
-                    'expiry_date'=>$val->VFDAT);
+            $api_type = $res->O_WH_STOCK->TYPE;
+            if($api_type = 'I'){
+                $stock_details_arr = $res->O_WH_STOCK->DETAILS->item;
+                $stock_data = array();
 
-                $check_stock_available = DB::table('stock')
-                                            ->where($data)
-                                            ->select('id')
-                                            ->first();
-                        //print_r($check_stock_available);                  
-                if(empty($check_stock_available)){
-                    $stock_data[] = array(
-                    'customer'=>$val->ZKUNNR,
-                    'nupco_generic_code'=>$nupco_generic_code,
+                $update_arr = array(
+                    'unrestricted_stock_qty'=>0,
+                    'stock_value'=>0
+                );
+                DB::table('stock')
+                ->where('plant',$plant)
+                ->where('storage_location',$storage_location)
+                ->update($update_arr);
+
+                foreach($stock_details_arr as $key=>$val){
+                    $nupco_generic_code = ltrim($val->MATNR, '0');
+                    $data = array(
+                    // 'customer'=>$val->ZKUNNR,
+                        'nupco_generic_code'=>$nupco_generic_code,
                     'nupco_trade_code'=>$val->BWTAR,
-                    'customer_trade_code'=>$val->ZCTMATNR,
-                    'nupco_desc'=>$val->ZNTCDES,
-                    'plant'=>$val->WERKS,
-                    'storage_location'=>$val->LGORT,
-                    'unrestricted_stock_qty'=>$val->CLABS,
-                    'vendor_batch'=>$val->LICHA,
-                    'uom'=>$val->MEINS,
-                    'batch'=>$val->CHARG,
-                    'map'=>$val->VERPR,
-                    'stock_value'=>$val->STOCKV,
-                    'return_stock'=>$val->CRETM,
-                    'mfg_date'=>$val->HSDAT,
-                    'expiry_date'=>$val->VFDAT,
-                    'created_at'=>date('Y-m-d H:i:s'));
+                    // 'customer_trade_code'=>$val->ZCTMATNR,
+                    // 'nupco_desc'=>$val->ZNTCDES,
+                        'plant'=>$val->WERKS,
+                        'storage_location'=>$val->LGORT,
+                    // 'unrestricted_stock_qty'=>$val->CLABS,
+                        'vendor_batch'=>$val->LICHA,
+                    // 'uom'=>$val->MEINS,
+                        'batch'=>$val->CHARG,
+                    // 'map'=>$val->VERPR,
+                    // 'stock_value'=>$val->STOCKV,
+                    // 'return_stock'=>$val->CRETM,
+                    // 'mfg_date'=>$val->HSDAT,
+                    // 'expiry_date'=>$val->VFDAT
+                    );
+
+                    $check_stock_available = DB::table('stock')
+                                                ->where($data)
+                                                ->select('id')
+                                                ->first();
+                        // print_r($check_stock_available);exit;                  
+                    if(empty($check_stock_available)){
+                        $stock_data[] = array(
+                        'customer'=>$val->ZKUNNR,
+                        'nupco_generic_code'=>$nupco_generic_code,
+                        'nupco_trade_code'=>$val->BWTAR,
+                        'customer_trade_code'=>$val->ZCTMATNR,
+                        'nupco_desc'=>$val->ZNTCDES,
+                        'plant'=>$val->WERKS,
+                        'storage_location'=>$val->LGORT,
+                        'unrestricted_stock_qty'=>$val->CLABS,
+                        'vendor_batch'=>$val->LICHA,
+                        'uom'=>$val->MEINS,
+                        'batch'=>$val->CHARG,
+                        'map'=>$val->VERPR,
+                        'stock_value'=>$val->STOCKV,
+                        'return_stock'=>$val->CRETM,
+                        'mfg_date'=>$val->HSDAT,
+                        'expiry_date'=>$val->VFDAT,
+                        'created_at'=>date('Y-m-d H:i:s'));
+                    }else{
+                        $api_data_arr = array('unrestricted_stock_qty'=>$val->CLABS,
+                                            'stock_value'=>$val->STOCKV);
+                        DB::table('stock')
+                        ->where('plant',$plant)
+                        ->where('id',$check_stock_available->id)
+                        ->update($api_data_arr);
+                    }
                 }
+                // print_r($stock_data);
+                // exit;
+                if(count($stock_data) > 0){
+                    $result = DB::table('stock')->insert($stock_data);
+                }
+                $response = true; 
+            }else{
+                $response = false; 
             }
-            // print_r($stock_data);
-            // exit;
-           if(count($stock_data) > 0){
-              $result = DB::table('stock')->insert($stock_data);
-           }
-            $response = true; 
+        }else{
+            $response = false; 
         }
     }else{
         $response = false;

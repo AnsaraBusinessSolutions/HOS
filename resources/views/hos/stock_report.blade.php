@@ -37,20 +37,37 @@
             </thead>
             </form>
         </table>
+        <section class="container-fluid" style="display:none" id="stock_header">
+        <div class="row mx-0">
+            <div class="col-md-6 col-sm-6 col-12 border">
+              <div class="form-group py-1 mb-0">
+                <label class="col-md-2 col-sm-5 col-5"><b>Plant &ensp;&ensp;:</b></label>
+                <label class="col-md-9 col-sm-6 col-6" id="plant_name">
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-12 border">
+              <div class="form-group py-1 mb-0">
+                <label class="col-md-5 col-sm-5 col-5"><b>Storage Location &ensp;&ensp;&ensp;:</b></label>
+                <label class="col-md-6 col-sm-6 col-6" id="sloc_name">
+                </label>
+               </div>
+           </div>
+        </div>
+        </section>
         <div class="col-12 text-center">
             <table id="stock_report_table" class="table table-striped table-bordered example">
                 <thead>
                     <tr class="bg_color">
-                        <th width="3%" class="text-nowrap px-3">Plant</th>
-                        <th width="10%" class="text-nowrap px-3">Storage Location</th>
                         <th width="10%" class="text-nowrap px-3">NUPCO Material</th>
                         <th width="10%" class="text-nowrap px-3">NUPCO Trade Code</th>
                         <th width="5%" class="text-nowrap px-3">Customer Code</th>
                         <th width="25%" class="text-nowrap px-3">Description</th>
                         <th width="6%" class="text-nowrap px-3">Stock Qty</th>
+                        <!-- <th width="6%" class="text-nowrap px-3">Open Qty</th>
+                        <th width="6%" class="text-nowrap px-3">Available Qty</th> -->
                         <th width="8%" class="text-nowrap px-3">Vendor Batch</th>
                         <th width="5%" class="text-nowrap px-3">UOM</th>
-                        <th width="10%" class="text-nowrap px-3">Mfg Date</th>
                         <th width="8%" class="text-nowrap px-3">Expiry Date</th>
                     </tr>
                 </thead>
@@ -94,6 +111,7 @@
             processData: false,
             beforeSend: function() { 
                $("#preloader").css('display','block'); 
+               $('#stock_header').css('display','none');
                $(".add_result_alert").html('');
             },
             success:function(response)
@@ -106,7 +124,9 @@
                 }else{
                     $(".add_result_alert").html('<div class="spinner-grow text-danger"></div>')
                 }
-                
+                $('#plant_name').text(response.plant_name);
+                $('#sloc_name').text(response.sloc_name);
+                $('#stock_header').css('display','block');
                 $('#stock_report_table').DataTable( {
                     "scrollY":        "47vh",
                     "scrollCollapse": true,

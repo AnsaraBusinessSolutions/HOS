@@ -44,8 +44,8 @@ class ApiController extends Controller
         $res = curl_exec($curl);
         curl_close($curl);
         $res = json_decode($res);
-        // print_r($res);
-        // exit;
+        print_r($res);
+        exit;
         if(!empty($res)){
             $stock_details_arr = $res->O_WH_STOCK->DETAILS->item;
             $stock_data = array();

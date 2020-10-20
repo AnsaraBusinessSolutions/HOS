@@ -200,13 +200,12 @@ echo $currentTime; ?></span> |
                                 </a>
                             </li>
                             <li class="nav-item px-2 py-1">
-                                <a href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span
+                                <a href="{{ route('logout') }}" id="logout_a"><span
                                         class="badge badge-dark p-2" title="logout"><i
                                             class="fas fa-power-off"></i></span>
                                 </a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    style="display: none;">@csrf</form>
+                                    style="display: none;"><input type="hidden" name="_token" value=""></form>
                             </li>
                             <li class="nav-item px-2 py-1">
                                 <a>
@@ -275,6 +274,13 @@ echo $currentTime; ?></span> |
         uiLibrary: 'bootstrap4',
     });
     </script>
+    <script>
+    $('#logout_a').click(function(event){
+        event.preventDefault(); 
+        $('#logout-form').find('input').val($('meta[name="csrf-token"]').attr('content'));
+        document.getElementById('logout-form').submit();
+    });
+</script>
 </body>
 
 </html>

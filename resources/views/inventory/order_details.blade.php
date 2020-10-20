@@ -139,7 +139,7 @@
           <div class="col-12 text-center">
             <button class="btn btn-success">Update</button>
           </div>
-          @endif
+          @endif 
           </form>
     </div>
 @stop
