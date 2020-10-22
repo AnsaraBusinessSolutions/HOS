@@ -502,6 +502,7 @@ class HomeController extends Controller
                 DB::table('stock')
                 ->where('plant',$plant)
                 ->where('storage_location',$storage_location)
+                ->where('added_from','soap_api')
                 ->update($update_arr);
 
                 foreach($stock_details_arr as $key=>$val){
@@ -523,6 +524,7 @@ class HomeController extends Controller
                     // 'return_stock'=>$val->CRETM,
                     // 'mfg_date'=>$val->HSDAT,
                     // 'expiry_date'=>$val->VFDAT
+                    'added_from'=>'soap_api'
                     );
 
                     $check_stock_available = DB::table('stock')
@@ -548,6 +550,7 @@ class HomeController extends Controller
                         'return_stock'=>$val->CRETM,
                         'mfg_date'=>$val->HSDAT,
                         'expiry_date'=>$val->VFDAT,
+                        'added_from'=>'soap_api',
                         'created_at'=>date('Y-m-d H:i:s'));
                     }else{
                         $api_data_arr = array('unrestricted_stock_qty'=>$val->CLABS,

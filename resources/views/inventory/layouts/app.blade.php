@@ -190,11 +190,15 @@ echo $currentTime; ?></span> |
 
     });
     </script>
+
+    <!-- Common datepicker -->
     <script>
     $('.datepicker').datepicker({
         uiLibrary: 'bootstrap4'
     });
     </script>
+
+    <!-- logout script -->
     <script>
     $('#logout_a').click(function(event){
         event.preventDefault(); 

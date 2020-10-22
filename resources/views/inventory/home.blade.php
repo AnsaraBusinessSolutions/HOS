@@ -86,6 +86,7 @@
   @stop
 @push('scripts')
 <script type="text/javascript">
+//Datatable for displaying order
     $(document).ready(function() {
         $('.example').DataTable( {
             "ordering": false,

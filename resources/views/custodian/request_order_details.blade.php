@@ -293,6 +293,7 @@
 @push('scripts')
 <script type="text/javascript">
   $(document).ready(function() {
+    //Datatable for display order items
     $('.example').DataTable( {
         "ordering": false,
         "scrollY":        "55vh",
@@ -303,6 +304,7 @@
         "iDisplayLength": 1000,
     });
 
+    //Add datatable for batch list table. Currently this function isn't used
     $('#batch_table').DataTable({
       "searching": false,
       "paging": false,
@@ -310,6 +312,7 @@
       "bInfo": false,
     });
 
+    //Click on batch button and dislay all batch of that item in popup. Currently this function is not using 
     $('.btn_batch').click(function(e){
       e.preventDefault();
       var order_id = $(this).data('order_id');
@@ -328,11 +331,13 @@
           });
     });
 
+    //Datepicker for delivery date input
     $("#delivery_date_order").datepicker({ 
       format: 'yyyy-mm-dd',
       uiLibrary: 'bootstrap4'
     });  
 
+    //Change delivery date and save date in database
     $('#date_change_btn').click(function(e){
       e.preventDefault();
       var delivery_date = $(this).data('delivery_date');
@@ -340,6 +345,7 @@
       $('#date_change').modal('show');
     });
 
+    //Display item and header text in popup
     $(".text_icon").click(function(){
         var icon_row_id = $(this).data('row_id');
         $('#text_input').val($('#text_'+icon_row_id).val());

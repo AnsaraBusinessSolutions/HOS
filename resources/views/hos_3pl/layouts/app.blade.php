@@ -38,12 +38,6 @@
          </div>
          
       </div>
-        <!-- <span class="dropdown">
-          <span class="dropdown-toggle" data-toggle="dropdown" style="color:#197c89">White Pharmacy</span> |
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Logout</a>
-          </div>
-        </span> -->
         <span style="color:#197c89;"><?php echo date("Y/m/d"); ?></span> |
         <span style="color:#8a8c8d;"><?php date_default_timezone_set('Asia/Kolkata');
 $currentTime = date( 'h:i:s A', time () );
@@ -135,7 +129,6 @@ echo $currentTime; ?></span> |
   <script src="{{ asset('public/hos/js/crs.min.js') }}"></script>
   <script src="{{ asset('public/hos/js/script.js') }}"></script>
   <!--------table style lib------------------------>
-  
   <script src="{{ asset('public/hos/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ asset('public/hos/js/dataTables.bootstrap4.min.js') }}"></script>
   <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
@@ -160,11 +153,15 @@ echo $currentTime; ?></span> |
 
    });
   </script>
+
+  <!-- Common datepicker -->
   <script>
         $('.datepicker').datepicker({
             uiLibrary: 'bootstrap4'
         });
-    </script>
+  </script>
+
+  <!-- logout script -->
   <script>
     $('#logout_a').click(function(event){
         event.preventDefault(); 

@@ -44,12 +44,6 @@
             <img class="" src="{{ asset('public/hos/img/logo2.png') }}" height="50px" width="auto" style="margin:16px 10px">
           </div>
       </div>
-        <!-- <span class="dropdown">
-          <span class="dropdown-toggle" data-toggle="dropdown" style="color:#197c89">White Pharmacy</span> |
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Logout</a>
-          </div>
-        </span> -->
         <span style="color:#197c89;"><?php echo date("Y/m/d"); ?></span> |
         <span style="color:#8a8c8d;"><?php date_default_timezone_set('Asia/Kolkata');
 $currentTime = date( 'h:i:s A', time () );
@@ -152,11 +146,15 @@ echo $currentTime; ?></span> |
 
    });
   </script>
+
+  <!-- Common datepicker -->
   <script>
         $('.datepicker').datepicker({
             uiLibrary: 'bootstrap4'
         });
     </script>
+
+    <!-- logout script -->
     <script>
       $('#logout_a').click(function(event){
         event.preventDefault(); 

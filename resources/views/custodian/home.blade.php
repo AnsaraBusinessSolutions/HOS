@@ -55,6 +55,7 @@
       @stop
 @push('scripts')
 <script type="text/javascript">
+    //Datatable of order list in homepage
     $(document).ready(function() {
         $('.example').DataTable( {
             "ordering":false,

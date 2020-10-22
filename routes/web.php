@@ -40,6 +40,15 @@ Route::prefix('store')->group(function () {
     Route::post('material_data', 'Hos\HomeController@materialData')->name('hos.material.data');
     Route::get('/stock_report', 'Hos\HomeController@stockReport')->name('hos.stock.report');
     Route::post('/search_stock', 'Hos\HomeController@searchStock')->name('hos.search.stock');
+
+    //Department related route
+    Route::get('/department_order', 'Hos\DepartmentController@departmentOrder')->name('hos.department.order')->middleware('auth');
+    Route::post('department_search_data', 'Hos\DepartmentController@departmentSearchData')->name('hos.department.search.data');
+    Route::post('department_material_data', 'Hos\DepartmentController@departmentMaterialData')->name('hos.department.material.data');
+    Route::post('/add_department_order', 'Hos\DepartmentController@addDepartmentOrder')->name('hos.add.department.order')->middleware('auth');
+    Route::get('/department_order_list', 'Hos\DepartmentController@departmentOrderList')->name('hos.department.order.list')->middleware('auth');
+    Route::get('/department_order_detail/{department_order_id}', 'Hos\DepartmentController@departmentOrderDetail')->name('hos.department.order.detail')->middleware('auth');
+    Route::post('/add_stock_consumption', 'Hos\DepartmentController@addStockConsumption')->name('hos.add.stock.consumption')->middleware('auth');
 });
 
 Route::prefix('custodian')->group(function () {

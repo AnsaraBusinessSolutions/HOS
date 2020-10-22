@@ -66,7 +66,7 @@
       @stop
 @push('scripts')
 <script type="text/javascript">
-
+    //Chnage ordering sequence using datatable
     $.fn.dataTable.ext.type.order['order-status-pre'] = function ( d ) {
         switch ( d ) {
             case '<span class="text-primary"><b>APPROVED</b></span>':    return 1;
@@ -77,6 +77,7 @@
     };
 
     $(document).ready(function() {
+      //Datatable for open order list
         $('.example').DataTable( {
            "order": [6,'asc'],
               columnDefs: [

@@ -76,6 +76,7 @@
     };
 
     $(document).ready(function() {
+      //Datatable for order list
         $('.example').DataTable( {
            "order": [6,'asc'],
               columnDefs: [

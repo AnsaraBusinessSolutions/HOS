@@ -97,6 +97,7 @@ table.dataTable thead .sorting_desc_disabled:before {
 @push('scripts')
 <script type="text/javascript">
 $(document).ready(function() {
+    //Datatable for delivered open orders
     $('.example').DataTable({
         "ordering": false,
         "scrollY": "55vh",

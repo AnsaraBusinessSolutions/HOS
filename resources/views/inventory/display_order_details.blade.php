@@ -129,6 +129,7 @@
 @push('scripts')
 <script>
 $(function() {
+  //Datatable for display delivered order items
   var counter = 1;
     $('#display_order').DataTable( {
         "ordering": false,

@@ -14,6 +14,8 @@ class HomeController extends Controller
         $this->middleware('auth.inventory');
     }
 
+    /* Getting all order with the status of  dispatch, partially dispatch,delivered, partially delivered.
+    this data is getting from pgi_details table*/
     public function index()
     {   
         $user_id = auth()->guard('inventory')->user()->id;
@@ -34,6 +36,8 @@ class HomeController extends Controller
         return view('inventory.home', array('all_order'=>$all_order));
     }
 
+    /* Fetching all details of order. 
+    Pass the status in different array */
     public function orderDetail($order_id){
         $order_detail = DB::table('pgi_details as pd')
                                         ->join('hss_master as hs','pd.hss_master_no','=','hs.hss_master_no')
@@ -47,6 +51,8 @@ class HomeController extends Controller
         return view('inventory.order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'status_data'=>$status));
     }
 
+    /*Crerat grn_id and insert all data in grn table.
+    Also the data add in stock table */
     public function createGrn(Request $request){
         $pgi_main_id_arr = $request->input('pgi_main_id');
         $received_qty_arr = $request->input('received_qty');
@@ -126,14 +132,15 @@ class HomeController extends Controller
                         'nupco_trade_code'=>$pgi_data->nupco_trade_code,
                         'customer_trade_code'=>$pgi_data->customer_trade_code,
                         'nupco_desc'=>$pgi_data->material_desc,
-                        'plant'=>$pgi_data->supplying_plant_code,
-                        'storage_location'=>$pgi_data->sloc_id,
+                        'plant'=>$pgi_data->hss_master_no,
+                        'storage_location'=>$pgi_data->hss_master_no,
                         'unrestricted_stock_qty'=>$received_qty_arr[$key],
                         'vendor_batch'=>$pgi_data->batch_no,
                         'uom'=>$pgi_data->uom,
                         'batch'=>'',
                         'mfg_date'=>$pgi_data->manufacture_date,
                         'expiry_date'=>$pgi_data->expiry_date,
+                        'added_from'=>'hos_inventory',
                         'created_at'=>date('Y-m-d H:i:s'));
 
                         DB::table('stock')->insert($stock_data);
@@ -217,6 +224,8 @@ class HomeController extends Controller
         }
     }
 
+    /* Getting all order with the status of  dispatch, partially dispatch,delivered, partially delivered.
+    this data is getting from pgi_details table*/
     public function openOrder()
     {   
         $user_id = auth()->guard('inventory')->user()->id;
@@ -239,6 +248,8 @@ class HomeController extends Controller
         return view('inventory.open_order', array('all_order'=>$all_order));
     }
 
+    /* Fetching all details of order. 
+    Pass the status in different array */
     public function openOrderDetail($order_id){
         $order_detail = DB::table('pgi_details as pd')
                                         ->join('hss_master as hs','pd.hss_master_no','=','hs.hss_master_no')
@@ -253,6 +264,7 @@ class HomeController extends Controller
         return view('inventory.open_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'status_data'=>$status));
     }
 
+    /*Getting all delivered order from grn_details tables */
     public function displayOrder()
     {
         $user_id = auth()->guard('inventory')->user()->id;
@@ -270,6 +282,8 @@ class HomeController extends Controller
         return view('inventory.display_order', array('all_order'=>$all_order));
     }
 
+    /* Fetching all details of order. 
+    Pass the status in different array */
     public function displayOrderDetail($order_id)
     {
         $order_detail = DB::table('grn_details as gd')

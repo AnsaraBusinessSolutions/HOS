@@ -116,6 +116,8 @@
     <script src="{{ asset('public/hos/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('public/hos/js/crs.min.js') }}"></script>
     <script src="{{ asset('public/hos/js/script.js') }}"></script>
+
+     <!-- Button animation -->
     <script type="text/javascript">
     var animateButton = function(e) {
         e.preventDefault;

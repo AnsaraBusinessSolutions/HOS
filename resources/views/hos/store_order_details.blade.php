@@ -273,12 +273,14 @@
 <script>
 var table;
   $(document).ready(function() {
+    //Datatable for display order items
     table = $('#order_detail').DataTable({
         "searching": false,
         "paging": false,
         "ordering": false
       });
 
+    //Add datatable for batch list table. Currently this function isn't used
      $('#batch_table').DataTable({
       "searching": false,
       "paging": false,
@@ -286,6 +288,7 @@ var table;
       "bInfo": false,
     });
 
+    //Hide drop down when user search the data and then click outside the dropdown
     $(document).mouseup(function(e) {
         var container = $(".search_data ul");
         if (!container.is(e.target) && container.has(e.target).length === 0) 
@@ -294,6 +297,7 @@ var table;
         }
     });
 
+    //when add qty in qty-input at that time compare qty and available qty and according that change text color
     $(document).on('keyup',".qty_input",function(){
         var qty_val = $(this).val();
         var row_no = $(this).data('row_id');
@@ -307,10 +311,12 @@ var table;
         }
     });
 
+    //Call all function
     autoSearchMaterial();
     deleteRow();
     textAddAndDisplay();
 
+    //Click on add item and add new row in table
     var counter = {{count($order_detail)}};
     $('#addRow').on('click', function (e) { 
       e.preventDefault();
@@ -334,6 +340,7 @@ var table;
         textAddAndDisplay();
     });
 
+    //Click on batch button and dislay all batch of that item in popup. Currently this function is not using 
       $('.btn_batch').click(function(e){
         e.preventDefault();
         var order_id = $(this).data('order_id');
@@ -355,10 +362,9 @@ var table;
            });
       });
 
-   
-
   });
 
+  //Type material code,customer code or description and accroding that getting available data from database.(Search data)
   function autoSearchMaterial(){
   $('input.material_data').keyup(function(){ 
       var row_id = $(this).data('row_id');
@@ -391,6 +397,7 @@ var table;
     });
 }
 
+//Set all data in table row when click on perticular one item from the search dropdown
 function setMaterialData(element,input_name,row_id){
     var input_data = $(element).text();
     $.ajax({
@@ -429,6 +436,7 @@ function setMaterialData(element,input_name,row_id){
     });
  }
 
+//Select checkbox for delete item
  function deleteRow(){
   $('#order_detail tr td input[type="checkbox"]').click( function() {
         $(this).closest('tr').find(":input:not(:first)").attr('disabled', this.checked);
@@ -441,6 +449,7 @@ function setMaterialData(element,input_name,row_id){
     });
  }
 
+//All validation for qty
  function checkQtyValidation(){
   var check_qty = 1;
       $("#order_detail .qty_input").each(function() {
@@ -477,6 +486,7 @@ function setMaterialData(element,input_name,row_id){
       }
  }
 
+//Using this function item and header text add and display in popup
  function textAddAndDisplay(){
   $(".text_icon").click(function(){
         var icon_row_id = $(this).data('row_id');

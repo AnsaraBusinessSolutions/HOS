@@ -67,22 +67,13 @@
                  <tr>
                   <th width="1%" class="p-0">&ensp;</th>
                    <th width="13%" class="p-0">
-                    <label for="supplying-plant">Supplying Plant:</label></th>
-                    @if(count($delivery_wh) > 0)
+                    <label for="supplying-plant">Department:</label></th>
                    <th width="20%" class="p-0 border">
-                    <label class="mb-0 py-2" ><b>{{$delivery_wh[0]->delivery_wh_name}}</b></label>
-                    <input type="hidden" name="supplying_plant_code" value="{{$delivery_wh[0]->delivery_warehouse}}">
-                    <input type="hidden" name="supplying_plant" value="{{$delivery_wh[0]->delivery_wh_name}}">
-                    <input type="hidden" name="sloc_id" value="{{$delivery_wh[0]->sloc_id}}">
-                    <input type="hidden" name="hss_master_no" value="{{$delivery_wh[0]->hss_master_no}}">
-                    <input type="hidden" name="hospital_name" value="{{$delivery_wh[0]->name1}}">
-                    @else
-                    <input type="hidden" name="supplying_plant_code" value="">
-                    <input type="hidden" name="supplying_plant" value="">
-                    <input type="hidden" name="sloc_id" value="">
-                    <input type="hidden" name="hss_master_no" value="">
-                    <input type="hidden" name="hospital_name" value="">
-                    @endif
+                    <select class="form-control" name="department_id" id="department_id">
+                    @foreach($departments as $key=>$val)
+                      <option value="{{$val->id}}">{{$val->department_name}}</option>
+                    @endforeach
+                    </select>
                     </th>
                     <th width="1%" class="p-0">&ensp;</th>
                     <th width="10%" class="p-0">
@@ -92,11 +83,8 @@
                       <option value="normal">Normal</option>
                       <option value="emergency">Emergency</option>
                     </select>
+                    </th>
                      <th width="2%" class="p-0">&ensp;</th>
-                   <th width="10%" class="p-0">
-                    <label for="delivery-date">Delivery Date:</label></th>
-                   <th width="16%" class="p-0">
-                    <input type="" class="datepicker form-control h_sm" name="delivery_date" id="delivery_date" required autocomplete="off"></th>
                   <th width="6%" class="p-0">
                     <input type="hidden" class="form-control h_1rem" data-row_id="ht1" data-name="header_text" id="text_ht1" name="header_text">
                     <i class="fas fa-file-alt text_icon" aria-hidden="true" data-row_id="ht1"></i>
@@ -197,21 +185,21 @@ $(function() {
  
     //Date disabled according order type
     //Normal : Display tomorrow and future date,Disable friday and saturday //Emergency : Display today and future date,Disable friday and saturday
-    $('#order_type').on('change', function (e) {
-        var selected_order_type = $(this).val();
-        var date_disable_min; 
-        if(selected_order_type == 'normal'){
-          date_disable_min = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1);
-        }else{  
-          date_disable_min = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-        }
-        $("#delivery_date").datepicker("destroy");
-        $('#delivery_date').datepicker({
-          uiLibrary: 'bootstrap4',
-          minDate: date_disable_min,
-          disableDaysOfWeek: [5, 6],
-        });
-    });
+    // $('#order_type').on('change', function (e) {
+    //     var selected_order_type = $(this).val();
+    //     var date_disable_min; 
+    //     if(selected_order_type == 'normal'){
+    //       date_disable_min = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1);
+    //     }else{  
+    //       date_disable_min = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    //     }
+    //     $("#delivery_date").datepicker("destroy");
+    //     $('#delivery_date').datepicker({
+    //       uiLibrary: 'bootstrap4',
+    //       minDate: date_disable_min,
+    //       disableDaysOfWeek: [5, 6],
+    //     });
+    // });
 
     //when add qty in qty-input at that time compare qty and available qty and according that change text color
     $(document).on('keyup',".qty_input",function(){
@@ -270,8 +258,6 @@ $(function() {
       }
       else if($('#store_order tbody').children().length == 0) {
         alert('Please add atleast one order');
-      }else if($('#delivery_date').val() == ''){
-        alert('Please select Delivery Date');
       }else{
         $('#conformation_modal').modal('show');
       }
@@ -283,7 +269,7 @@ $(function() {
     // event.preventDefault();
       var formData = new FormData(document.getElementById("store_order_form"));
       $.ajax({
-          url:"{{ route('hos.add.order') }}",
+          url:"{{ route('hos.add.department.order') }}",
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
@@ -302,7 +288,7 @@ $(function() {
             if(data == 0){
               location.reload(true);
             }else{
-                window.location.href='{{route('hos.home')}}';
+                window.location.href="{{route('hos.department.order.list')}}";
             }
             
           }
@@ -359,7 +345,7 @@ function autoSearchMaterial(){
     {
       var token = "{{ csrf_token() }}";
       $.ajax({
-        url:"{{ route('hos.search.data') }}",
+        url:"{{ route('hos.department.search.data') }}",
         headers: {
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
@@ -386,7 +372,7 @@ function autoSearchMaterial(){
 function setMaterialData(element,input_name,row_id){
     var input_data = $(element).text();
     $.ajax({
-      url: '{!! route('hos.material.data') !!}',
+      url: "{!! route('hos.department.material.data') !!}",
       headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },

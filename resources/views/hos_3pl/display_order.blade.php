@@ -38,6 +38,7 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function() {
+      //Datatable for dispatch order list table
         $('.example').DataTable( {
             "ordering": false,
             "scrollY":        "55vh",

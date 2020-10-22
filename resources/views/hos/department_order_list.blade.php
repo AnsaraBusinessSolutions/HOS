@@ -31,7 +31,7 @@
    <div class="container-fluid main_content bg-white p-2">
         <div class="row mx-0">
           <div class="col-12 text-center">
-            <h5 style="color: steelblue"> <b>{{__('lang.exist_order_list')}}</b> </h5>
+            <h5 style="color: steelblue"> <b>{{__('lang.department_order_list')}}</b> </h5>
           </div>
           <div class="col-12 text-center">
             <table id="example" class="table table-striped table-bordered example">
@@ -48,10 +48,10 @@
               </thead>
               <tbody>
               @foreach($all_order as $key=>$val)
-                  <tr onclick="window.location.href='{{url('store/order_detail/'.$val->order_id)}}'">
-                      <td>@if($val->order_type == 'emergency')<i class="fas fa-circle text-danger fs_10"></i>&ensp;@endif{{$val->order_id}}</td>
+                  <tr onclick="window.location.href='{{url('store/department_order_detail/'.$val->department_order_id)}}'">
+                      <td>@if($val->order_type == 'emergency')<i class="fas fa-circle text-danger fs_10"></i>&ensp;@endif{{$val->department_order_id}}</td>
                       <td>{{$val->supplying_plant}}</td>
-                      <td>{{$val->delivery_date}}</td>
+                      <td>{{$val->department_name}}</td>
                       <td>{{$val->total_item}}</td>
                       <td>{{$val->total_qty}}</td>
                       <td>{{date('Y-m-d', strtotime($val->created_date))}}</td>
@@ -59,17 +59,7 @@
                         @if($val->status == '0')
                           <span class="text-warning"><b>NEW</b></span>
                         @elseif($val->status == '1')
-                          <span class="text-danger"><b>REJECTED</b></span>
-                        @elseif($val->status == '2')
-                          <span class="text-success"><b>APPROVED</b></span>
-                        @elseif($val->status == '3')
-                          <span class="text-primary"><b>DISPATCHED</b></span>
-                        @elseif($val->status == '4' || $val->status == '6')
-                          <span class="text-info"><b>DELIVERED</b></span>
-                        @elseif(strpos($val->status, '6') !== false || strpos($val->status, '8') !== false)
-                          <span class="text-primary"><b>PARTIALLY DELIVERED</b></span>
-                        @elseif(strpos($val->status, '5') !== false || strpos($val->status, '7') !== false)
-                          <span class="text-primary"><b>PARTIALLY DISPATCHED</b></span>
+                          <span class="text-success"><b>RECEIVED</b></span>
                         @else
                           <span class="text-primary" style="font-size: 14px"><b></b></span>
                         @endif

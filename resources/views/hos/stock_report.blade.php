@@ -84,6 +84,7 @@
 @stop
 @push('scripts')
 <script type="text/javascript">
+    // Datatable for stock report table 
     $(document).ready(function() {
         $('#stock_report_table').DataTable( {
             "scrollY":        "47vh",
@@ -94,7 +95,7 @@
         });
     });
 
-    //$('#search_stock_btn').click(function(){
+    //Search stock form submit event
     $("#search_stock_form").on("submit", function (e) {
         e.preventDefault();
         var formData = new FormData(document.getElementById("search_stock_form"));

@@ -37,6 +37,7 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function() {
+      //Datatable for display delivered orders
         $('.example').DataTable( {
             "ordering": false,
             "scrollY":        "55vh",

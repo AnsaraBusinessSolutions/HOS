@@ -345,6 +345,8 @@ class HomeController extends Controller
         return view('hos_3pl.display_order', array('all_order'=>$all_order));
     }
 
+    /* Fetching all details of order from pgi details, Calculate qty total of order items 
+    Pass the status in different array */
     public function displayOrderDetail($order_id)
     {
         $order_detail = DB::table('pgi_details as pd')
@@ -365,7 +367,7 @@ class HomeController extends Controller
         return view('hos_3pl.display_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'total_qty'=>$total_qty,'status_data'=>$status));
     }
 
-
+    /*Get batches for dispalying in dispatch order details page*/
     public function displayBatchData(Request $request){
         $order_main_id = $request->input('order_main_id');
         $status = $request->input('status');
@@ -380,6 +382,7 @@ class HomeController extends Controller
         return $batch_data;
     }
 
+    /*This function is use for trade code iterchangebility. Select different trade code and getting all details according that */
     public function tradeCodeData(Request $request){
         $material_master_id =$request->input('material_master_id');
 

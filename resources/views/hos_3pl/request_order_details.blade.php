@@ -291,6 +291,7 @@
 <script>
 $(function() {
   var counter = 1;
+  //Datatable for order items
     $('.example').DataTable( {
         "ordering": false,
         "scrollY":        "55vh",
@@ -301,7 +302,7 @@ $(function() {
         "iDisplayLength": 1000,
     });
 
-    
+    //Click on add batch button and add new row in batch table.  
     $('#add_batch').click(function () {
         var tr = $('<tr><td><input class="form-control batch_qty" type="text" name="batch_qty[]" id="batch_qty_'+counter+'" required maxlength="10" autocomplete="off"></td>'
                   +'<td><input class="form-control" type="text" name="batch_no[]" id="batch_no_'+counter+'" required maxlength="10" autocomplete="off"></td>'
@@ -320,6 +321,7 @@ $(function() {
         counter++;
     });
 
+    //Click on batch button and dislay all batch of that item in popup.
     $('.batch_btn').click(function(){
         var order_id = $(this).data('order_id');
         var order_main_id = $(this).data('order_main_id');
@@ -376,6 +378,7 @@ $(function() {
         }
     });
 
+    //Submit batch in database using this event. 
     $('#batch_submit').click(function(e){
       e.preventDefault();
       var total_qty = 0;
@@ -408,11 +411,13 @@ $(function() {
         }
     });
 
+    //Clear modal data when modal close and again open
     $('#batch_modal').on('hidden.bs.modal', function () {
       $('#batch_modal').find('tbody tr').remove();
       counter = 1;
     });
 
+    //Using this function item and header text display in popup
     $(".text_icon").click(function(){
         var icon_row_id = $(this).data('row_id');
         $('#text_input').val($('#text_'+icon_row_id).val());
@@ -420,6 +425,7 @@ $(function() {
         $('#text_modal').modal('show');
     });
 
+    //Iterchangeability functionality. When select trade code at that time change another data according that
     $('.trade_code_select').on('change', function (e) {
         var row_id = $(this).data('row_id');
         var material_master_id = $(this).find(':selected').data('material_master_id');
@@ -452,10 +458,12 @@ $(function() {
     });
 
 });
+
+  //Delete row in batch list table.
   function deleteRow(btn) {
-  var row = btn.parentNode.parentNode;
-  row.parentNode.removeChild(row);
-}
+    var row = btn.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+  }
 </script>
 @endpush
 

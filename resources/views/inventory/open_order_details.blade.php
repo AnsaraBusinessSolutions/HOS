@@ -147,6 +147,7 @@
 @push('scripts')
 <script type="text/javascript">
   $(document).ready(function() {
+    //Datatable for open order items
     $('.example').DataTable( {
         "ordering": false,
         "scrollY":        "41vh",
@@ -157,6 +158,7 @@
         "iDisplayLength": 1000,
     });
 
+    //Click on checkbox and enable-disable received qty inputbox
     $(".select_item").click(function () {
       var row_id = $(this).data('row_id');
       if ($(this).is(":checked")) {
@@ -170,6 +172,7 @@
 
   });
 
+   //Check all received qty validation
   function checkQtyValidation(){
   var check_qty = 1;
       $("#order_detail .received_qty").each(function() {

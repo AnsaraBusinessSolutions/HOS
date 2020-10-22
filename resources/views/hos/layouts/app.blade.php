@@ -63,12 +63,6 @@
                         style="margin:16px 10px">
                 </div>
             </div>
-            <!-- <span class="dropdown">
-          <span class="dropdown-toggle" data-toggle="dropdown" style="color:#197c89">White Pharmacy</span> |
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Logout</a>
-          </div>
-        </span> -->
             <span style="color:#197c89;"><?php echo date("Y/m/d"); ?></span> |
             <span style="color:#8a8c8d;"><?php date_default_timezone_set('Asia/Kolkata');
 $currentTime = date( 'h:i:s A', time () );
@@ -112,6 +106,22 @@ echo $currentTime; ?></span> |
                         <a class="nav-link" href="{{route('hos.stock.report')}}">
                             <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;{{__('lang.inventory')}}</a>
                     </li>
+                    @if(Request::path() == 'store/department_order')
+                    <li class="nav-item my-1 active">
+                        @else
+                    <li class="nav-item my-1 ">
+                        @endif
+                        <a class="nav-link" href="{{ route('hos.department.order') }}">
+                            <i class="fas fa-store fs_18"></i>&ensp; {{__('lang.department_order')}}</a>
+                    </li>
+                    @if(Request::path() == 'store/department_order_list' || Request::is('store/department_order_detail/*'))
+                    <li class="nav-item my-1 active">
+                        @else
+                    <li class="nav-item my-1 ">
+                        @endif
+                        <a class="nav-link" href="{{ route('hos.department.order.list') }}">
+                            <i class="fas fa-tachometer-alt fs_18"></i>&ensp; {{__('lang.department_order_list')}}</a>
+                    </li>
                     <!-- <li class="nav-item mb-1">
                         <a class="nav-link" href="#">
                             <i class="fas fa-balance-scale fs_18"></i> &ensp;{{__('lang.sales')}}</a>
@@ -129,7 +139,7 @@ echo $currentTime; ?></span> |
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent" style="height: 57px">
                         <ul class="navbar-nav mr-auto">
-                            @if(Request::path() == 'store/order')
+                            @if(Request::path() == 'store/order' || Request::path() == 'store/department_order')
                             <li class="nav-item">
                                 <a class="nav-link" href="">
                                     <i class="fas fa-copy fs_18"></i><br>
@@ -221,8 +231,6 @@ echo $currentTime; ?></span> |
         </div>
     </div>
 
-
-
     <!-- script files -->
     <script src="{{ asset('public/hos/js/jquery.min.js') }}"></script>
     <script src="{{ asset('public/hos/js/jquery-3.3.1.js') }}"></script>
@@ -231,23 +239,12 @@ echo $currentTime; ?></span> |
     <script src="{{ asset('public/hos/js/crs.min.js') }}"></script>
     <script src="{{ asset('public/hos/js/script.js') }}"></script>
     <!--------table style lib------------------------>
-
     <script src="{{ asset('public/hos/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('public/hos/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 
     @stack('scripts')
-    <script>
-    // $('#lang_switch_select').on('change', function (e) {
-    //     alert($(this).val());
-    //     var lang = $(this).val();
-    //     $.ajax({
-    //           type: "GET",
-    //           url: "{{ url('locale') }}/"+lang,
-    //   });
-    // });
-    </script>
     <script>
     $('.topsecnav .navbar-nav .nav-link').on('click', function() {
         $('.topsecnav .navbar-nav').find('.nav-item.active').removeClass('active');
@@ -266,6 +263,8 @@ echo $currentTime; ?></span> |
 
     });
     </script>
+
+    <!-- Common datepicker -->
     <script>
     var date_disable_min = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1);
     $('.datepicker').datepicker({
@@ -274,6 +273,8 @@ echo $currentTime; ?></span> |
         uiLibrary: 'bootstrap4',
     });
     </script>
+
+    <!-- logout script -->
     <script>
     $('#logout_a').click(function(event){
         event.preventDefault(); 
