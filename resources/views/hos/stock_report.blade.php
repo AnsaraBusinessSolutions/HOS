@@ -28,10 +28,19 @@
                     <th width="1%" class="p-0"><label></label></th>
                     <th width="14%" class="p-0"> <input type="text" class="form-control form-control-sm" name="plant" placeholder="Supplying Warehouse" required></th>
                     <th width="2%" class="p-0">&ensp;</th>
+                    <th width="20%" class="p-0"><input type="text" class="form-control form-control-sm" name="storage_location" placeholder="Storage Location" required></th>
+                    <th width="2%" class="p-0">&ensp;</th>
                     <th width="20%" class="p-0"><input type="text" class="form-control form-control-sm" name="nupco_generic_code" placeholder="NUPCO Material"></th>
                     <th width="2%" class="p-0">&ensp;</th>
                     <th width="14%" class="p-0"><input type="text" class="form-control form-control-sm" name="nupco_desc" placeholder="Description"></th>
-                    <th width="10%" class="p-0"><button type="submit" class="btn btn-success btn-sm" id="search_stock_btn">Search</button></th>
+                    <th width="2%" class="p-0">&ensp;</th>
+                    <th width="10%" class="p-0">
+                        <input type="checkbox" name="no_zero" id="no_zero" value="1" checked>
+                        <label for="">No Zero Qty</label>
+                    </th>
+                    <th width="10%" class="p-0">
+                        <button type="submit" class="btn btn-success btn-sm" id="search_stock_btn">Search</button>
+                    </th>
                     <th width="6%" class="p-0 add_result_alert"></th>
                 </tr>
             </thead>

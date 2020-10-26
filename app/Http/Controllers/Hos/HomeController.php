@@ -41,7 +41,21 @@ class HomeController extends Controller
     {
         $hss_master_id = Auth::user()->hss_master_id;
         $delivery_wh = DB::table('hss_master')->where('id',$hss_master_id)->get();
-    
+
+        if(count($delivery_wh) > 0){
+            $plant = $delivery_wh[0]->delivery_warehouse;
+            $storage_location = $delivery_wh[0]->sloc_id;
+            $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant;
+            $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
+            $input_arr = array(
+                "wsdl_link" => $wsdl_link,
+                "user_name" => Config::get('constants.soap_api_username'),
+                "pass_word" => Config::get('constants.soap_api_password'),
+                "soap_header" => 'ZMM_WHS_STOCK_INTF',
+                "parameters" =>$parameters
+                );
+            $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location,'');
+        }
         return view('hos.store_order',array('delivery_wh'=>$delivery_wh));
     }
 
@@ -67,18 +81,7 @@ class HomeController extends Controller
             $plant = $hss_data->delivery_warehouse;
             $storage_location = $hss_data->sloc_id;
 
-             //call soap api
-            $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant;
-            $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
-            $input_arr = array(
-                "wsdl_link" => $wsdl_link,
-                "user_name" => Config::get('constants.soap_api_username'),
-                "pass_word" => Config::get('constants.soap_api_password'),
-                "soap_header" => 'ZMM_WHS_STOCK_INTF',
-                "parameters" =>$parameters
-                );
-            $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location);
-            
+             //call soap api 
             $stock_data = DB::table('stock')->where('plant',$plant)
                                             ->where('storage_location',$storage_location)
                                             ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
@@ -379,14 +382,11 @@ class HomeController extends Controller
     public function searchStock(Request $request){
         $nupco_generic_code =$request->input('nupco_generic_code');
         $plant =$request->input('plant');
+        $storage_location  =$request->input('storage_location');
         $nupco_desc =$request->input('nupco_desc');
 
         //call soap api
-        $hss_master_id = Auth::user()->hss_master_id;
-        $hss_data = DB::table('hss_master')->select('sloc_id')->where('id',$hss_master_id)->first();
-        $storage_location = $hss_data->sloc_id;
-
-        $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant;
+        $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant.',I_MATNR='.$nupco_generic_code;
         $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
         $input_arr = array(
             "wsdl_link" => $wsdl_link,
@@ -395,7 +395,7 @@ class HomeController extends Controller
             "soap_header" => 'ZMM_WHS_STOCK_INTF',
             "parameters" =>$parameters
             );
-        $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location);
+        $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location,$nupco_generic_code);
             
         $where_arr = array();
         if($plant != ''){
@@ -404,12 +404,20 @@ class HomeController extends Controller
         if($nupco_generic_code != ''){
             $where_arr['nupco_generic_code'] = $nupco_generic_code;
         }
-        
-        $stock_data = DB::table('stock')
-        ->where($where_arr)
-        ->where('nupco_desc','like','%'.$nupco_desc.'%')
-        ->get();
 
+        if($request->has('no_zero')){
+            $stock_data = DB::table('stock')
+                    ->where($where_arr)
+                    ->where('nupco_desc','like','%'.$nupco_desc.'%')
+                    ->where('unrestricted_stock_qty','!=',0)
+                    ->get();
+        }else{
+            $stock_data = DB::table('stock')
+            ->where($where_arr)
+            ->where('nupco_desc','like','%'.$nupco_desc.'%')
+            ->get();
+        }
+        
         $result['data'] = '';
         if(!empty($stock_data)){
             foreach($stock_data as $key=>$val){
@@ -464,7 +472,7 @@ class HomeController extends Controller
     }
 
     /*Add stock data using the soap api */
-    public function AddStockSoapApi($input_arr,$plant,$storage_location){
+    public function AddStockSoapApi($input_arr,$plant,$storage_location,$nupco_generic_code){
     if(!empty($input_arr)){
         $response = '';
         $data_string = json_encode($input_arr);
