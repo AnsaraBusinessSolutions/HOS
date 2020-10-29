@@ -40,6 +40,8 @@ Route::prefix('store')->group(function () {
     Route::post('material_data', 'Hos\HomeController@materialData')->name('hos.material.data');
     Route::get('/stock_report', 'Hos\HomeController@stockReport')->name('hos.stock.report');
     Route::post('/search_stock', 'Hos\HomeController@searchStock')->name('hos.search.stock');
+    Route::get('/own_stock_report', 'Hos\HomeController@ownStockReport')->name('hos.own.stock.report');
+    Route::post('/own_search_stock', 'Hos\HomeController@ownSearchStock')->name('hos.own.search.stock');
 
     //Department related route
     Route::get('/department_order', 'Hos\DepartmentController@departmentOrder')->name('hos.department.order')->middleware('auth');

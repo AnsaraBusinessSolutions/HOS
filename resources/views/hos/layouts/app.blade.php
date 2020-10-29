@@ -104,7 +104,15 @@ echo $currentTime; ?></span> |
                     <li class="nav-item my-1 ">
                         @endif
                         <a class="nav-link" href="{{route('hos.stock.report')}}">
-                            <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;{{__('lang.inventory')}}</a>
+                            <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Warehouse Inventory</a>
+                    </li>
+                    @if(Request::path() == 'store/own_stock_report')
+                    <li class="nav-item my-1 active">
+                        @else
+                    <li class="nav-item my-1 ">
+                        @endif
+                        <a class="nav-link" href="{{route('hos.own.stock.report')}}">
+                            <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Own Inventory</a>
                     </li>
                     @if(Request::path() == 'store/department_order')
                     <li class="nav-item my-1 active">

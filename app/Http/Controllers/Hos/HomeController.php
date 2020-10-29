@@ -371,12 +371,18 @@ class HomeController extends Controller
         return $batch_data;
     }
 
-    /*User for the displaying the stock report for inventory menu*/
+    /*User for the displaying the warehouse stock report for inventory menu*/
     public function stockReport(){
-        return view('hos.stock_report');
+        $hss_master_id = Auth::user()->hss_master_id;
+        $hss_data = DB::table('hss_master')->where('id',$hss_master_id)->first();
+
+        $plant = $hss_data->delivery_warehouse;
+        $storage_location = $hss_data->sloc_id;
+
+        return view('hos.wh_stock_report',array('plant'=>$plant,'storage_location'=>$storage_location));
     }
 
-    /*Search stock according the supplying plant,nupco code and description.
+    /*Search warehouse stock according the supplying plant,nupco code and description.
     Make tbody string and return the encoded string.
     This function is calling through ajax function.*/
     public function searchStock(Request $request){
@@ -410,11 +416,13 @@ class HomeController extends Controller
                     ->where($where_arr)
                     ->where('nupco_desc','like','%'.$nupco_desc.'%')
                     ->where('unrestricted_stock_qty','!=',0)
+                    ->where('added_from','soap_api')
                     ->get();
         }else{
             $stock_data = DB::table('stock')
             ->where($where_arr)
             ->where('nupco_desc','like','%'.$nupco_desc.'%')
+            ->where('added_from','soap_api')
             ->get();
         }
         
@@ -586,6 +594,102 @@ class HomeController extends Controller
     }
      return $response;
         
+    }
+
+     /*User for the displaying the own stock report for inventory menu*/
+     public function ownStockReport(){
+        $hss_master_id = Auth::user()->hss_master_id;
+        $hss_data = DB::table('hss_master')->where('id',$hss_master_id)->first();
+
+        $plant = $hss_data->delivery_warehouse;
+        $storage_location = $hss_data->sloc_id;
+
+        return view('hos.own_stock_report',array('plant'=>$plant,'storage_location'=>$storage_location));
+    }
+
+        /*Search own stock according the supplying plant,nupco code and description.
+    Make tbody string and return the encoded string.
+    This function is calling through ajax function.*/
+    public function ownSearchStock(Request $request){
+        $nupco_generic_code =$request->input('nupco_generic_code');
+        $plant =$request->input('plant');
+        $storage_location  = $request->input('plant');
+        $nupco_desc =$request->input('nupco_desc');
+   
+        $where_arr = array();
+        if($plant != ''){
+            $where_arr['plant'] = $plant;  
+        }
+        if($nupco_generic_code != ''){
+            $where_arr['nupco_generic_code'] = $nupco_generic_code;
+        }
+
+        if($request->has('no_zero')){
+            $stock_data = DB::table('stock')
+                    ->where($where_arr)
+                    ->where('nupco_desc','like','%'.$nupco_desc.'%')
+                    ->where('unrestricted_stock_qty','!=',0)
+                    ->where('added_from','hos_inventory')
+                    ->get();
+        }else{
+            $stock_data = DB::table('stock')
+            ->where($where_arr)
+            ->where('nupco_desc','like','%'.$nupco_desc.'%')
+            ->where('added_from','hos_inventory')
+            ->get();
+        }
+        
+        $result['data'] = '';
+        if(!empty($stock_data)){
+            foreach($stock_data as $key=>$val){
+
+                // $stock_data = DB::table('stock')->where('plant',$plant)
+                // ->where('storage_location',$storage_location)
+                // ->where('nupco_generic_code',$val->nupco_generic_code)
+                // ->groupBy('nupco_generic_code')
+                // ->selectRaw('sum(unrestricted_stock_qty) as total_qty')
+                // ->first();
+            
+                // $open_qty_data = DB::table('order_details')
+                // ->where('supplying_plant_code',$plant)
+                // ->where('sloc_id',$storage_location)
+                // ->where('nupco_generic_code',$val->nupco_generic_code)
+                // ->where('is_deleted',0)
+                // ->whereIn('status',[0,2])
+                // ->groupBy('nupco_generic_code')
+                // ->selectRaw('sum(qty_ordered) as open_qty')
+                // ->first();
+
+                // $total_qty = 0;
+                // $open_qty = 0;
+                // $availability = 0;
+                // if(!empty($stock_data)){
+                // $total_qty = $stock_data->total_qty;
+                // }
+                // if(!empty($open_qty_data)){
+                // $open_qty =  $open_qty_data->open_qty;
+                // }
+                // if($total_qty > $open_qty){
+                // $availability =  $total_qty - $open_qty;
+                // }
+
+            $result['data'] .= "<tr>
+                        <td>".$val->nupco_generic_code."</td>
+                        <td>".$val->nupco_trade_code."</td>
+                        <td>".$val->customer_trade_code."</td>
+                        <td>".$val->nupco_desc."</td>
+                        <td>".$val->unrestricted_stock_qty."</td>
+                        <td>".$val->vendor_batch."</td>
+                        <td>".$val->uom."</td>
+                        <td>".$val->expiry_date."</td>
+                    </tr>";
+            }
+        }
+       
+        $result['plant_name'] = $plant;
+        $result['sloc_name'] = $storage_location;
+        echo json_encode($result);
+
     }
 
     

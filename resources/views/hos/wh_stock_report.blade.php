@@ -16,7 +16,7 @@
 <div class="container-fluid main_content bg-white p-2">
     <div class="row mx-0">
         <div class="col-10 text-center">
-            <h5 style="color: steelblue"><b>Stock Report</b></h5>
+            <h5 style="color: steelblue"><b>Warehouse Stock Report</b></h5>
         </div>
         <div class="col-2 py-1 text-center">
         </div>
@@ -26,9 +26,9 @@
             <form id="search_stock_form">
                 <tr>
                     <th width="1%" class="p-0"><label></label></th>
-                    <th width="14%" class="p-0"> <input type="text" class="form-control form-control-sm" name="plant" placeholder="Supplying Warehouse" required></th>
+                    <th width="14%" class="p-0"> <input type="text" class="form-control form-control-sm" name="plant" value="{{$plant}}" readonly placeholder="Supplying Warehouse" required></th>
                     <th width="2%" class="p-0">&ensp;</th>
-                    <th width="20%" class="p-0"><input type="text" class="form-control form-control-sm" name="storage_location" placeholder="Storage Location" required></th>
+                    <th width="20%" class="p-0"><input type="text" class="form-control form-control-sm" name="storage_location" value="{{$storage_location}}" readonly placeholder="Storage Location" required></th>
                     <th width="2%" class="p-0">&ensp;</th>
                     <th width="20%" class="p-0"><input type="text" class="form-control form-control-sm" name="nupco_generic_code" placeholder="NUPCO Material"></th>
                     <th width="2%" class="p-0">&ensp;</th>
