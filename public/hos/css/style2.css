@@ -21,9 +21,9 @@
   width: 85%;
 }
 .sidenav .navbar-nav .nav-link {
-  padding: 13px 20px!important;
+  padding: 13px 8px!important;
   color: #0e5099!important;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 600;
 }
 .sidenav .navbar-nav .nav-item .nav-link:hover{
