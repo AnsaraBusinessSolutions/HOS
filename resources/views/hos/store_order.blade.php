@@ -128,7 +128,7 @@
                 </div>
                 <div class="col-12 text-center">
                   <!-- <button id="store_order_submit" class="btn btn-info my-2">Create Order</button> -->
-                  <button id="store_order_submit" class="btn btn-info btn-sm my-0 mt-2">Create Order</button>
+                  <button id="store_order_submit" class="btn btn-info btn-sm my-0 mt-2" type="button">Create Order</button>
                 </div>
           </form>
         </div>
@@ -245,13 +245,27 @@ $(function() {
         
       $('#store_order tbody').append(tr);
       counter++;
-      autoSearchMaterial();
+      // autoSearchMaterial();
       
     });
+
+    autoSearchMaterial();
     // Automatically add a first row of data
     for (var add_i = 0; add_i < 10; add_i++) {
        $('#addRow').click(); 
     }
+
+    // $('input.material_data').on('keypress', function (e) {
+    //       var row_id = $(this).data('row_id');
+    //       var input_data = $(this).val();
+    //       var input_name = $(this).data('name');
+    //       var this_element = this;
+    //     if(e.which == 13){
+    //       setMaterialData(this_element,input_name,row_id,input_data);
+    //       $('#'+input_name+'_list_'+row_id).fadeOut();  
+    //       return false;
+    //     }
+    // });
 
     //Click on create order button and check all validatioon and then open confirmation popup 
     $('#store_order_submit').click(function(e){
@@ -351,10 +365,16 @@ function onlyNumberKey(evt) {
 
 //Type material code,customer code or description and accroding that getting available data from database.(Search data)
 function autoSearchMaterial(){
-  $('input.material_data').keyup(function(){ 
+  //$('input.material_data').keyup(function(){ 
+    $(document).on('keyup','input.material_data',function (e) {
     var row_id = $(this).data('row_id');
     var input_data = $(this).val();
     var input_name = $(this).data('name');
+    if(e.which == 13){
+          setMaterialData(this,input_name,row_id,input_data);
+          $('#'+input_name+'_list_'+row_id).fadeOut();  
+          return false;
+        }else{
     if(input_data != '')
     {
       var token = "{{ csrf_token() }}";
@@ -373,18 +393,19 @@ function autoSearchMaterial(){
             $("#store_order li").bind("click",function(){
                 $('#'+input_name+'_list_'+row_id).fadeOut();  
                 var li_data = $(this).text();
-                setMaterialData(this,input_name,row_id);
+                setMaterialData(this,input_name,row_id,li_data);
             });
           }
         }
       });
     }
+        }
   });
 }
 
 //Set all data in table row when click on perticular one item from the search dropdown
-function setMaterialData(element,input_name,row_id){
-    var input_data = $(element).text();
+function setMaterialData(element,input_name,row_id,input_data){
+    //var input_data = $(element).text();
     $.ajax({
       url: '{!! route('hos.material.data') !!}',
       headers: {
@@ -412,6 +433,7 @@ function setMaterialData(element,input_name,row_id){
             $('#available_'+row_id).val(response.availability);
             $('#qty_'+row_id).attr("readonly", false); 
         }else{
+            alert('this data is not available');
             $('#'+input_name+'_'+row_id).val('');
         }
       }
