@@ -1,8 +1,8 @@
 .main{
   height: 100%;
   position: fixed!important;
-  width: 87%;
-  left: 13%;
+  width: 85%;
+  left: 15%;
   background: #BAD0D9;
 }
 .topnav{
@@ -13,12 +13,12 @@
 .sidenav{
   height: 100%;
   position: fixed!important;
-  width:13%;
+  width:15%;
   z-index: 99!important;
 }
 .main .navbar{
   position: fixed!important;
-  width: 87%;
+  width: 85%;
 }
 .sidenav .navbar-nav .nav-link {
   padding: 13px 20px!important;
