@@ -102,10 +102,10 @@ echo $currentTime; ?></span> |
                       <a class="nav-link" data-toggle="collapse" href="#collapseOne">
                          <i class="fas fa-dolly-flatbed fs_18"></i>&ensp; Inventory
                       </a>
-                      <div id="collapseOne" class="collapse" data-parent="#accordion">
+                      <div id="collapseOne" class="collapse show" data-parent="#accordion">
                          <ul class="navbar-nav sub_list">
                             @if(Request::path() == 'store/stock_report')
-                            <li class="nav-itemactive">
+                            <li class="nav-item active">
                                 @else
                             <li class="nav-item">
                                 @endif
@@ -114,7 +114,7 @@ echo $currentTime; ?></span> |
                             </li>
 
                             @if(Request::path() == 'store/own_stock_report')
-                            <li class="nav-itemactive">
+                            <li class="nav-item active">
                                 @else
                             <li class="nav-item">
                                 @endif
