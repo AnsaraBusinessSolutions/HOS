@@ -61,6 +61,15 @@
     text-decoration: none;
     padding-left: 30px;
 }
+.sidenav .nav-item .sub_list .nav-link{
+    padding: 8px 20px!important;
+    color: #0e5099!important;
+    font-size: 12px;
+    font-weight: 600;
+    padding-left: 30px!important;
+    margin: 0px 0px;
+    background: snow;
+}
 .fs_18 {
   font-size: 18px;
 }
