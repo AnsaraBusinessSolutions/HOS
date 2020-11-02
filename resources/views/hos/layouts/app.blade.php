@@ -119,7 +119,7 @@ echo $currentTime; ?></span> |
                             <li class="nav-item">
                                 @endif
                                 <a class="nav-link" href="{{route('hos.own.stock.report')}}">
-                                    <i class="fab fa-osi"></i> &ensp;Own Inventory</a>
+                                    <i class="fab fa-first-order-alt"></i> &ensp;Own Inventory</a>
                             </li>
                           </ul>
                       </div>
