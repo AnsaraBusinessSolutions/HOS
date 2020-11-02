@@ -105,18 +105,18 @@ echo $currentTime; ?></span> |
                       <div id="collapseOne" class="collapse" data-parent="#accordion">
                          <ul class="navbar-nav sub_list">
                             @if(Request::path() == 'store/stock_report')
-                            <li class="nav-item my-1 active">
+                            <li class="nav-itemactive">
                                 @else
-                            <li class="nav-item my-1 ">
+                            <li class="nav-item">
                                 @endif
                                 <a class="nav-link" href="{{route('hos.stock.report')}}">
                                     <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Warehouse Inventory</a>
                             </li>
 
                             @if(Request::path() == 'store/own_stock_report')
-                            <li class="nav-item my-1 active">
+                            <li class="nav-itemactive">
                                 @else
-                            <li class="nav-item my-1 ">
+                            <li class="nav-item">
                                 @endif
                                 <a class="nav-link" href="{{route('hos.own.stock.report')}}">
                                     <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Own Inventory</a>
