@@ -110,7 +110,7 @@ echo $currentTime; ?></span> |
                             <li class="nav-item">
                                 @endif
                                 <a class="nav-link" href="{{route('hos.stock.report')}}">
-                                    <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Warehouse Inventory</a>
+                                    <i class="fas fa-dolly-flatbed"></i> &ensp;Warehouse Inventory</a>
                             </li>
 
                             @if(Request::path() == 'store/own_stock_report')
@@ -119,7 +119,7 @@ echo $currentTime; ?></span> |
                             <li class="nav-item">
                                 @endif
                                 <a class="nav-link" href="{{route('hos.own.stock.report')}}">
-                                    <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Own Inventory</a>
+                                    <i class="fas fa-dolly-flatbed"></i> &ensp;Own Inventory</a>
                             </li>
                           </ul>
                       </div>
