@@ -55,6 +55,12 @@
   font-weight: 600;
   box-shadow: inset 0px -2px 3px 0 rgb(186 208 217), 0 0px 3px 0 rgb(186 208 217);
 }
+.sidenav .nav-item .sub_list .nav-item.active > .nav-link {
+    background: #dae8f7!important;
+    color: #495057!important;
+    text-decoration: none;
+    padding-left: 30px;
+}
 .fs_18 {
   font-size: 18px;
 }

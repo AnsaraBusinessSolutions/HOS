@@ -98,22 +98,33 @@ echo $currentTime; ?></span> |
                         <a class="nav-link" href=#>
                             <i class="fas fa-pills fs_18"></i> &ensp;{{__('lang.material_list')}}</a>
                     </li>
-                    @if(Request::path() == 'store/stock_report')
-                    <li class="nav-item my-1 active">
-                        @else
-                    <li class="nav-item my-1 ">
-                        @endif
-                        <a class="nav-link" href="{{route('hos.stock.report')}}">
-                            <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Warehouse Inventory</a>
+                    <li class="nav-item my-1" id="accordion">
+                      <a class="nav-link" data-toggle="collapse" href="#collapseOne">
+                         <i class="fas fa-dolly-flatbed fs_18"></i>&ensp; Inventory
+                      </a>
+                      <div id="collapseOne" class="collapse" data-parent="#accordion">
+                         <ul class="navbar-nav sub_list">
+                            @if(Request::path() == 'store/stock_report')
+                            <li class="nav-item my-1 active">
+                                @else
+                            <li class="nav-item my-1 ">
+                                @endif
+                                <a class="nav-link" href="{{route('hos.stock.report')}}">
+                                    <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Warehouse Inventory</a>
+                            </li>
+
+                            @if(Request::path() == 'store/own_stock_report')
+                            <li class="nav-item my-1 active">
+                                @else
+                            <li class="nav-item my-1 ">
+                                @endif
+                                <a class="nav-link" href="{{route('hos.own.stock.report')}}">
+                                    <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Own Inventory</a>
+                            </li>
+                          </ul>
+                      </div>
                     </li>
-                    @if(Request::path() == 'store/own_stock_report')
-                    <li class="nav-item my-1 active">
-                        @else
-                    <li class="nav-item my-1 ">
-                        @endif
-                        <a class="nav-link" href="{{route('hos.own.stock.report')}}">
-                            <i class="fas fa-dolly-flatbed fs_18"></i> &ensp;Own Inventory</a>
-                    </li>
+
                     @if(Request::path() == 'store/department_order')
                     <li class="nav-item my-1 active">
                         @else
