@@ -94,6 +94,9 @@ class LoginController extends Controller
         ]);
 
         if (Auth::guard('custodian')->attempt(['email' => $request->email, 'password' => $request->password,'user_type'=>2], $request->get('remember'))) {
+            auth()->guard('custodian')->user()->update([
+                'last_login_at' => date('Y-m-d H:i:s'),
+            ]);
             return redirect()->intended('/custodian/home');
             //return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
         }
@@ -121,6 +124,9 @@ class LoginController extends Controller
         ]);
 
         if (Auth::guard('hos3pl')->attempt(['email' => $request->email, 'password' => $request->password,'user_type'=>3], $request->get('remember'))) {
+            auth()->guard('hos3pl')->user()->update([
+                'last_login_at' => date('Y-m-d H:i:s'),
+            ]);
             return redirect()->intended('/hos3pl/home');
             //return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
         }
@@ -147,6 +153,9 @@ class LoginController extends Controller
         ]);
 
         if (Auth::guard('inventory')->attempt(['email' => $request->email, 'password' => $request->password,'user_type'=>4], $request->get('remember'))) {
+            auth()->guard('inventory')->user()->update([
+                'last_login_at' => date('Y-m-d H:i:s'),
+            ]);
             return redirect()->intended('/inventory/home');
             //return back()->withInput($request->only('email', 'remember'))->withErrors(['common-error'=>'Email or Password is Wrong.']);
         }
@@ -161,6 +170,10 @@ class LoginController extends Controller
     }
 
     protected function authenticated(Request $request, $user) {
+        $user->update([
+            'last_login_at' => date('Y-m-d H:i:s'),
+        ]);
+
         $request->session()->put('user_type', $user->user_type);
         if ($user->user_type == 1) {
             return redirect('/store/home');

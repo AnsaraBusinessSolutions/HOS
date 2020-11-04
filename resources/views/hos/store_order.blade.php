@@ -197,11 +197,11 @@ $(function() {
     });
  
     //Date disabled according order type
-    //Normal : Display tomorrow and future date,Disable friday and saturday //Emergency : Display today and future date,Disable friday and saturday
+    //Normal/Return : Display tomorrow and future date,Disable friday and saturday //Emergency : Display today and future date,Disable friday and saturday
     $('#order_type').on('change', function (e) {
         var selected_order_type = $(this).val();
         var date_disable_min; 
-        if(selected_order_type == 'normal'){
+        if(selected_order_type == 'normal' || selected_order_type == 'return'){
           date_disable_min = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1);
         }else{  
           date_disable_min = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
@@ -359,7 +359,8 @@ function autoSearchMaterial(){
     var row_id = $(this).data('row_id');
     var input_data = $(this).val();
     var input_name = $(this).data('name');
-  
+    var order_type = $('#order_type').val();
+
     if(e.which == 13){
           setMaterialData(this,input_name,row_id,input_data);
           $('#'+input_name+'_list_'+row_id).fadeOut();  
@@ -374,7 +375,7 @@ function autoSearchMaterial(){
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         method:"POST",
-        data:{input_data:input_data,input_name:input_name},
+        data:{input_data:input_data,input_name:input_name,order_type:order_type},
         success:function(data){
           $('#'+input_name+'_list_'+row_id).html('');
           if(data != ''){

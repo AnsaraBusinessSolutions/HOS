@@ -106,7 +106,7 @@
           <input type="hidden" name="sloc_id" value="{{$order_detail[0]->sloc_id}}">
           <input type="hidden" name="hss_master_no" value="{{$order_detail[0]->hss_master_no}}">
           <input type="hidden" name="hospital_name" value="{{$order_detail[0]->hospital_name}}">
-          <input type="hidden" name="order_type" value="{{$order_detail[0]->order_type}}">
+          <input type="hidden" name="order_type" id="order_type" value="{{$order_detail[0]->order_type}}">
           <input type="hidden" name="order_id" value="{{$order_id}}">
           <div class="col-12 text-center">
             <table id="order_detail" class="table table-striped table-bordered example search_data text-center">
@@ -409,6 +409,8 @@ var table;
       var row_id = $(this).data('row_id');
       var input_data = $(this).val();
       var input_name = $(this).data('name');
+      var order_type = $('#order_type').val();
+
       if(e.which == 13){
           e.preventDefault();
           setMaterialData(this,input_name,row_id,input_data);
@@ -424,7 +426,7 @@ var table;
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           method:"POST",
-          data:{input_data:input_data,input_name:input_name},
+          data:{input_data:input_data,input_name:input_name,order_type:order_type},
           success:function(data){
             $('#'+input_name+'_list_'+row_id).html('');
             if(data != ''){
@@ -446,6 +448,7 @@ var table;
 //Set all data in table row when click on perticular one item from the search dropdown
 function setMaterialData(element,input_name,row_id,input_data){
     //var input_data = $(element).text();
+    var order_type = $('#order_type').val();
     $.ajax({
           url: '{!! route('hos.material.data') !!}',
           headers: {
@@ -455,7 +458,8 @@ function setMaterialData(element,input_name,row_id,input_data){
           dataType: "json",
           data: {
               input_data:input_data,
-              input_name:input_name
+              input_name:input_name,
+              order_type:order_type
           }, 
           beforeSend: function() { 
               $("#preloader").css('display','block'); 
