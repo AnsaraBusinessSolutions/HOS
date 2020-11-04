@@ -57,7 +57,7 @@ class HomeController extends Controller
                 );
             $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location,'');
         }
-        
+
         return view('hos.store_order',array('delivery_wh'=>$delivery_wh));
     }
 
@@ -254,6 +254,7 @@ class HomeController extends Controller
     Also Here getting the hospital related details.*/
     public function orderDetail($order_id){
         $hss_master_id = Auth::user()->hss_master_id;
+        $hss_master_no = Auth::user()->hss_master_no;
         $hss_data = DB::table('hss_master')->where('id',$hss_master_id)->first();
 
         $plant = $hss_data->delivery_warehouse;
@@ -262,13 +263,12 @@ class HomeController extends Controller
         $order_detail = DB::table('order_details as od')
                                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
                                         ->select('od.hss_master_no','od.hospital_name','od.order_type','hs.delivery_wh_name','hs.delivery_warehouse','hs.address','hs.sloc_id','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.header_text','od.item_text','od.is_deleted',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
-                                        ->selectRaw(DB::raw("(SELECT (sum(sq.unrestricted_stock_qty)) FROM stock as sq WHERE sq.storage_location = '$storage_location' AND sq.plant='$plant' AND sq.nupco_generic_code=od.nupco_generic_code limit 1) as unrestricted_stock_qty"))
                                         ->where('od.order_id', $order_id)
                                         ->get();
 
         $pgi_details = DB::table('pgi_details as pd')->select('pd.pgi_id')->where('pd.order_id',$order_id)->first();
 
-        return view('hos.store_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'pgi_details'=>$pgi_details,'plant'=>$plant,'storage_location'=>$storage_location));
+        return view('hos.store_order_details',array('order_detail'=>$order_detail,'order_id'=>$order_id,'pgi_details'=>$pgi_details,'plant'=>$plant,'storage_location'=>$storage_location,'hss_master_no'=>$hss_master_no));
     }
 
     /*This function is use for order delete,update and add new item in perticular order using the order id. */
