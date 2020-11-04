@@ -50,8 +50,8 @@
         <div class="row mx-0">
             <div class="col-md-6 col-sm-6 col-12 border">
               <div class="form-group py-1 mb-0">
-                <label class="col-md-2 col-sm-5 col-5"><b>Plant &ensp;&ensp;:</b></label>
-                <label class="col-md-9 col-sm-6 col-6" id="plant_name">
+                <label class="col-md-3 col-sm-5 col-5"><b>Plant &ensp;&ensp;:</b></label>
+                <label class="col-md-8 col-sm-6 col-6" id="plant_name">
                 </label>
               </div>
             </div>

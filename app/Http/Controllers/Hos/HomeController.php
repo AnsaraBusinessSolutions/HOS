@@ -43,20 +43,36 @@ class HomeController extends Controller
         $hss_master_id = Auth::user()->hss_master_id;
         $delivery_wh = DB::table('hss_master')->where('id',$hss_master_id)->get();
 
-        // if(count($delivery_wh) > 0){
-        //     $plant = $delivery_wh[0]->delivery_warehouse;
-        //     $storage_location = $delivery_wh[0]->sloc_id;
-        //     $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant;
-        //     $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
-        //     $input_arr = array(
-        //         "wsdl_link" => $wsdl_link,
-        //         "user_name" => Config::get('constants.soap_api_username'),
-        //         "pass_word" => Config::get('constants.soap_api_password'),
-        //         "soap_header" => 'ZMM_WHS_STOCK_INTF',
-        //         "parameters" =>$parameters
-        //         );
-        //     $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location,'');
-        // }
+        if(count($delivery_wh) > 0){
+            $plant = $delivery_wh[0]->delivery_warehouse;
+            $storage_location = $delivery_wh[0]->sloc_id;
+
+                $last_run_data = DB::table('login_master')
+                ->select('updated_at')
+                ->where('plant',$plant)
+                ->where('storage_location',$storage_location)
+                ->whereIn('status',['I','E'])
+                ->orderBy('id','desc')
+                ->first();
+
+                if(!empty($last_run_data)){
+                    $last_updated_date = date("Ymd", strtotime($last_run_data->updated_at));
+                    $last_updated_time = date("His", strtotime($last_run_data->updated_at));
+                }else{
+                    $last_updated_date = '';
+                    $last_updated_time = '';
+                }
+            $parameters = 'I_LASTRUN_DATE='.$last_updated_date.',I_LASTRUN_TIME='.$last_updated_time.',I_LGORT='.$storage_location.',I_WERKS='.$plant;
+            $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
+            $input_arr = array(
+                "wsdl_link" => $wsdl_link,
+                "user_name" => Config::get('constants.soap_api_username'),
+                "pass_word" => Config::get('constants.soap_api_password'),
+                "soap_header" => 'ZMM_WHS_STOCK_INTF',
+                "parameters" =>$parameters
+                );
+            $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location,'');
+        }
 
         return view('hos.store_order',array('delivery_wh'=>$delivery_wh));
     }
@@ -441,7 +457,23 @@ class HomeController extends Controller
         $nupco_desc =$request->input('nupco_desc');
 
         //call soap api
-        $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant.',I_MATNR='.$nupco_generic_code;
+        $last_run_data = DB::table('login_master')
+        ->select('updated_at')
+        ->where('plant',$plant)
+        ->where('storage_location',$storage_location)
+        ->whereIn('status',['I','E'])
+        ->orderBy('id','desc')
+        ->first();
+
+        if(!empty($last_run_data)){
+            $last_updated_date = date("Ymd", strtotime($last_run_data->updated_at));
+            $last_updated_time = date("His", strtotime($last_run_data->updated_at));
+        }else{
+            $last_updated_date = '';
+            $last_updated_time = '';
+        }
+       
+        $parameters = 'I_LASTRUN_DATE='.$last_updated_date.',I_LASTRUN_TIME='.$last_updated_time.',I_LGORT='.$storage_location.',I_WERKS='.$plant.',I_MATNR='.$nupco_generic_code;
         $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
         $input_arr = array(
             "wsdl_link" => $wsdl_link,
@@ -451,7 +483,7 @@ class HomeController extends Controller
             "parameters" =>$parameters
             );
         $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location,$nupco_generic_code);
-            
+           
         $where_arr = array();
         if($plant != ''){
             $where_arr['plant'] = $plant;  
@@ -553,43 +585,25 @@ class HomeController extends Controller
         $res = curl_exec($curl);
         curl_close($curl);
         $res = json_decode($res);
-        
+        //print_r($res);
         if(!empty($res)){
             $api_type = $res->O_WH_STOCK->TYPE;
-            if($api_type = 'I'){
+            $api_message = $res->O_WH_STOCK->MESSAGE;
+            if($api_type == 'I'){
                 $stock_details_arr = $res->O_WH_STOCK->DETAILS->item;
                 $stock_data = array();
 
-                $update_arr = array(
-                    'unrestricted_stock_qty'=>0,
-                    'stock_value'=>0
-                );
-                DB::table('stock')
-                ->where('plant',$plant)
-                ->where('storage_location',$storage_location)
-                ->where('added_from','soap_api')
-                ->update($update_arr);
-
+        
                 foreach($stock_details_arr as $key=>$val){
                     $nupco_generic_code = ltrim($val->MATNR, '0');
                     $data = array(
-                    // 'customer'=>$val->ZKUNNR,
                         'nupco_generic_code'=>$nupco_generic_code,
-                    'nupco_trade_code'=>$val->BWTAR,
-                    // 'customer_trade_code'=>$val->ZCTMATNR,
-                    // 'nupco_desc'=>$val->ZNTCDES,
+                        'nupco_trade_code'=>$val->BWTAR,
                         'plant'=>$val->WERKS,
                         'storage_location'=>$val->LGORT,
-                    // 'unrestricted_stock_qty'=>$val->CLABS,
                         'vendor_batch'=>$val->LICHA,
-                    // 'uom'=>$val->MEINS,
                         'batch'=>$val->CHARG,
-                    // 'map'=>$val->VERPR,
-                    // 'stock_value'=>$val->STOCKV,
-                    // 'return_stock'=>$val->CRETM,
-                    // 'mfg_date'=>$val->HSDAT,
-                    // 'expiry_date'=>$val->VFDAT
-                    'added_from'=>'soap_api'
+                        'added_from'=>'soap_api'
                     );
 
                     $check_stock_available = DB::table('stock')
@@ -606,20 +620,22 @@ class HomeController extends Controller
                         'nupco_desc'=>$val->ZNTCDES,
                         'plant'=>$val->WERKS,
                         'storage_location'=>$val->LGORT,
-                        'unrestricted_stock_qty'=>$val->CLABS,
+                        'unrestricted_stock_qty'=>$val->LABST,
                         'vendor_batch'=>$val->LICHA,
                         'uom'=>$val->MEINS,
                         'batch'=>$val->CHARG,
-                        'map'=>$val->VERPR,
-                        'stock_value'=>$val->STOCKV,
-                        'return_stock'=>$val->CRETM,
+                        //'map'=>$val->VERPR,
+                        'map'=>'',
+                        'stock_value'=>$val->WLABS,
+                        //'return_stock'=>$val->CRETM,
+                        'return_stock'=>'',
                         'mfg_date'=>$val->HSDAT,
                         'expiry_date'=>$val->VFDAT,
                         'added_from'=>'soap_api',
                         'created_at'=>date('Y-m-d H:i:s'));
                     }else{
-                        $api_data_arr = array('unrestricted_stock_qty'=>$val->CLABS,
-                                            'stock_value'=>$val->STOCKV);
+                        $api_data_arr = array('unrestricted_stock_qty'=>$val->LABST,
+                                            'stock_value'=>$val->WLABS);
                         DB::table('stock')
                         ->where('plant',$plant)
                         ->where('id',$check_stock_available->id)
@@ -632,9 +648,19 @@ class HomeController extends Controller
                     $result = DB::table('stock')->insert($stock_data);
                 }
                 $response = true; 
+            }else if($api_type == 'E'){
+                $response = true;
             }else{
                 $response = false; 
             }
+            
+            $login_master = array('hss_master_no'=>Auth::user()->hss_master_no,
+                                'plant'=>$plant,
+                                'storage_location'=>$storage_location,
+                                'status'=>$api_type,
+                                'result'=>$api_message,
+                                'updated_at'=>date('Y-m-d H:i:s'));
+            DB::table('login_master')->insert($login_master);
         }else{
             $response = false; 
         }
