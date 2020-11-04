@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Hos;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+//use Maatwebsite\Excel\Facades\Excel;
 use Auth;
 use DB;
 use Config;
@@ -24,8 +25,8 @@ class HomeController extends Controller
         $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->where('od.user_id','=',$user_id)
-                                ->orderBy('od.order_type','ASC')
                                 ->orderBy('od.status','ASC')
+                                ->orderBy('od.order_type','ASC')
                                 ->orderBy('od.order_id','DESC')
                                 ->groupBy("od.order_id")
                                 ->select('od.order_id','od.supplying_plant','od.delivery_date','od.uom','od.qty_ordered','od.status','od.created_date','od.order_type')
@@ -42,20 +43,20 @@ class HomeController extends Controller
         $hss_master_id = Auth::user()->hss_master_id;
         $delivery_wh = DB::table('hss_master')->where('id',$hss_master_id)->get();
 
-        if(count($delivery_wh) > 0){
-            $plant = $delivery_wh[0]->delivery_warehouse;
-            $storage_location = $delivery_wh[0]->sloc_id;
-            $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant;
-            $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
-            $input_arr = array(
-                "wsdl_link" => $wsdl_link,
-                "user_name" => Config::get('constants.soap_api_username'),
-                "pass_word" => Config::get('constants.soap_api_password'),
-                "soap_header" => 'ZMM_WHS_STOCK_INTF',
-                "parameters" =>$parameters
-                );
-            $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location,'');
-        }
+        // if(count($delivery_wh) > 0){
+        //     $plant = $delivery_wh[0]->delivery_warehouse;
+        //     $storage_location = $delivery_wh[0]->sloc_id;
+        //     $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant;
+        //     $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
+        //     $input_arr = array(
+        //         "wsdl_link" => $wsdl_link,
+        //         "user_name" => Config::get('constants.soap_api_username'),
+        //         "pass_word" => Config::get('constants.soap_api_password'),
+        //         "soap_header" => 'ZMM_WHS_STOCK_INTF',
+        //         "parameters" =>$parameters
+        //         );
+        //     $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location,'');
+        // }
         return view('hos.store_order',array('delivery_wh'=>$delivery_wh));
     }
 
@@ -70,17 +71,37 @@ class HomeController extends Controller
     public function materialData(Request $request){
         $input_data = $request->input_data;
         $input_name = $request->input_name;
+        $order_type = $request->order_type;
         $material_data = DB::table('material_master')->select('id','nupco_generic_code','nupco_trade_code','customer_code','customer_code_cat','nupco_desc','uom')->where($input_name, $input_data)->get();
        
         $availability = 0;
         $status = 0;
         if(count($material_data) > 0){
             $hss_master_id = Auth::user()->hss_master_id;
+            $hss_master_no = Auth::user()->hss_master_no;
             $hss_data = DB::table('hss_master')->where('id',$hss_master_id)->first();
-        
+            
             $plant = $hss_data->delivery_warehouse;
             $storage_location = $hss_data->sloc_id;
-
+            if($order_type == 'return'){
+            $stock_data = DB::table('stock')->where('plant',$hss_master_no)
+                                            ->where('storage_location',$hss_master_no)
+                                            ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
+                                            ->where('added_from','hos_inventory')
+                                            ->groupBy('nupco_generic_code')
+                                            ->selectRaw('sum(unrestricted_stock_qty) as total_qty')
+                                            ->first();
+            $open_qty_data = DB::table('order_details')
+                            ->where('supplying_plant_code',$plant)
+                            ->where('sloc_id',$storage_location)
+                            ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
+                            ->where('is_deleted',0)
+                            ->whereIn('status',[0,2])
+                            ->where('order_type','return')
+                            ->groupBy('nupco_generic_code')
+                            ->selectRaw('sum(qty_ordered) as open_qty')
+                            ->first();
+            }else{
             $stock_data = DB::table('stock')->where('plant',$plant)
                                             ->where('storage_location',$storage_location)
                                             ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
@@ -93,9 +114,11 @@ class HomeController extends Controller
                             ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
                             ->where('is_deleted',0)
                             ->whereIn('status',[0,2])
+                            ->whereIn('order_type',['normal','emergency'])
                             ->groupBy('nupco_generic_code')
                             ->selectRaw('sum(qty_ordered) as open_qty')
                             ->first();
+            }
            
             $total_qty = 0;
             $open_qty = 0;
@@ -691,6 +714,16 @@ class HomeController extends Controller
         $result['sloc_name'] = $storage_location;
         echo json_encode($result);
 
+    }
+
+    public function importExcel(Request $request){
+       
+        // $import_file = $request->file("import_file");
+        // print_r($import_file);
+        // exit;
+        $data = Excel::toArray(new ExcelImport,$request->file("import_file"));
+        print_r($data);
+        exit;
     }
 
     

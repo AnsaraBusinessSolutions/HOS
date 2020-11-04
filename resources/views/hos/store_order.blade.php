@@ -91,6 +91,7 @@
                     <select class="form-control" name="order_type" id="order_type">
                       <option value="normal">Normal</option>
                       <option value="emergency">Emergency</option>
+                      <option value="return">Return</option>
                     </select>
                      <th width="2%" class="p-0">&ensp;</th>
                    <th width="10%" class="p-0">
@@ -255,18 +256,6 @@ $(function() {
        $('#addRow').click(); 
     }
 
-    // $('input.material_data').on('keypress', function (e) {
-    //       var row_id = $(this).data('row_id');
-    //       var input_data = $(this).val();
-    //       var input_name = $(this).data('name');
-    //       var this_element = this;
-    //     if(e.which == 13){
-    //       setMaterialData(this_element,input_name,row_id,input_data);
-    //       $('#'+input_name+'_list_'+row_id).fadeOut();  
-    //       return false;
-    //     }
-    // });
-
     //Click on create order button and check all validatioon and then open confirmation popup 
     $('#store_order_submit').click(function(e){
       e.preventDefault();
@@ -370,6 +359,7 @@ function autoSearchMaterial(){
     var row_id = $(this).data('row_id');
     var input_data = $(this).val();
     var input_name = $(this).data('name');
+  
     if(e.which == 13){
           setMaterialData(this,input_name,row_id,input_data);
           $('#'+input_name+'_list_'+row_id).fadeOut();  
@@ -406,6 +396,7 @@ function autoSearchMaterial(){
 //Set all data in table row when click on perticular one item from the search dropdown
 function setMaterialData(element,input_name,row_id,input_data){
     //var input_data = $(element).text();
+    var order_type = $('#order_type').val();
     $.ajax({
       url: '{!! route('hos.material.data') !!}',
       headers: {
@@ -415,7 +406,8 @@ function setMaterialData(element,input_name,row_id,input_data){
       dataType: "json",
       data: {
           input_data:input_data,
-          input_name:input_name
+          input_name:input_name,
+          order_type:order_type
       },
       beforeSend: function() { 
           $("#preloader").css('display','block'); 
@@ -437,6 +429,36 @@ function setMaterialData(element,input_name,row_id,input_data){
             $('#'+input_name+'_'+row_id).val('');
         }
       }
+    });
+ }
+ importExcel();
+//Import 
+ function importExcel(){
+    $("#import_excel").on('click', function(e){
+      e.preventDefault();
+      $("#upload_excel:hidden").trigger('click');
+    });
+
+    $('#upload_excel').on('change', function() {
+    var file_data = $('#upload_excel').prop('files')[0];   
+    //console.log(file_data);
+    var form_data = new FormData();                  
+    form_data.append('import_file', file_data);
+    //alert(form_data);                             
+      $.ajax({
+          url:"{{ route('hos.import.excel') }}",
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          dataType:'JSON',
+          contentType: false,
+          processData: false,
+          data: form_data,                         
+          type: 'POST',
+          success: function(response){
+              alert(response); // display response from the PHP script, if any
+          }
+      });
     });
  }
 

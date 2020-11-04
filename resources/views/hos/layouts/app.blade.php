@@ -185,7 +185,8 @@ echo $currentTime; ?></span> |
                                     Print</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <input id="upload_excel" type="file" style="display:none"/>
+                                <a class="nav-link" href="#" id="import_excel">
                                     <i class="fas fa-file-export fs_18"></i><br>
                                     Import</a>
                             </li>
