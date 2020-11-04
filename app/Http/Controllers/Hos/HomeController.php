@@ -43,20 +43,21 @@ class HomeController extends Controller
         $hss_master_id = Auth::user()->hss_master_id;
         $delivery_wh = DB::table('hss_master')->where('id',$hss_master_id)->get();
 
-        // if(count($delivery_wh) > 0){
-        //     $plant = $delivery_wh[0]->delivery_warehouse;
-        //     $storage_location = $delivery_wh[0]->sloc_id;
-        //     $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant;
-        //     $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
-        //     $input_arr = array(
-        //         "wsdl_link" => $wsdl_link,
-        //         "user_name" => Config::get('constants.soap_api_username'),
-        //         "pass_word" => Config::get('constants.soap_api_password'),
-        //         "soap_header" => 'ZMM_WHS_STOCK_INTF',
-        //         "parameters" =>$parameters
-        //         );
-        //     $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location,'');
-        // }
+        if(count($delivery_wh) > 0){
+            $plant = $delivery_wh[0]->delivery_warehouse;
+            $storage_location = $delivery_wh[0]->sloc_id;
+            $parameters = 'I_LGORT='.$storage_location.',I_WERKS='.$plant;
+            $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zmm_whs_stock_srvc/300/zmm_whs_stock_srvc/zmm_whs_stock_srvc?sap-client=300';
+            $input_arr = array(
+                "wsdl_link" => $wsdl_link,
+                "user_name" => Config::get('constants.soap_api_username'),
+                "pass_word" => Config::get('constants.soap_api_password'),
+                "soap_header" => 'ZMM_WHS_STOCK_INTF',
+                "parameters" =>$parameters
+                );
+            $api_response = $this->AddStockSoapApi($input_arr,$plant,$storage_location,'');
+        }
+        
         return view('hos.store_order',array('delivery_wh'=>$delivery_wh));
     }
 
