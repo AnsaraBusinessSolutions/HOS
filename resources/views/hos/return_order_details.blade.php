@@ -129,24 +129,23 @@
                   @foreach($order_detail as $key=>$val)
                   @php
                       $availability = 0;
-                     
-                        $stock_data = DB::table('stock')->where('plant',$plant)
-                                              ->where('storage_location',$storage_location)
-                                              ->where('nupco_generic_code',$val->nupco_generic_code)
-                                              ->groupBy('nupco_generic_code')
-                                              ->selectRaw('sum(unrestricted_stock_qty) as total_qty')
-                                              ->first();
-
+                        $stock_data = DB::table('stock')->where('plant',$hss_master_no)
+                                                        ->where('storage_location',$hss_master_no)
+                                                        ->where('nupco_generic_code',$val->nupco_generic_code)
+                                                        ->where('added_from','hos_inventory')
+                                                        ->groupBy('nupco_generic_code')
+                                                        ->selectRaw('sum(unrestricted_stock_qty) as total_qty')
+                                                        ->first();
                         $open_qty_data = DB::table('order_details')
-                                  ->where('supplying_plant_code',$plant)
-                                  ->where('sloc_id',$storage_location)
-                                  ->where('nupco_generic_code',$val->nupco_generic_code)
-                                  ->where('is_deleted',0)
-                                  ->whereIn('status',[0,2])
-                                  ->whereIn('order_type',['normal','emergency'])
-                                  ->groupBy('nupco_generic_code')
-                                  ->selectRaw('sum(qty_ordered) as open_qty')
-                                  ->first();
+                                        ->where('supplying_plant_code',$plant)
+                                        ->where('sloc_id',$storage_location)
+                                        ->where('nupco_generic_code',$val->nupco_generic_code)
+                                        ->where('is_deleted',0)
+                                        ->whereIn('status',[0,2])
+                                        ->where('order_type','return')
+                                        ->groupBy('nupco_generic_code')
+                                        ->selectRaw('sum(qty_ordered) as open_qty')
+                                        ->first();
                       
                       $total_qty = 0;
                       $open_qty = 0;

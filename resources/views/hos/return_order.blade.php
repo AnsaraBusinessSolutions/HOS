@@ -89,14 +89,13 @@
                     <label for="delivery-date">Order Type:</label></th>
                    <th width="20%" class="p-0">
                     <select class="form-control" name="order_type" id="order_type">
-                      <option value="normal">Normal</option>
-                      <option value="emergency">Emergency</option>
+                      <option value="return">Return</option>
                     </select>
                      <th width="2%" class="p-0">&ensp;</th>
                    <th width="10%" class="p-0">
                     <label for="delivery-date">Delivery Date:</label></th>
                    <th width="16%" class="p-0">
-                    <input type="" class="datepicker form-control h_sm" name="delivery_date" id="delivery_date" required autocomplete="off"></th>
+                    <input type="" class="form-control h_sm" name="delivery_date" id="delivery_date" required autocomplete="off"></th>
                   <th width="6%" class="p-0">
                     <input type="hidden" class="form-control h_1rem" data-row_id="ht1" data-name="header_text" id="text_ht1" name="header_text">
                     <i class="fas fa-file-alt text_icon" aria-hidden="true" data-row_id="ht1"></i>
@@ -115,6 +114,9 @@
                             <th class="text-nowrap px-3 w_10">Category</th>
                             <th class="text-nowrap px-3 w_45">Description</th>
                             <th class="text-nowrap px-3 w_4">UOM</th>
+                            <th class="text-nowrap px-3 w_4">Batch</th>
+                            <th class="text-nowrap px-3 w_4">Mfg Date</th>
+                            <th class="text-nowrap px-3 w_4">Expiry Date</th>
                             <th class="text-nowrap px-3 w_8">Qty</th>
                             <th class="text-nowrap px-3 w_8">Available</th>
                             <th class="text-nowrap px-3 w_2">Item Text</th>
@@ -195,23 +197,10 @@ $(function() {
         }
     });
  
-    //Date disabled according order type
-    //Normal/Return : Display tomorrow and future date,Disable friday and saturday //Emergency : Display today and future date,Disable friday and saturday
-    $('#order_type').on('change', function (e) {
-        var selected_order_type = $(this).val();
-        var date_disable_min; 
-        if(selected_order_type == 'normal' || selected_order_type == 'return'){
-          date_disable_min = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1);
-        }else{  
-          date_disable_min = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-        }
-        $("#delivery_date").datepicker("destroy");
-        $('#delivery_date').datepicker({
+    $('#delivery_date').datepicker({
           uiLibrary: 'bootstrap4',
-          minDate: date_disable_min,
           disableDaysOfWeek: [5, 6],
         });
-    });
 
     //when add qty in qty-input at that time compare qty and available qty and according that change text color
     $(document).on('keyup',".qty_input",function(){
@@ -239,14 +228,15 @@ $(function() {
             +'<td class="p-0"><input type="text"  class="form-control h_1rem"  data-row_id ="'+counter+'" data-name="customer_code_cat" id="customer_code_cat_'+counter+'" name="customer_code_cat[]" readonly><div id="customer_code_cat_list_'+counter+'"></div></td>'
             +'<td class="p-0"><input type="text"  class="material_data form-control h_1rem" data-row_id ="'+counter+'" data-name="nupco_desc" id="nupco_desc_'+counter+'" name="nupco_desc[]" autocomplete="off"><div id="nupco_desc_list_'+counter+'" class="position-relative"></div></td>'
             +'<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="uom" id="uom_'+counter+'" name="uom[]" readonly></td>'
+            +'<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="batch" id="batch_'+counter+'" name="batch[]" readonly></td>'
+            +'<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="mfg_date" id="mfg_date_'+counter+'" name="mfg_date[]" readonly></td>'
+            +'<td class="p-0"><input type="text" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="expiry_date" id="expiry_date_'+counter+'" name="expiry_date[]" readonly></td>'
             +'<td class="p-0"><input type="text" class="form-control h_1rem qty_input" data-row_id ="'+counter+'" data-name="qty" id="qty_'+counter+'" name="qty[]" onkeypress="return onlyNumberKey(event)" maxlength="15" autocomplete="off" readonly></td>'
             +'<td class="p-0"><input type="text" class="form-control h_1rem text-success" data-row_id ="'+counter+'" data-name="available" id="available_'+counter+'" name="available[]" readonly></td>'
             +'<td class="p-0"><input type="hidden" class="form-control h_1rem" data-row_id ="'+counter+'" data-name="item_text" id="text_'+counter+'" name="item_text[]"><i class="fas fa-file-alt text_icon" aria-hidden="true" data-row_id ="'+counter+'"></i></td></tr>');
         
       $('#store_order tbody').append(tr);
       counter++;
-      // autoSearchMaterial();
-      
     });
 
     autoSearchMaterial();
@@ -304,7 +294,7 @@ $(function() {
             if(data == 0){
               location.reload(true);
             }else{
-                window.location.href='{{route('hos.home')}}';
+                window.location.href="{{route('hos.return.order.list')}}";
             }
             
           }
@@ -358,9 +348,9 @@ function autoSearchMaterial(){
     var row_id = $(this).data('row_id');
     var input_data = $(this).val();
     var input_name = $(this).data('name');
-
+    var stock_id = '';
     if(e.which == 13){
-          setMaterialData(this,input_name,row_id,input_data);
+          setMaterialData(this,input_name,row_id,input_data,stock_id);
           $('#'+input_name+'_list_'+row_id).fadeOut();  
           return false;
         }else{
@@ -368,7 +358,7 @@ function autoSearchMaterial(){
     {
       var token = "{{ csrf_token() }}";
       $.ajax({
-        url:"{{ route('hos.search.data') }}",
+        url:"{{ route('hos.return.search.data') }}",
         headers: {
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
@@ -382,7 +372,8 @@ function autoSearchMaterial(){
             $("#store_order li").bind("click",function(){
                 $('#'+input_name+'_list_'+row_id).fadeOut();  
                 var li_data = $(this).text();
-                setMaterialData(this,input_name,row_id,li_data);
+                stock_id = $(this).data('stock_id');
+                setMaterialData(this,input_name,row_id,li_data,stock_id);
             });
           }
         }
@@ -393,10 +384,10 @@ function autoSearchMaterial(){
 }
 
 //Set all data in table row when click on perticular one item from the search dropdown
-function setMaterialData(element,input_name,row_id,input_data){
+function setMaterialData(element,input_name,row_id,input_data,stock_id){
     //var input_data = $(element).text();
     $.ajax({
-      url: '{!! route('hos.material.data') !!}',
+      url: "{!! route('hos.return.material.data') !!}",
       headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
@@ -404,7 +395,8 @@ function setMaterialData(element,input_name,row_id,input_data){
       dataType: "json",
       data: {
           input_data:input_data,
-          input_name:input_name
+          input_name:input_name,
+          stock_id:stock_id
       },
       beforeSend: function() { 
           $("#preloader").css('display','block'); 
@@ -419,6 +411,9 @@ function setMaterialData(element,input_name,row_id,input_data){
             $('#customer_code_cat_'+row_id).val(response.data[0].customer_code_cat);
             $('#nupco_desc_'+row_id).val(response.data[0].nupco_desc);
             $('#uom_'+row_id).val(response.data[0].uom);
+            $('#batch_'+row_id).val(response.stock_details.vendor_batch);
+            $('#mfg_date_'+row_id).val(response.stock_details.mfg_date);
+            $('#expiry_date_'+row_id).val(response.stock_details.expiry_date);
             $('#available_'+row_id).val(response.availability);
             $('#qty_'+row_id).attr("readonly", false); 
         }else{
