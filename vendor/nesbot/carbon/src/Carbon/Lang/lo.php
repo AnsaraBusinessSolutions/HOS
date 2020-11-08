@@ -31,8 +31,6 @@ return [
     's' => ':count ວິ. ',
     'ago' => ':timeຜ່ານມາ',
     'from_now' => 'ອີກ :time',
-    'diff_now' => 'ຕອນນີ້',
-    'diff_today' => 'ມື້ນີ້ເວລາ',
     'diff_yesterday' => 'ມື້ວານນີ້ເວລາ',
     'diff_tomorrow' => 'ມື້ອື່ນເວລາ',
     'formats' => [

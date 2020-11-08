@@ -25,7 +25,6 @@ class HomeController extends Controller
         $user_id = Auth::user()->id;
         $all_order = DB::table('order_details as od')
                                 ->where('od.user_id','=',$user_id)
-                                ->whereIn('od.order_type',['normal','emergency'])
                                 ->orderBy('od.status','ASC')
                                 ->orderBy('od.order_type','ASC')
                                 ->orderBy('od.order_id','DESC')
@@ -89,6 +88,7 @@ class HomeController extends Controller
     public function materialData(Request $request){
         $input_data = $request->input_data;
         $input_name = $request->input_name;
+        $order_type = $request->order_type;
         
         $material_data = DB::table('material_master')->select('id','nupco_generic_code','nupco_trade_code','customer_code','customer_code_cat','nupco_desc','uom')->where($input_name, $input_data)->get();
        
@@ -101,7 +101,25 @@ class HomeController extends Controller
             
             $plant = $hss_data->delivery_warehouse;
             $storage_location = $hss_data->sloc_id;
-         
+            if($order_type == 'return'){
+            $stock_data = DB::table('stock')->where('plant',$hss_master_no)
+                                            ->where('storage_location',$hss_master_no)
+                                            ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
+                                            ->where('added_from','hos_inventory')
+                                            ->groupBy('nupco_generic_code')
+                                            ->selectRaw('sum(unrestricted_stock_qty) as total_qty')
+                                            ->first();
+            $open_qty_data = DB::table('order_details')
+                            ->where('supplying_plant_code',$plant)
+                            ->where('sloc_id',$storage_location)
+                            ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
+                            ->where('is_deleted',0)
+                            ->whereIn('status',[0,2])
+                            ->where('order_type','return')
+                            ->groupBy('nupco_generic_code')
+                            ->selectRaw('sum(qty_ordered) as open_qty')
+                            ->first();
+            }else{
             $stock_data = DB::table('stock')->where('plant',$plant)
                                             ->where('storage_location',$storage_location)
                                             ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
@@ -118,6 +136,7 @@ class HomeController extends Controller
                             ->groupBy('nupco_generic_code')
                             ->selectRaw('sum(qty_ordered) as open_qty')
                             ->first();
+            }
            
             $total_qty = 0;
             $open_qty = 0;
@@ -141,13 +160,34 @@ class HomeController extends Controller
     public function searchData(Request $request){
         $input_data = $request->input_data;
         $input_name = $request->input_name;
-       
+        $order_type = $request->order_type;
         $hss_master_no = Auth::user()->hss_master_no;
         //$search_data = MaterialMaster::select('id',$input_name)->where($input_name,'LIKE',"%{$input_data}%")->get();
-        if($input_name == 'nupco_desc'){
-            $search_data = DB::table('material_master')->where($input_name,'LIKE',"%{$input_data}%")->select('id',$input_name)->take(50)->get();
-        }else{
-            $search_data = DB::table('material_master')->where($input_name,'LIKE',"{$input_data}%")->select('id',$input_name)->take(50)->get();
+        if($order_type == 'return'){
+            if($input_name == 'nupco_desc'){
+                $search_data = DB::table('material_master as mm')
+                ->join('stock as s','mm.nupco_generic_code','=','s.nupco_generic_code')
+                ->where('mm.'.$input_name,'LIKE',"%{$input_data}%")
+                ->where('s.plant',$hss_master_no)
+                ->where('s.storage_location',$hss_master_no)
+                ->groupBy('s.nupco_generic_code')
+                ->select('mm.id','mm.'.$input_name)->take(50)->get();
+            }else{
+                $search_data = DB::table('material_master as mm')
+                ->join('stock as s','mm.nupco_generic_code','=','s.nupco_generic_code')
+                ->where('mm.'.$input_name,'LIKE',"{$input_data}%")
+                ->where('s.plant',$hss_master_no)
+                ->where('s.storage_location',$hss_master_no)
+                ->groupBy('s.nupco_generic_code')
+                ->select('mm.id','mm.'.$input_name)->take(50)->get();
+            }
+        }
+        else{
+            if($input_name == 'nupco_desc'){
+                $search_data = DB::table('material_master')->where($input_name,'LIKE',"%{$input_data}%")->select('id',$input_name)->take(50)->get();
+            }else{
+                $search_data = DB::table('material_master')->where($input_name,'LIKE',"{$input_data}%")->select('id',$input_name)->take(50)->get();
+            }
         }
         
         if(count($search_data) > 0){

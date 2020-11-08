@@ -26,6 +26,7 @@ use DateTimeInterface;
  * Depends on the following methods:
  *
  * @method bool lessThan($date)
+ * @method DateInterval diff(\DateTimeInterface $date, bool $absolute = false)
  * @method static copy()
  * @method static resolveCarbon($date = null)
  * @method static Translator translator()
@@ -150,20 +151,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in quarters rounded down.
-     *
-     * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
-     * @param bool                                                   $absolute Get the absolute of the difference
-     *
-     * @return int
-     */
-    public function diffInQuarters($date = null, $absolute = true)
-    {
-        return (int) ($this->diffInMonths($date, $absolute) / static::MONTHS_PER_QUARTER);
-    }
-
-    /**
-     * Get the difference in months rounded down.
+     * Get the difference in months
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -178,7 +166,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in weeks rounded down.
+     * Get the difference in weeks
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -191,7 +179,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in days rounded down.
+     * Get the difference in days
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -204,7 +192,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in days using a filter closure rounded down.
+     * Get the difference in days using a filter closure
      *
      * @param Closure                                                $callback
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
@@ -218,7 +206,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in hours using a filter closure rounded down.
+     * Get the difference in hours using a filter closure
      *
      * @param Closure                                                $callback
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
@@ -232,7 +220,7 @@ trait Difference
     }
 
     /**
-     * Get the difference by the given interval using a filter closure.
+     * Get the difference by the given interval using a filter closure
      *
      * @param CarbonInterval                                         $ci       An interval to traverse by
      * @param Closure                                                $callback
@@ -260,7 +248,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in weekdays rounded down.
+     * Get the difference in weekdays
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -275,7 +263,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in weekend days using a filter rounded down.
+     * Get the difference in weekend days using a filter
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -290,7 +278,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in hours rounded down.
+     * Get the difference in hours.
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -303,7 +291,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in hours rounded down using timestamps.
+     * Get the difference in hours using timestamps.
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -316,7 +304,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in minutes rounded down.
+     * Get the difference in minutes.
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -329,7 +317,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in minutes rounded down using timestamps.
+     * Get the difference in minutes using timestamps.
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -342,7 +330,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in seconds rounded down.
+     * Get the difference in seconds.
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -385,7 +373,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in milliseconds rounded down.
+     * Get the difference in milliseconds.
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -433,7 +421,7 @@ trait Difference
     }
 
     /**
-     * Get the difference in milliseconds rounded down using timestamps.
+     * Get the difference in milliseconds using timestamps.
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -497,19 +485,6 @@ trait Difference
         $hoursDiff = $this->floatDiffInHours($date, $absolute);
 
         return ($hoursDiff < 0 ? -1 : 1) * $this->diffInDays($date) + fmod($hoursDiff, static::HOURS_PER_DAY) / static::HOURS_PER_DAY;
-    }
-
-    /**
-     * Get the difference in weeks as float (microsecond-precision).
-     *
-     * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
-     * @param bool                                                   $absolute Get the absolute of the difference
-     *
-     * @return float
-     */
-    public function floatDiffInWeeks($date = null, $absolute = true)
-    {
-        return $this->floatDiffInDays($date, $absolute) / static::DAYS_PER_WEEK;
     }
 
     /**
@@ -634,19 +609,6 @@ trait Difference
         $hoursDiff = $this->floatDiffInRealHours($date, $absolute);
 
         return ($hoursDiff < 0 ? -1 : 1) * $this->diffInDays($date) + fmod($hoursDiff, static::HOURS_PER_DAY) / static::HOURS_PER_DAY;
-    }
-
-    /**
-     * Get the difference in weeks as float (microsecond-precision).
-     *
-     * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
-     * @param bool                                                   $absolute Get the absolute of the difference
-     *
-     * @return float
-     */
-    public function floatDiffInRealWeeks($date = null, $absolute = true)
-    {
-        return $this->floatDiffInRealDays($date, $absolute) / static::DAYS_PER_WEEK;
     }
 
     /**
@@ -783,14 +745,14 @@ trait Difference
     public function diffForHumans($other = null, $syntax = null, $short = false, $parts = 1, $options = null)
     {
         /* @var CarbonInterface $this */
-        if (\is_array($other)) {
-            $other['syntax'] = \array_key_exists('syntax', $other) ? $other['syntax'] : $syntax;
+        if (is_array($other)) {
+            $other['syntax'] = array_key_exists('syntax', $other) ? $other['syntax'] : $syntax;
             $syntax = $other;
             $other = $syntax['other'] ?? null;
         }
 
         $intSyntax = &$syntax;
-        if (\is_array($syntax)) {
+        if (is_array($syntax)) {
             $syntax['syntax'] = $syntax['syntax'] ?? null;
             $intSyntax = &$syntax['syntax'];
         }
@@ -983,7 +945,7 @@ trait Difference
         $other = null;
 
         if ($syntax instanceof DateTimeInterface) {
-            [$other, $syntax, $short, $parts, $options] = array_pad(\func_get_args(), 5, null);
+            [$other, $syntax, $short, $parts, $options] = array_pad(func_get_args(), 5, null);
         }
 
         return $this->from($other, $syntax, $short, $parts, $options);
@@ -1055,7 +1017,7 @@ trait Difference
         $other = null;
 
         if ($syntax instanceof DateTimeInterface) {
-            [$other, $syntax, $short, $parts, $options] = array_pad(\func_get_args(), 5, null);
+            [$other, $syntax, $short, $parts, $options] = array_pad(func_get_args(), 5, null);
         }
 
         return $this->from($other, $syntax, $short, $parts, $options);
@@ -1112,6 +1074,6 @@ trait Difference
             $format = $format($current, $other) ?? '';
         }
 
-        return $this->isoFormat(\strval($format));
+        return $this->isoFormat(strval($format));
     }
 }

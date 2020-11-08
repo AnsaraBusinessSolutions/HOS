@@ -141,23 +141,6 @@ echo $currentTime; ?></span> |
                         <a class="nav-link" href="{{ route('hos.department.order.list') }}">
                             <i class="fas fa-tachometer-alt fs_18"></i>&ensp; {{__('lang.department_order_list')}}</a>
                     </li>
-
-                    @if(Request::path() == 'store/return_order')
-                    <li class="nav-item my-1 active">
-                        @else
-                    <li class="nav-item my-1 ">
-                        @endif
-                        <a class="nav-link" href="{{ route('hos.return.order') }}">
-                            <i class="fas fa-store fs_18"></i>&ensp; Return Order</a>
-                    </li>
-                    @if(Request::path() == 'store/return_order_list' || Request::is('store/return_order_detail/*'))
-                    <li class="nav-item my-1 active">
-                        @else
-                    <li class="nav-item my-1 ">
-                        @endif
-                        <a class="nav-link" href="{{ route('hos.return.order.list') }}">
-                            <i class="fas fa-tachometer-alt fs_18"></i>&ensp; Return Order List</a>
-                    </li>
                     <!-- <li class="nav-item mb-1">
                         <a class="nav-link" href="#">
                             <i class="fas fa-balance-scale fs_18"></i> &ensp;{{__('lang.sales')}}</a>
@@ -175,7 +158,7 @@ echo $currentTime; ?></span> |
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent" style="height: 57px">
                         <ul class="navbar-nav mr-auto">
-                            @if(Request::path() == 'store/order' || Request::path() == 'store/department_order' || Request::path() == 'store/return_order')
+                            @if(Request::path() == 'store/order' || Request::path() == 'store/department_order')
                             <li class="nav-item">
                                 <a class="nav-link" href="">
                                     <i class="fas fa-copy fs_18"></i><br>
