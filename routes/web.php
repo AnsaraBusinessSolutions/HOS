@@ -52,6 +52,14 @@ Route::prefix('store')->group(function () {
     Route::get('/department_order_list', 'Hos\DepartmentController@departmentOrderList')->name('hos.department.order.list')->middleware('auth');
     Route::get('/department_order_detail/{department_order_id}', 'Hos\DepartmentController@departmentOrderDetail')->name('hos.department.order.detail')->middleware('auth');
     Route::post('/add_stock_consumption', 'Hos\DepartmentController@addStockConsumption')->name('hos.add.stock.consumption')->middleware('auth');
+
+    //Return order route
+    Route::get('/return_order', 'Hos\ReturnOrderController@returnOrder')->name('hos.return.order')->middleware('auth');
+    Route::post('return_search_data', 'Hos\ReturnOrderController@returnSearchData')->name('hos.return.search.data');
+    Route::post('return_material_data', 'Hos\ReturnOrderController@returnMaterialData')->name('hos.return.material.data');
+    Route::post('/add_return_order', 'Hos\ReturnOrderController@addReturnOrder')->name('hos.add.return.order')->middleware('auth');
+    Route::get('/return_order_list', 'Hos\ReturnOrderController@returnOrderList')->name('hos.return.order.list')->middleware('auth');
+    Route::get('/return_order_detail/{return_order_id}', 'Hos\ReturnOrderController@returnOrderDetail')->name('hos.return.order.detail')->middleware('auth');
 });
 
 Route::prefix('custodian')->group(function () {
@@ -98,6 +106,10 @@ Route::prefix('inventory')->group(function () {
     Route::get('/open_order_detail/{order_id}', 'Inventory\HomeController@openOrderDetail')->name('inventory.open.order.detail');
     Route::get('/display_order', 'Inventory\HomeController@displayOrder')->name('inventory.display.order');
     Route::get('/display_order_detail/{order_id}', 'Inventory\HomeController@displayOrderDetail')->name('inventory.display.order.detail');
+});
+
+Route::prefix('cron')->group(function () {
+    Route::get('/sales_order', 'Hos\SalesOrderController@salesOrder')->name('sales.order');
 });
 
 Auth::routes();

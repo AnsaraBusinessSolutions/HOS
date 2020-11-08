@@ -95,6 +95,23 @@ class HomeController extends Controller
                    'approve_date' => $approve_date,
                    'status'=>2
            ]);
+
+            $last_sales_order_log = DB::table('sales_order_log')->select('sap_id')->orderBy('sap_id', 'DESC')->first();
+            if(empty($last_sales_order_log)){
+                $sap_id = 59000001;
+            }else{
+                $sap_id = $last_sales_order_log->sap_id;
+                $sap_id = $sap_id + 1;
+            }
+
+           $sales_order = array(
+                'hss_master_no'=>auth()->guard('custodian')->user()->hss_master_no,
+                'hss_order_id'=>$order_id,
+                'sap_id'=>$sap_id,
+                'status'=>'pending',
+                'message'=>''
+           );
+           DB::table('sales_order_log')->insert($sales_order);
        }
        return redirect('custodian/home');
    }
