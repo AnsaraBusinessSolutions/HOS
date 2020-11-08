@@ -20,7 +20,7 @@ class ReturnOrderController extends Controller
     public function returnOrderList()
     {     
         $user_id = Auth::user()->id;
-        $all_order = DB::table('order_details as od')
+        $all_order = DB::table('return_order_details as od')
                                 ->where('od.user_id','=',$user_id)
                                 ->where('od.order_type','return')
                                 ->orderBy('od.status','ASC')
@@ -88,7 +88,7 @@ class ReturnOrderController extends Controller
                                             ->groupBy('nupco_generic_code')
                                             ->selectRaw('sum(unrestricted_stock_qty) as total_qty')
                                             ->first();
-            $open_qty_data = DB::table('order_details')
+            $open_qty_data = DB::table('return_order_details')
                             ->where('supplying_plant_code',$plant)
                             ->where('sloc_id',$storage_location)
                             ->where('nupco_generic_code',$material_data[0]->nupco_generic_code)
@@ -176,10 +176,10 @@ class ReturnOrderController extends Controller
             $header_text = $request->input('header_text');
             if(count($qty_arr) > 0){
                 $order_data = array();
-                $ord_no = '000-000-001';
-                $last_ord_id= $last3 = DB::table('order_details')->select('order_id')->orderBy('order_id', 'DESC')->first();
+                $ord_no = '110-000-001';
+                $last_ord_id= $last3 = DB::table('return_order_details')->select('order_id')->orderBy('order_id', 'DESC')->first();
                 if(empty($last_ord_id)){
-                    $lasts_ord_id = '000-000-000';
+                    $lasts_ord_id = '110-000-000';
                 }else{
                     $lasts_ord_id=$last_ord_id->order_id;
                 }
@@ -224,7 +224,7 @@ class ReturnOrderController extends Controller
                 }
                 
                 if(!empty($order_data)){
-                    $result = DB::table('order_details')->insert($order_data);
+                    $result = DB::table('return_order_details')->insert($order_data);
                 }
             }
         }
@@ -251,7 +251,7 @@ class ReturnOrderController extends Controller
         $plant = $hss_data->delivery_warehouse;
         $storage_location = $hss_data->sloc_id;
 
-        $order_detail = DB::table('order_details as od')
+        $order_detail = DB::table('return_order_details as od')
                                         ->join('hss_master as hs','od.hss_master_no','=','hs.hss_master_no')
                                         ->select('od.hss_master_no','od.hospital_name','od.order_type','hs.delivery_wh_name','hs.delivery_warehouse','hs.address','hs.sloc_id','od.id','od.nupco_generic_code','od.nupco_trade_code','od.customer_trade_code','od.category','od.material_desc','od.uom','od.qty_ordered','od.delivery_date','od.created_date','od.status','od.header_text','od.item_text','od.is_deleted',DB::raw("(SELECT count(bl.id) FROM batch_list as bl WHERE bl.order_id = od.id) as batch_count"))
                                         ->where('od.order_id', $order_id)
@@ -269,7 +269,7 @@ class ReturnOrderController extends Controller
             $delete_row_id_arr = $request->input('delete_row');
             
             foreach($delete_row_id_arr as $key=>$val) {
-                DB::table('order_details')
+                DB::table('return_order_details')
                 ->where('id',$val)
                 ->update([
                     'is_deleted'=>1,
@@ -300,7 +300,7 @@ class ReturnOrderController extends Controller
         $old_nupco_generic_code_arr = $request->input('old_nupco_generic_code');
        
         foreach($order_primary_id_arr as $key=>$val){
-            DB::table('order_details')
+            DB::table('return_order_details')
                 ->where('id',$val)
                 ->update([
                     'qty_ordered' => $qty_arr[$key],
@@ -332,7 +332,7 @@ class ReturnOrderController extends Controller
             $new_uom_arr = $request->input('new_uom');
             $new_item_text_arr = $request->input('new_item_text');
 
-            $order_item = DB::table('order_details')->select('order_item')->orderBy('order_item','DESC')->where('order_id',$order_id)->first();
+            $order_item = DB::table('return_order_details')->select('order_item')->orderBy('order_item','DESC')->where('order_id',$order_id)->first();
             $order_item_val = $order_item->order_item;
             foreach($new_qty_arr as $key=>$val) {
                 if(!empty($val) && !empty($new_nupco_generic_code_arr[$key])){ 
@@ -366,7 +366,7 @@ class ReturnOrderController extends Controller
         }
         
             if(!empty($order_data_add)){
-                $result = DB::table('order_details')->insert($order_data_add);
+                $result = DB::table('return_order_details')->insert($order_data_add);
             }
         }
 

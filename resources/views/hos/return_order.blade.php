@@ -275,7 +275,7 @@ $(function() {
     // event.preventDefault();
       var formData = new FormData(document.getElementById("store_order_form"));
       $.ajax({
-          url:"{{ route('hos.add.order') }}",
+          url:"{{ route('hos.add.return.order') }}",
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },

@@ -108,5 +108,9 @@ Route::prefix('inventory')->group(function () {
     Route::get('/display_order_detail/{order_id}', 'Inventory\HomeController@displayOrderDetail')->name('inventory.display.order.detail');
 });
 
+Route::prefix('cron')->group(function () {
+    Route::get('/sales_order', 'Hos\SalesOrderController@salesOrder')->name('sales.order');
+});
+
 Auth::routes();
 
