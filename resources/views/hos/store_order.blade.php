@@ -67,10 +67,9 @@
                  <tr>
                   <th width="1%" class="p-0">&ensp;</th>
                    <th width="13%" class="p-0">
-                    <label for="supplying-plant">Supplying Plant:</label></th>
-                    @if(count($delivery_wh) > 0)
-                   <th width="20%" class="p-0 border">
-                    <label class="mb-0 py-2" ><b>{{$delivery_wh[0]->delivery_wh_name}}</b></label>
+                    <label for="supplying-plant">Supplying Plant :<br>
+                     @if(count($delivery_wh) > 0)
+                     <label class="mb-0 py-2" ><b>{{$delivery_wh[0]->delivery_wh_name}}</b></label>
                     <input type="hidden" name="supplying_plant_code" value="{{$delivery_wh[0]->delivery_warehouse}}">
                     <input type="hidden" name="supplying_plant" value="{{$delivery_wh[0]->delivery_wh_name}}">
                     <input type="hidden" name="sloc_id" value="{{$delivery_wh[0]->sloc_id}}">
@@ -83,6 +82,10 @@
                     <input type="hidden" name="hss_master_no" value="">
                     <input type="hidden" name="hospital_name" value="">
                     @endif
+                    </label></th>
+                    
+                   <th width="20%" class="p-0 border">
+                    
                     </th>
                     <th width="1%" class="p-0">&ensp;</th>
                     <th width="10%" class="p-0">
