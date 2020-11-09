@@ -112,6 +112,7 @@ class HomeController extends Controller
                 'message'=>''
            );
            DB::table('sales_order')->insert($sales_order_data);
+
        }
        return redirect('custodian/home');
    }

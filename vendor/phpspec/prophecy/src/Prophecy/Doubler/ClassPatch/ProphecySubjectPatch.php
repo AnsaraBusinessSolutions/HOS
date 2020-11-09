@@ -11,11 +11,9 @@
 
 namespace Prophecy\Doubler\ClassPatch;
 
-use Prophecy\Doubler\Generator\Node\ArgumentTypeNode;
 use Prophecy\Doubler\Generator\Node\ClassNode;
 use Prophecy\Doubler\Generator\Node\MethodNode;
 use Prophecy\Doubler\Generator\Node\ArgumentNode;
-use Prophecy\Doubler\Generator\Node\ReturnTypeNode;
 
 /**
  * Add Prophecy functionality to the double.
@@ -45,14 +43,14 @@ class ProphecySubjectPatch implements ClassPatchInterface
     public function apply(ClassNode $node)
     {
         $node->addInterface('Prophecy\Prophecy\ProphecySubjectInterface');
-        $node->addProperty('objectProphecyClosure', 'private');
+        $node->addProperty('objectProphecy', 'private');
 
         foreach ($node->getMethods() as $name => $method) {
             if ('__construct' === strtolower($name)) {
                 continue;
             }
 
-            if ($method->getReturnTypeNode()->isVoid()) {
+            if ($method->getReturnType() === 'void') {
                 $method->setCode(
                     '$this->getProphecy()->makeProphecyMethodCall(__FUNCTION__, func_get_args());'
                 );
@@ -65,19 +63,12 @@ class ProphecySubjectPatch implements ClassPatchInterface
 
         $prophecySetter = new MethodNode('setProphecy');
         $prophecyArgument = new ArgumentNode('prophecy');
-        $prophecyArgument->setTypeNode(new ArgumentTypeNode('Prophecy\Prophecy\ProphecyInterface'));
+        $prophecyArgument->setTypeHint('Prophecy\Prophecy\ProphecyInterface');
         $prophecySetter->addArgument($prophecyArgument);
-        $prophecySetter->setCode(<<<PHP
-if (null === \$this->objectProphecyClosure) {
-    \$this->objectProphecyClosure = static function () use (\$prophecy) {
-        return \$prophecy;
-    };
-}
-PHP
-    );
+        $prophecySetter->setCode('$this->objectProphecy = $prophecy;');
 
         $prophecyGetter = new MethodNode('getProphecy');
-        $prophecyGetter->setCode('return \call_user_func($this->objectProphecyClosure);');
+        $prophecyGetter->setCode('return $this->objectProphecy;');
 
         if ($node->hasMethod('__call')) {
             $__call = $node->getMethod('__call');

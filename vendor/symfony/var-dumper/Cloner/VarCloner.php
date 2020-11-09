@@ -46,7 +46,7 @@ class VarCloner extends AbstractCloner
                                         // or null if the original value is used directly
 
         if (!$gid = self::$gid) {
-            $gid = self::$gid = md5(random_bytes(6)); // Unique string used to detect the special $GLOBALS variable
+            $gid = self::$gid = uniqid(mt_rand(), true); // Unique string used to detect the special $GLOBALS variable
         }
         $arrayStub = new Stub();
         $arrayStub->type = Stub::TYPE_ARRAY;
@@ -114,6 +114,7 @@ class VarCloner extends AbstractCloner
                     case \is_int($v):
                     case \is_float($v):
                         continue 2;
+
                     case \is_string($v):
                         if ('' === $v) {
                             continue 2;
@@ -240,7 +241,7 @@ class VarCloner extends AbstractCloner
                         $stub->position = $len++;
                     } elseif ($pos < $maxItems) {
                         if ($maxItems < $pos += \count($a)) {
-                            $a = \array_slice($a, 0, $maxItems - $pos, true);
+                            $a = \array_slice($a, 0, $maxItems - $pos);
                             if ($stub->cut >= 0) {
                                 $stub->cut += $pos - $maxItems;
                             }
