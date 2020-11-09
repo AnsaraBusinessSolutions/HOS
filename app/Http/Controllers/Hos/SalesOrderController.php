@@ -12,7 +12,8 @@ class SalesOrderController extends Controller
     /*This function is use for sales order. */
     public function salesOrder()
     {     
-        $pending_order_data = DB::select('SELECT * FROM sales_order_log WHERE id IN (SELECT MAX(id) FROM sales_order_log where status IN ("pending","fail") GROUP BY hss_order_id)');
+        //$pending_order_data = DB::select('SELECT * FROM sales_order WHERE id IN (SELECT MAX(id) FROM sales_order where status IN ("pending","fail") GROUP BY hss_order_id)');
+        $pending_order_data = DB::table('sales_order')->whereIn('status',['pending','E'])->get();
         // dd($pending_order_data);
         foreach($pending_order_data as $key=>$pending_order_val){
             $sales_org_data = DB::table('sales_org')->where('hss_master_no',$pending_order_val->hss_master_no)->first();
@@ -26,52 +27,35 @@ class SalesOrderController extends Controller
                         'SALES_ORG'=>$sales_org_data->sales_org,
                         'DISTR_CHAN'=>$sales_org_data->dist_channel,
                         'DIVISION'=>$sales_org_data->division,
-                        'REQ_DATE_H'=>$order_details[0]->delivery_date,
-                        'PURCH_DATE'=>$order_details[0]->created_date,
+                        'REQ_DATE_H'=>date("Ymd", strtotime($order_details[0]->delivery_date)),
+                        'PURCH_DATE'=>date("Ymd", strtotime($order_details[0]->created_date)),
                         'PURCH_NO_C'=>'HOS ORDER',
                         'CURRENCY'=>'SAR',
                         "MAWARID_NO"=>"12345",
                         "ORD_REASON"=>"ZN5");
 
                         foreach($order_details as $key=>$val){
-                            $I_T_ITEM['item'] = array(
+                            $I_T_ITEM['item'][] = array(
                                 'ITM_NUMBER'=>$val->order_item,
                                 'MATERIAL'=>$order_details[0]->nupco_generic_code,
-                                'BATCH'=>'',
-                                'PLANT'=>$val->supplying_plant_code,
-                                'STORE_LOC'=>$val->sloc_id,
+                                'BATCH'=>"",
+                                // 'PLANT'=>$val->supplying_plant_code,
+                                // 'STORE_LOC'=>$val->sloc_id,
+                                'PLANT'=>'E1C2',
+                                'STORE_LOC'=>'E000',
                                 'TARGET_QTY'=>$val->qty_ordered,
                                 'SALES_UNIT'=>$val->uom,
-                                'ZZMN'=>'',
-                                'ZZAS'=>'',
-                                'ZZCO'=>'',
-                                "DLV_PRIO"=>"99"); 
+                                'ZZMN'=>"",
+                                'ZZAS'=>"",
+                                'ZZCO'=>"",
+                                "DLV_PRIO"=>"2"); 
                         }
 
-                        //$order_details = array('order_item'=>'1111','nupco_generic_code'=>'22222');
-                        $outp = "{";
-                        $outp .= '"vehicleLocations":';
-                        $outp .= "[";
-                        $cm ="{".'"vehicleLocations":'."[";
-                        foreach($order_details as $key=>$val){
-                            if ($outp != $cm) {
-                                $outp .= ",";
-                            }
-                            $outp .= '"temperature":"'   . $val->order_item. '",';
-                            $outp .= '"humidity":"'   . $val->order_item. '",';
-                            $outp .= '"taxiStatus":"'. $val->nupco_generic_code. '",';
-                            $outp .= '"roleCode":"'. $val->nupco_generic_code. '"}';
-                            
-                        }
-                        $outp .="]";
-                        $outp .="}";
-
-                        print_r($outp);exit;
-
-                        $I_T_PARTNERS['item'][] =  array(
+    
+                        $I_T_PARTNERS['item'] =  array(
                             "PARTN_ROLE"=>"SP",
                             "PARTN_NUMB"=>"10005"
-                        );
+                                                                                                                                      );
                                       
 
           $parameters = array("I_SO_DET"=>array(
@@ -80,67 +64,9 @@ class SalesOrderController extends Controller
                                       "I_T_PARTNERS"=>$I_T_PARTNERS
                                   )
                           );
-
-//         $I_HEADER = array(
-//             "SALESDOCUMENTIN"=>"5000001145",
-//             "DOC_TYPE"=>"ZPSO",
-//             "SALES_ORG"=>"NP02",
-//             "DISTR_CHAN"=>"E1",
-//             "DIVISION"=>"00",
-//             "REQ_DATE_H"=>"20201102",
-//             "PURCH_DATE"=>"20201102",
-//             "PURCH_NO_C"=>"BAPI VARIANT1",
-//             "CURRENCY"=>"SAR",
-//             "MAWARID_NO"=>"12345",
-//             "ORD_REASON"=>"ZN5"
-//           );    
-// $I_T_ITEM = array("item"=>
-//                   array(
-//                         "ITM_NUMBER"=>"000010",
-//                         "MATERIAL"=>"5110150300205",
-//                         "BATCH"=>"",
-//                         "PLANT"=>"E1C2",
-//                         "STORE_LOC"=>"E000",
-//                         "TARGET_QTY"=>"1.000",
-//                         "SALES_UNIT"=>"TUB",
-//                         "ZZMN"=>"BAYER",
-//                         "ZZAS"=>"20001",
-//                         "ZZCO"=>"SA",
-//                           "DLV_PRIO"=>"99"
-//                   ),array(
-//                     "ITM_NUMBER"=>"000010",
-//                     "MATERIAL"=>"5110150300205",
-//                     "BATCH"=>"",
-//                     "PLANT"=>"E1C2",
-//                     "STORE_LOC"=>"E000",
-//                     "TARGET_QTY"=>"1.000",
-//                     "SALES_UNIT"=>"TUB",
-//                     "ZZMN"=>"BAYER",
-//                     "ZZAS"=>"20001",
-//                     "ZZCO"=>"SA",
-//                       "DLV_PRIO"=>"99"
-//               ),
-//           );
-// $I_T_PARTNERS = array("item"=>
-//                   array(
-//                         "PARTN_ROLE"=>"SP",
-//                         "PARTN_NUMB"=>"10005"
-//               ),"item"=>
-//                   array(
-//                         "PARTN_ROLE"=>"SH",
-//                         "PARTN_NUMB"=>"10005"
-//                       )
-//           );
-// $parameters = array("I_SO_DET"=>
-//                   array(
-//                       "I_HEADER"=>$I_HEADER,
-//                       "I_T_ITEM"=>$I_T_ITEM,
-//                       "I_T_PARTNERS"=>$I_T_PARTNERS
-//                   )
-//           );
-           echo '<pre>';
-        //  print_r($parameters);
-        //     exit;
+           echo '<pre>'; 
+            print_r($parameters);
+           // exit;
             $wsdl_link = 'http://saprd1ap1.nupco.com:8000/sap/bc/srt/wsdl/flv_10002A101AD1/bndg_url/sap/bc/srt/rfc/sap/zsd_hos_so_create_srvc/300/zsd_hos_so_create_srvc/zsd_hos_so_create_srvc?sap-client=300';
             $input_arr = array(
                 "wsdl_link" => $wsdl_link,
@@ -169,24 +95,23 @@ class SalesOrderController extends Controller
                 curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
                 $res = curl_exec($curl);
                 curl_close($curl);
-               // $res = json_decode($res);
+                $res = json_decode($res);
                 print_r($res);
-                exit;
+                //exit;
 
                 if(!empty($res)){
-                    $api_type = $res->O_WH_STOCK->TYPE;
-                    $api_message = $res->O_WH_STOCK->MESSAGE;
+                    $api_type = $res->O_SO_RESPONSE->TYPE;
+                    $api_message = $res->O_SO_RESPONSE->MESSAGE;
 
-                    $sales_order_log_data = array(
-                        'hss_master_no'=>$pending_order_val->hss_master_no,
-                        'hss_order_id'=>$pending_order_val->hss_order_id,
-                        'sap_id'=>$pending_order_val->sap_id,
+                    $sales_order_update_data = array(
                         'status'=>$api_type,
                         'message'=>$api_message
                    );
 
-                   DB::table('sales_order_log')->insert($sales_order_log_data);
-                   echo $pending_order_val->hss_order_id.' Sales Order Added';
+                   $pending_order_id = $pending_order_val->id;
+                   DB::table('sales_order')->where('id',$pending_order_id)->update($sales_order_update_data);
+                   
+                   echo $pending_order_val->hss_order_id.' Sales Order called';
                 }else{
                     echo $pending_order_val->hss_order_id. 'Something was wrong';
                 }
