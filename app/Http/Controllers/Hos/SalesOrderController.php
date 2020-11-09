@@ -108,9 +108,31 @@ class SalesOrderController extends Controller
                         'message'=>$api_message
                    );
 
+                  
+                   
                    $pending_order_id = $pending_order_val->id;
                    DB::table('sales_order')->where('id',$pending_order_id)->update($sales_order_update_data);
-                   
+                   $sales_order_log = DB::table('sales_order_log')->where('order_id',$pending_order_id)->get();
+
+                   $item = $res->O_SO_RESPONSE->ITEM;
+                   $sales_order_log_arr = array();
+                   if(count($item) > 0){
+                    foreach($item as $key=>$val){
+                         $sales_order_log_arr[] = array(
+                             'order_id'=>$pending_order_id,
+                             'item'=>'',
+                             'material'=>'',
+                             'description'=>'',
+                             'sap_so_id'=>$pending_order_val->sap_id,
+                             'sap_so_item'=>$val->NUMBER,
+                             'status'=>$val->TYPE,
+                             'message'=>$val->MESSAGE
+                         );
+                    }
+
+                    print_r($sales_order_log_arr);
+                   // exit;
+                }
                    echo $pending_order_val->hss_order_id.' Sales Order called';
                 }else{
                     echo $pending_order_val->hss_order_id. 'Something was wrong';

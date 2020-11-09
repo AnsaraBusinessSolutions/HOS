@@ -3,7 +3,7 @@
 /public/storage
 /storage/*.key
 /.history
-.composer.lock
+
 .env
 .env.backup
 .phpunit.result.cache

@@ -91,7 +91,6 @@
                     <select class="form-control" name="order_type" id="order_type">
                       <option value="normal">Normal</option>
                       <option value="emergency">Emergency</option>
-                      <option value="return">Return</option>
                     </select>
                      <th width="2%" class="p-0">&ensp;</th>
                    <th width="10%" class="p-0">
@@ -359,7 +358,6 @@ function autoSearchMaterial(){
     var row_id = $(this).data('row_id');
     var input_data = $(this).val();
     var input_name = $(this).data('name');
-    var order_type = $('#order_type').val();
 
     if(e.which == 13){
           setMaterialData(this,input_name,row_id,input_data);
@@ -375,7 +373,7 @@ function autoSearchMaterial(){
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         method:"POST",
-        data:{input_data:input_data,input_name:input_name,order_type:order_type},
+        data:{input_data:input_data,input_name:input_name},
         success:function(data){
           $('#'+input_name+'_list_'+row_id).html('');
           if(data != ''){
@@ -397,7 +395,6 @@ function autoSearchMaterial(){
 //Set all data in table row when click on perticular one item from the search dropdown
 function setMaterialData(element,input_name,row_id,input_data){
     //var input_data = $(element).text();
-    var order_type = $('#order_type').val();
     $.ajax({
       url: '{!! route('hos.material.data') !!}',
       headers: {
@@ -407,8 +404,7 @@ function setMaterialData(element,input_name,row_id,input_data){
       dataType: "json",
       data: {
           input_data:input_data,
-          input_name:input_name,
-          order_type:order_type
+          input_name:input_name
       },
       beforeSend: function() { 
           $("#preloader").css('display','block'); 
@@ -426,7 +422,7 @@ function setMaterialData(element,input_name,row_id,input_data){
             $('#available_'+row_id).val(response.availability);
             $('#qty_'+row_id).attr("readonly", false); 
         }else{
-            alert('this data is not available');
+            alert('This material is not available');
             $('#'+input_name+'_'+row_id).val('');
         }
       }
